@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="NeoContext.App.Views.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Resources>
+        <Style x:Key="CardStyle" TargetType="Grid">
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="ColumnSpacing" Value="16" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer>
+        <StackPanel Padding="32,16,32,32" Spacing="8" MaxWidth="900" HorizontalAlignment="Left">
+            <TextBlock x:Uid="Settings_Title" Text="Settings" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,12" />
+
+            <!-- General -->
+            <TextBlock x:Uid="Settings_General" Text="General" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
+
+            <Grid Style="{StaticResource CardStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock x:Uid="Settings_Language" Text="Language" />
+                    <TextBlock x:Uid="Settings_Language_Hint" Text="Takes effect after restarting NeoContext." Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+                <ComboBox Grid.Column="1" MinWidth="200" VerticalAlignment="Center"
+                          ItemsSource="{x:Bind ViewModel.Languages}"
+                          SelectedItem="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}" />
+            </Grid>
+
+            <Grid Style="{StaticResource CardStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock x:Uid="Settings_Protect" Text="Protect essential entries" />
+                    <TextBlock x:Uid="Settings_Protect_Hint" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="Prevents disabling or deleting entries such as Open, which Explorer needs to work." />
+                </StackPanel>
+                <ToggleSwitch Grid.Column="1" MinWidth="0" OnContent="" OffContent=""
+                              IsOn="{x:Bind ViewModel.ProtectEssentialEntries, Mode=TwoWay}" />
+            </Grid>
+
+            <!-- Updates -->
+            <TextBlock x:Uid="Settings_Updates" Text="Updates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,16,0,0" />
+
+            <Grid Style="{StaticResource CardStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock x:Uid="Settings_AutoCheck" Text="Check for updates automatically" />
+                    <TextBlock x:Uid="Settings_AutoCheck_Hint" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="Once a week. NeoContext only notifies you; it never installs anything on its own." />
+                </StackPanel>
+                <ToggleSwitch Grid.Column="1" MinWidth="0" OnContent="" OffContent=""
+                              IsOn="{x:Bind ViewModel.CheckForUpdates, Mode=TwoWay}" />
+            </Grid>
+
+            <Grid Style="{StaticResource CardStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{x:Bind ViewModel.UpdateStatus, Mode=OneWay}" TextWrapping="Wrap" />
+                    <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsCheckingForUpdates, Mode=OneWay}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Button x:Uid="Settings_Download" Content="Download and verify" Style="{StaticResource AccentButtonStyle}"
+                            Visibility="{x:Bind ViewModel.IsUpdateAvailable, Mode=OneWay}"
+                            Command="{x:Bind ViewModel.DownloadUpdateCommand}" />
+                    <Button x:Uid="Settings_ReleasePage" Content="Release notes" Command="{x:Bind ViewModel.OpenReleasePageCommand}" />
+                    <Button x:Uid="Settings_CheckNow" Content="Check now" Command="{x:Bind ViewModel.CheckNowCommand}" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Permissions -->
+            <TextBlock x:Uid="Settings_Permissions" Text="Permissions" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,16,0,0" />
+
+            <Grid Style="{StaticResource CardStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock x:Uid="Settings_Ownership" Text="Restore original key owners" />
+                    <TextBlock Text="{x:Bind ViewModel.OwnershipStatus, Mode=OneWay}" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+                <Button x:Uid="Settings_RestoreOwnership" Grid.Column="1" Content="Restore" VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.RestorePermissionsCommand}" />
+            </Grid>
+
+            <Grid Style="{StaticResource CardStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock x:Uid="Settings_DataFolder" Text="Data folder" />
+                    <TextBlock Text="{x:Bind ViewModel.DataDirectory}" TextWrapping="Wrap" IsTextSelectionEnabled="True"
+                               Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+                <Button x:Uid="Settings_OpenFolder" Grid.Column="1" Content="Open" VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.OpenDataFolderCommand}" />
+            </Grid>
+
+            <!-- About -->
+            <TextBlock x:Uid="Settings_About" Text="About" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,16,0,0" />
+
+            <Grid Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{x:Bind ViewModel.VersionText}" />
+                    <TextBlock x:Uid="Settings_About_License" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="Free software under the GNU General Public License v3.0. Based on the ideas of ContextMenuManager by BluePointLilac." />
+                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+                        <HyperlinkButton x:Uid="Settings_About_Repository" Content="Source code" Command="{x:Bind ViewModel.OpenRepositoryCommand}" />
+                        <HyperlinkButton x:Uid="Settings_About_Original" Content="Original project" Command="{x:Bind ViewModel.OpenOriginalProjectCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

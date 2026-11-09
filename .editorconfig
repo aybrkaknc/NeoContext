@@ -398,3 +398,7 @@ dotnet_diagnostic.CA1716.severity = none
 [tests/**.cs]
 # Test names use underscores to read as sentences.
 dotnet_diagnostic.CA1707.severity = none
+
+[src/NeoContext.App/**.cs]
+# x:Bind paths and generated commands bind to instance members, even when they read only static state.
+dotnet_diagnostic.CA1822.severity = none

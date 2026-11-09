@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminBadge.Text" xml:space="preserve">
+    <value>Yönetici</value>
+  </data>
+  <data name="SearchBox.PlaceholderText" xml:space="preserve">
+    <value>Bu sayfada ara</value>
+  </data>
+  <data name="RefreshButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Yenile</value>
+  </data>
+  <data name="RefreshButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Yenile</value>
+  </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Diğer seçenekler</value>
+  </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Diğer seçenekler</value>
+  </data>
+  <data name="EmptyText.Text" xml:space="preserve">
+    <value>Bu sayfada girdi yok.</value>
+  </data>
+  <data name="ShiftBadge.Text" xml:space="preserve">
+    <value>Yalnızca Shift</value>
+  </data>
+  <data name="Menu_Rename.Text" xml:space="preserve">
+    <value>Yeniden adlandır</value>
+  </data>
+  <data name="Menu_OpenLocation.Text" xml:space="preserve">
+    <value>Konumu aç</value>
+  </data>
+  <data name="Menu_CopyLocation.Text" xml:space="preserve">
+    <value>Konumu kopyala</value>
+  </data>
+  <data name="Menu_Delete.Text" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Settings_Title.Text" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="Settings_General.Text" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="Settings_Language.Text" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="Settings_Language_Hint.Text" xml:space="preserve">
+    <value>NeoContext yeniden başlatıldığında uygulanır.</value>
+  </data>
+  <data name="Settings_Protect.Text" xml:space="preserve">
+    <value>Temel girdileri koru</value>
+  </data>
+  <data name="Settings_Protect_Hint.Text" xml:space="preserve">
+    <value>Explorer'ın çalışması için gereken "Aç" gibi girdilerin kapatılmasını veya silinmesini engeller.</value>
+  </data>
+  <data name="Settings_Updates.Text" xml:space="preserve">
+    <value>Güncellemeler</value>
+  </data>
+  <data name="Settings_AutoCheck.Text" xml:space="preserve">
+    <value>Güncellemeleri otomatik denetle</value>
+  </data>
+  <data name="Settings_AutoCheck_Hint.Text" xml:space="preserve">
+    <value>Haftada bir. NeoContext yalnızca bildirir, kendiliğinden hiçbir şey kurmaz.</value>
+  </data>
+  <data name="Settings_Download.Content" xml:space="preserve">
+    <value>İndir ve doğrula</value>
+  </data>
+  <data name="Settings_ReleasePage.Content" xml:space="preserve">
+    <value>Sürüm notları</value>
+  </data>
+  <data name="Settings_CheckNow.Content" xml:space="preserve">
+    <value>Şimdi denetle</value>
+  </data>
+  <data name="Settings_Permissions.Text" xml:space="preserve">
+    <value>İzinler</value>
+  </data>
+  <data name="Settings_Ownership.Text" xml:space="preserve">
+    <value>Anahtarların özgün sahiplerini geri yükle</value>
+  </data>
+  <data name="Settings_RestoreOwnership.Content" xml:space="preserve">
+    <value>Geri yükle</value>
+  </data>
+  <data name="Settings_DataFolder.Text" xml:space="preserve">
+    <value>Veri klasörü (ayarlar, günlükler, kayıt defteri yedekleri)</value>
+  </data>
+  <data name="Settings_OpenFolder.Content" xml:space="preserve">
+    <value>Aç</value>
+  </data>
+  <data name="Settings_About.Text" xml:space="preserve">
+    <value>Hakkında</value>
+  </data>
+  <data name="Settings_About_License.Text" xml:space="preserve">
+    <value>GNU Genel Kamu Lisansı v3.0 ile dağıtılan özgür yazılımdır. BluePointLilac'ın ContextMenuManager projesinin fikirlerine dayanır.</value>
+  </data>
+  <data name="Settings_About_Repository.Content" xml:space="preserve">
+    <value>Kaynak kod</value>
+  </data>
+  <data name="Settings_About_Original.Content" xml:space="preserve">
+    <value>Özgün proje</value>
+  </data>
+  <data name="Section_Files" xml:space="preserve">
+    <value>Dosyalar</value>
+  </data>
+  <data name="Section_Files_Description" xml:space="preserve">
+    <value>Herhangi bir dosyaya sağ tıklandığında gösterilir.</value>
+  </data>
+  <data name="Section_FilesAndFolders" xml:space="preserve">
+    <value>Dosyalar ve klasörler</value>
+  </data>
+  <data name="Section_FilesAndFolders_Description" xml:space="preserve">
+    <value>Her dosya ve klasör için gösterilir.</value>
+  </data>
+  <data name="Section_Folders" xml:space="preserve">
+    <value>Klasörler</value>
+  </data>
+  <data name="Section_Folders_Description" xml:space="preserve">
+    <value>Bir klasöre sağ tıklandığında gösterilir.</value>
+  </data>
+  <data name="Section_FolderBackground" xml:space="preserve">
+    <value>Klasör arka planı</value>
+  </data>
+  <data name="Section_FolderBackground_Description" xml:space="preserve">
+    <value>Bir klasörün içindeki boş alana sağ tıklandığında gösterilir.</value>
+  </data>
+  <data name="Section_Desktop" xml:space="preserve">
+    <value>Masaüstü</value>
+  </data>
+  <data name="Section_Desktop_Description" xml:space="preserve">
+    <value>Masaüstüne sağ tıklandığında gösterilir.</value>
+  </data>
+  <data name="Section_Drives" xml:space="preserve">
+    <value>Sürücüler</value>
+  </data>
+  <data name="Section_Drives_Description" xml:space="preserve">
+    <value>Bir sürücüye sağ tıklandığında gösterilir.</value>
+  </data>
+  <data name="Section_NewMenu" xml:space="preserve">
+    <value>Yeni menüsü</value>
+  </data>
+  <data name="Section_NewMenu_Description" xml:space="preserve">
+    <value>"Yeni" alt menüsündeki dosya türleri.</value>
+  </data>
+  <data name="Section_WinX" xml:space="preserve">
+    <value>Win+X menüsü</value>
+  </data>
+  <data name="Section_WinX_Description" xml:space="preserve">
+    <value>Win+X ile veya Başlat'a sağ tıklayarak açılan menü. Değişiklikler Explorer yeniden başlatılınca uygulanır.</value>
+  </data>
+  <data name="Section_PackagedApps" xml:space="preserve">
+    <value>Mağaza uygulamaları</value>
+  </data>
+  <data name="Section_PackagedApps_Description" xml:space="preserve">
+    <value>Yüklü MSIX ve Microsoft Store uygulamalarının eklediği girdiler.</value>
+  </data>
+  <data name="Kind_ShellVerb" xml:space="preserve">
+    <value>Komut</value>
+  </data>
+  <data name="Kind_ShellExtension" xml:space="preserve">
+    <value>Kabuk uzantısı</value>
+  </data>
+  <data name="Kind_ShellNew" xml:space="preserve">
+    <value>Yeni menüsü şablonu</value>
+  </data>
+  <data name="Kind_WinX" xml:space="preserve">
+    <value>Kısayol</value>
+  </data>
+  <data name="Kind_PackagedApp" xml:space="preserve">
+    <value>Uygulama uzantısı</value>
+  </data>
+  <data name="WinX_Group" xml:space="preserve">
+    <value>Grup {0}</value>
+  </data>
+  <data name="Scope_CurrentUser" xml:space="preserve">
+    <value>Geçerli kullanıcı</value>
+  </data>
+  <data name="Scope_AllUsers" xml:space="preserve">
+    <value>Tüm kullanıcılar</value>
+  </data>
+  <data name="Action_RestartExplorer" xml:space="preserve">
+    <value>Explorer'ı yeniden başlat</value>
+  </data>
+  <data name="Action_RestartElevated" xml:space="preserve">
+    <value>Yönetici olarak yeniden başlat</value>
+  </data>
+  <data name="Action_TakeOwnership" xml:space="preserve">
+    <value>Sahipliği al ve yeniden dene</value>
+  </data>
+  <data name="Action_OpenRelease" xml:space="preserve">
+    <value>Sürümü görüntüle</value>
+  </data>
+  <data name="Error_NotFound" xml:space="preserve">
+    <value>Girdi artık yok</value>
+  </data>
+  <data name="Error_RequiresElevation" xml:space="preserve">
+    <value>Yönetici hakları gerekiyor</value>
+  </data>
+  <data name="Error_AccessDenied" xml:space="preserve">
+    <value>Erişim reddedildi</value>
+  </data>
+  <data name="Error_Protected" xml:space="preserve">
+    <value>Korunan girdi</value>
+  </data>
+  <data name="Error_Protected_Message" xml:space="preserve">
+    <value>"{0}" Explorer'ın çalışması için gerekli ve korunuyor. Korumayı Ayarlar'dan kapatabilirsiniz.</value>
+  </data>
+  <data name="Error_InvalidInput" xml:space="preserve">
+    <value>Geçersiz giriş</value>
+  </data>
+  <data name="Error_NotSupported" xml:space="preserve">
+    <value>Bu girdi için desteklenmiyor</value>
+  </data>
+  <data name="Error_Network" xml:space="preserve">
+    <value>Ağ hatası</value>
+  </data>
+  <data name="Error_Integrity" xml:space="preserve">
+    <value>Doğrulama başarısız</value>
+  </data>
+  <data name="Error_Unexpected" xml:space="preserve">
+    <value>Bir şeyler ters gitti</value>
+  </data>
+  <data name="Notice_RestartExplorer_Title" xml:space="preserve">
+    <value>Değişiklik kaydedildi</value>
+  </data>
+  <data name="Notice_RestartExplorer_Message" xml:space="preserve">
+    <value>Explorer bu değişikliği yeniden başladıktan sonra gösterir.</value>
+  </data>
+  <data name="Notice_Update_Title" xml:space="preserve">
+    <value>Güncelleme var</value>
+  </data>
+  <data name="Notice_Update_Message" xml:space="preserve">
+    <value>NeoContext {0} yayımlandı.</value>
+  </data>
+  <data name="Rename_Title" xml:space="preserve">
+    <value>Yeniden adlandır</value>
+  </data>
+  <data name="Rename_Hint" xml:space="preserve">
+    <value>En fazla {0} karakter.</value>
+  </data>
+  <data name="Delete_Title" xml:space="preserve">
+    <value>Girdi silinsin mi?</value>
+  </data>
+  <data name="Delete_Message_Registry" xml:space="preserve">
+    <value>"{0}" kaldırılacak. Önce {1} klasörüne bir .reg yedeği kaydedilir; geri yüklemek için yedeğe çift tıklayın.</value>
+  </data>
+  <data name="Delete_Message_File" xml:space="preserve">
+    <value>"{0}" Geri Dönüşüm Kutusu'na taşınacak.</value>
+  </data>
+  <data name="Delete_Confirm" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Dialog_Save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="Ownership_Title" xml:space="preserve">
+    <value>Sahiplik alınsın mı?</value>
+  </data>
+  <data name="Ownership_Message" xml:space="preserve">
+    <value>Bu anahtarlar Windows tarafından korunuyor. NeoContext hesabınızı bunların sahibi yapacak. Mevcut sahip ve izinler kaydedilir ve Ayarlar'dan geri yüklenebilir.{0}{0}{1}</value>
+  </data>
+  <data name="Ownership_Confirm" xml:space="preserve">
+    <value>Sahipliği al</value>
+  </data>
+  <data name="Ownership_Done_Title" xml:space="preserve">
+    <value>Tamamlandı</value>
+  </data>
+  <data name="Ownership_Done_Message" xml:space="preserve">
+    <value>Sahiplik alındı ve değişiklik uygulandı.</value>
+  </data>
+  <data name="Settings_Language_System" xml:space="preserve">
+    <value>Windows varsayılanı</value>
+  </data>
+  <data name="Settings_About_Version" xml:space="preserve">
+    <value>NeoContext {0} ({1})</value>
+  </data>
+  <data name="Settings_About_Portable" xml:space="preserve">
+    <value>taşınabilir</value>
+  </data>
+  <data name="Settings_Update_Current" xml:space="preserve">
+    <value>Kullandığınız sürüm: {0}.</value>
+  </data>
+  <data name="Settings_Update_Failed" xml:space="preserve">
+    <value>Güncellemeler denetlenemedi: {0}</value>
+  </data>
+  <data name="Settings_Update_UpToDate" xml:space="preserve">
+    <value>En son sürümü kullanıyorsunuz ({0}).</value>
+  </data>
+  <data name="Settings_Update_Available" xml:space="preserve">
+    <value>{0} sürümü yayımlandı.</value>
+  </data>
+  <data name="Settings_Update_Downloading" xml:space="preserve">
+    <value>{0} indiriliyor…</value>
+  </data>
+  <data name="Settings_Update_Downloaded" xml:space="preserve">
+    <value>{0} indirildi ve doğrulandı.</value>
+  </data>
+  <data name="Settings_Update_Rejected" xml:space="preserve">
+    <value>İndirilen dosya reddedildi: {0}</value>
+  </data>
+  <data name="Settings_Ownership_Restored" xml:space="preserve">
+    <value>Kayıtlı tüm sahipler geri yüklendi.</value>
+  </data>
+  <data name="Settings_Ownership_Failed" xml:space="preserve">
+    <value>{0} anahtar geri yüklenemedi. NeoContext'i yönetici olarak çalıştırıp yeniden deneyin.</value>
+  </data>
+  <data name="Settings_Ownership_Count" xml:space="preserve">
+    <value>Şu anda {0} anahtarın sahibi değiştirilmiş durumda.</value>
+  </data>
+</root>

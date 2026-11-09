@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminBadge.Text" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="SearchBox.PlaceholderText" xml:space="preserve">
+    <value>Search this page</value>
+  </data>
+  <data name="RefreshButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="RefreshButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>More options</value>
+  </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>More options</value>
+  </data>
+  <data name="EmptyText.Text" xml:space="preserve">
+    <value>No entries on this page.</value>
+  </data>
+  <data name="ShiftBadge.Text" xml:space="preserve">
+    <value>Shift only</value>
+  </data>
+  <data name="Menu_Rename.Text" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="Menu_OpenLocation.Text" xml:space="preserve">
+    <value>Open location</value>
+  </data>
+  <data name="Menu_CopyLocation.Text" xml:space="preserve">
+    <value>Copy location</value>
+  </data>
+  <data name="Menu_Delete.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Settings_Title.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Settings_General.Text" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Settings_Language.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Settings_Language_Hint.Text" xml:space="preserve">
+    <value>Takes effect after restarting NeoContext.</value>
+  </data>
+  <data name="Settings_Protect.Text" xml:space="preserve">
+    <value>Protect essential entries</value>
+  </data>
+  <data name="Settings_Protect_Hint.Text" xml:space="preserve">
+    <value>Prevents disabling or deleting entries such as Open, which Explorer needs to work.</value>
+  </data>
+  <data name="Settings_Updates.Text" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="Settings_AutoCheck.Text" xml:space="preserve">
+    <value>Check for updates automatically</value>
+  </data>
+  <data name="Settings_AutoCheck_Hint.Text" xml:space="preserve">
+    <value>Once a week. NeoContext only notifies you; it never installs anything on its own.</value>
+  </data>
+  <data name="Settings_Download.Content" xml:space="preserve">
+    <value>Download and verify</value>
+  </data>
+  <data name="Settings_ReleasePage.Content" xml:space="preserve">
+    <value>Release notes</value>
+  </data>
+  <data name="Settings_CheckNow.Content" xml:space="preserve">
+    <value>Check now</value>
+  </data>
+  <data name="Settings_Permissions.Text" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="Settings_Ownership.Text" xml:space="preserve">
+    <value>Restore original key owners</value>
+  </data>
+  <data name="Settings_RestoreOwnership.Content" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="Settings_DataFolder.Text" xml:space="preserve">
+    <value>Data folder (settings, logs, registry backups)</value>
+  </data>
+  <data name="Settings_OpenFolder.Content" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Settings_About.Text" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Settings_About_License.Text" xml:space="preserve">
+    <value>Free software under the GNU General Public License v3.0. Based on the ideas of ContextMenuManager by BluePointLilac.</value>
+  </data>
+  <data name="Settings_About_Repository.Content" xml:space="preserve">
+    <value>Source code</value>
+  </data>
+  <data name="Settings_About_Original.Content" xml:space="preserve">
+    <value>Original project</value>
+  </data>
+  <data name="Section_Files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="Section_Files_Description" xml:space="preserve">
+    <value>Shown when you right-click any file.</value>
+  </data>
+  <data name="Section_FilesAndFolders" xml:space="preserve">
+    <value>Files and folders</value>
+  </data>
+  <data name="Section_FilesAndFolders_Description" xml:space="preserve">
+    <value>Shown for every file and folder.</value>
+  </data>
+  <data name="Section_Folders" xml:space="preserve">
+    <value>Folders</value>
+  </data>
+  <data name="Section_Folders_Description" xml:space="preserve">
+    <value>Shown when you right-click a folder.</value>
+  </data>
+  <data name="Section_FolderBackground" xml:space="preserve">
+    <value>Folder background</value>
+  </data>
+  <data name="Section_FolderBackground_Description" xml:space="preserve">
+    <value>Shown when you right-click empty space inside a folder.</value>
+  </data>
+  <data name="Section_Desktop" xml:space="preserve">
+    <value>Desktop</value>
+  </data>
+  <data name="Section_Desktop_Description" xml:space="preserve">
+    <value>Shown when you right-click the desktop.</value>
+  </data>
+  <data name="Section_Drives" xml:space="preserve">
+    <value>Drives</value>
+  </data>
+  <data name="Section_Drives_Description" xml:space="preserve">
+    <value>Shown when you right-click a drive.</value>
+  </data>
+  <data name="Section_NewMenu" xml:space="preserve">
+    <value>New menu</value>
+  </data>
+  <data name="Section_NewMenu_Description" xml:space="preserve">
+    <value>File types in the "New" submenu.</value>
+  </data>
+  <data name="Section_WinX" xml:space="preserve">
+    <value>Win+X menu</value>
+  </data>
+  <data name="Section_WinX_Description" xml:space="preserve">
+    <value>The menu you get with Win+X or by right-clicking Start. Changes apply after restarting Explorer.</value>
+  </data>
+  <data name="Section_PackagedApps" xml:space="preserve">
+    <value>Store apps</value>
+  </data>
+  <data name="Section_PackagedApps_Description" xml:space="preserve">
+    <value>Entries added by installed MSIX and Microsoft Store apps.</value>
+  </data>
+  <data name="Kind_ShellVerb" xml:space="preserve">
+    <value>Command</value>
+  </data>
+  <data name="Kind_ShellExtension" xml:space="preserve">
+    <value>Shell extension</value>
+  </data>
+  <data name="Kind_ShellNew" xml:space="preserve">
+    <value>New-menu template</value>
+  </data>
+  <data name="Kind_WinX" xml:space="preserve">
+    <value>Shortcut</value>
+  </data>
+  <data name="Kind_PackagedApp" xml:space="preserve">
+    <value>App extension</value>
+  </data>
+  <data name="WinX_Group" xml:space="preserve">
+    <value>Group {0}</value>
+  </data>
+  <data name="Scope_CurrentUser" xml:space="preserve">
+    <value>Current user</value>
+  </data>
+  <data name="Scope_AllUsers" xml:space="preserve">
+    <value>All users</value>
+  </data>
+  <data name="Action_RestartExplorer" xml:space="preserve">
+    <value>Restart Explorer</value>
+  </data>
+  <data name="Action_RestartElevated" xml:space="preserve">
+    <value>Restart as administrator</value>
+  </data>
+  <data name="Action_TakeOwnership" xml:space="preserve">
+    <value>Take ownership and retry</value>
+  </data>
+  <data name="Action_OpenRelease" xml:space="preserve">
+    <value>View release</value>
+  </data>
+  <data name="Error_NotFound" xml:space="preserve">
+    <value>The entry no longer exists</value>
+  </data>
+  <data name="Error_RequiresElevation" xml:space="preserve">
+    <value>Administrator rights needed</value>
+  </data>
+  <data name="Error_AccessDenied" xml:space="preserve">
+    <value>Access denied</value>
+  </data>
+  <data name="Error_Protected" xml:space="preserve">
+    <value>Protected entry</value>
+  </data>
+  <data name="Error_Protected_Message" xml:space="preserve">
+    <value>"{0}" is needed for Explorer to work and is protected. You can turn protection off in Settings.</value>
+  </data>
+  <data name="Error_InvalidInput" xml:space="preserve">
+    <value>Invalid input</value>
+  </data>
+  <data name="Error_NotSupported" xml:space="preserve">
+    <value>Not supported for this entry</value>
+  </data>
+  <data name="Error_Network" xml:space="preserve">
+    <value>Network error</value>
+  </data>
+  <data name="Error_Integrity" xml:space="preserve">
+    <value>Verification failed</value>
+  </data>
+  <data name="Error_Unexpected" xml:space="preserve">
+    <value>Something went wrong</value>
+  </data>
+  <data name="Notice_RestartExplorer_Title" xml:space="preserve">
+    <value>Change saved</value>
+  </data>
+  <data name="Notice_RestartExplorer_Message" xml:space="preserve">
+    <value>Explorer shows this change after it restarts.</value>
+  </data>
+  <data name="Notice_Update_Title" xml:space="preserve">
+    <value>Update available</value>
+  </data>
+  <data name="Notice_Update_Message" xml:space="preserve">
+    <value>NeoContext {0} is available.</value>
+  </data>
+  <data name="Rename_Title" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="Rename_Hint" xml:space="preserve">
+    <value>Up to {0} characters.</value>
+  </data>
+  <data name="Delete_Title" xml:space="preserve">
+    <value>Delete entry?</value>
+  </data>
+  <data name="Delete_Message_Registry" xml:space="preserve">
+    <value>"{0}" will be removed. A .reg backup is saved first in {1}; double-click it to restore.</value>
+  </data>
+  <data name="Delete_Message_File" xml:space="preserve">
+    <value>"{0}" will be moved to the Recycle Bin.</value>
+  </data>
+  <data name="Delete_Confirm" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Dialog_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Ownership_Title" xml:space="preserve">
+    <value>Take ownership?</value>
+  </data>
+  <data name="Ownership_Message" xml:space="preserve">
+    <value>These keys are protected by Windows. NeoContext will make your account their owner. The current owner and permissions are saved, and you can restore them in Settings.{0}{0}{1}</value>
+  </data>
+  <data name="Ownership_Confirm" xml:space="preserve">
+    <value>Take ownership</value>
+  </data>
+  <data name="Ownership_Done_Title" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="Ownership_Done_Message" xml:space="preserve">
+    <value>Ownership was taken and the change was applied.</value>
+  </data>
+  <data name="Settings_Language_System" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
+  <data name="Settings_About_Version" xml:space="preserve">
+    <value>NeoContext {0} ({1})</value>
+  </data>
+  <data name="Settings_About_Portable" xml:space="preserve">
+    <value>portable</value>
+  </data>
+  <data name="Settings_Update_Current" xml:space="preserve">
+    <value>You have version {0}.</value>
+  </data>
+  <data name="Settings_Update_Failed" xml:space="preserve">
+    <value>Could not check for updates: {0}</value>
+  </data>
+  <data name="Settings_Update_UpToDate" xml:space="preserve">
+    <value>You have the latest version ({0}).</value>
+  </data>
+  <data name="Settings_Update_Available" xml:space="preserve">
+    <value>Version {0} is available.</value>
+  </data>
+  <data name="Settings_Update_Downloading" xml:space="preserve">
+    <value>Downloading {0}…</value>
+  </data>
+  <data name="Settings_Update_Downloaded" xml:space="preserve">
+    <value>{0} was downloaded and verified.</value>
+  </data>
+  <data name="Settings_Update_Rejected" xml:space="preserve">
+    <value>The download was rejected: {0}</value>
+  </data>
+  <data name="Settings_Ownership_Restored" xml:space="preserve">
+    <value>All saved owners were restored.</value>
+  </data>
+  <data name="Settings_Ownership_Failed" xml:space="preserve">
+    <value>{0} key(s) could not be restored. Run NeoContext as administrator and try again.</value>
+  </data>
+  <data name="Settings_Ownership_Count" xml:space="preserve">
+    <value>{0} key(s) currently have a changed owner.</value>
+  </data>
+</root>

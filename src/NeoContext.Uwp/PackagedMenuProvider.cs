@@ -44,7 +44,7 @@ public sealed class PackagedMenuProvider(IPackageSource packages, BlockedShellEx
             foreach (var verbs in byClass)
             {
                 var clsid = verbs.Key;
-                var itemTypes = string.Join(", ", verbs.Select(v => v.ItemType).Distinct(StringComparer.OrdinalIgnoreCase));
+                var itemTypes = Summarize(verbs.Select(v => v.ItemType).Distinct(StringComparer.OrdinalIgnoreCase).ToList());
                 var className = verbs.Select(v => v.ClassDisplayName).FirstOrDefault(n => n is not null);
 
                 entries.Add(new ContextMenuEntry(
@@ -57,13 +57,19 @@ public sealed class PackagedMenuProvider(IPackageSource packages, BlockedShellEx
                     Location: package.InstalledPath,
                     Capabilities: EntryCapabilities.Toggle)
                 {
-                    Detail = $"{package.FamilyName} · {itemTypes}",
+                    Detail = itemTypes,
                 });
             }
         }
 
         return entries;
     }
+
+    /// <summary>"*, Directory" stays as is; long lists of extensions become ".jpg, .png, .gif +40".</summary>
+    internal static string Summarize(IReadOnlyList<string> itemTypes, int shown = 3) =>
+        itemTypes.Count <= shown + 1
+            ? string.Join(", ", itemTypes)
+            : $"{string.Join(", ", itemTypes.Take(shown))} +{itemTypes.Count - shown}";
 
     public Result SetState(ContextMenuEntry entry, EntryState state)
     {

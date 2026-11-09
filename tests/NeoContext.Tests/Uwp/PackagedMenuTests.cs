@@ -92,6 +92,14 @@ public sealed class PackagedMenuTests : IDisposable
     }
 
     [Fact]
+    public void Long_item_type_lists_are_summarized()
+    {
+        Assert.Equal("*, Directory", PackagedMenuProvider.Summarize(["*", "Directory"]));
+        Assert.Equal(".a, .b, .c, .d", PackagedMenuProvider.Summarize([".a", ".b", ".c", ".d"]));
+        Assert.Equal(".a, .b, .c +3", PackagedMenuProvider.Summarize([".a", ".b", ".c", ".d", ".e", ".f"]));
+    }
+
+    [Fact]
     public void Real_package_source_lists_packages_without_elevation()
     {
         var packages = new WindowsPackageSource().GetPackages();

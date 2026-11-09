@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The WinUI 3 desktop app: views, view models and the composition root. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>$(WindowsTargetFramework)</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>NeoContext.App</RootNamespace>
+    <AssemblyName>NeoContext</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\NeoContext.ico</ApplicationIcon>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <DefaultLanguage>en-US</DefaultLanguage>
+  </PropertyGroup>
+
+  <!-- Unpackaged builds (portable zip, local runs) carry the Windows App SDK runtime with them. -->
+  <PropertyGroup Condition="'$(WindowsPackageType)' == 'None'">
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <SelfContained>true</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Manifest Include="$(ApplicationManifest)" />
+    <!-- Logos for the package and the title bar; the .ico is also loaded at runtime for the window icon. -->
+    <Content Include="Assets\*.png;Assets\*.ico" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Only the Windows App SDK components the app uses. The Microsoft.WindowsAppSDK metapackage also
+      pulls in AI and ML runtimes (onnxruntime, DirectML), which would add ~40 MB to every download.
+    -->
+    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.6.5" />
+    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.6.5" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NeoContext.Core\NeoContext.Core.csproj" />
+    <ProjectReference Include="..\NeoContext.Registry\NeoContext.Registry.csproj" />
+    <ProjectReference Include="..\NeoContext.Shell\NeoContext.Shell.csproj" />
+    <ProjectReference Include="..\NeoContext.Uwp\NeoContext.Uwp.csproj" />
+    <ProjectReference Include="..\NeoContext.Updates\NeoContext.Updates.csproj" />
+  </ItemGroup>
+
+  <!-- MSIX packaging tool support: lets dotnet build/publish produce a package. -->
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)' != 'true' and '$(EnableMsixTooling)' == 'true'">
+    <ProjectCapability Include="Msix" />
+  </ItemGroup>
+
+</Project>

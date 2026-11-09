@@ -68,7 +68,7 @@ public sealed class ShellExtensionProvider(ClassesRoots roots, IIndirectStringRe
                 Location: path.ToString(),
                 Capabilities: Capabilities)
             {
-                Detail = $"{clsid:B} · {root.Label}",
+                Detail = root.Label,
                 Command = ResolveServerPath(clsid),
             });
         }
