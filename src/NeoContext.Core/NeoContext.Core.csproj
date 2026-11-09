@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Pure domain layer: models, rules and service contracts. No Windows APIs here. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>NeoContext.Core</RootNamespace>
+  </PropertyGroup>
+
+</Project>

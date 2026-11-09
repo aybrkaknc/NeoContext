@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NeoContext.Core/NeoContext.Core.csproj" />
+    <Project Path="src/NeoContext.Registry/NeoContext.Registry.csproj" />
+    <Project Path="src/NeoContext.Shell/NeoContext.Shell.csproj" />
+    <Project Path="src/NeoContext.Updates/NeoContext.Updates.csproj" />
+    <Project Path="src/NeoContext.Uwp/NeoContext.Uwp.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NeoContext.Tests/NeoContext.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Registry-backed entry providers (shell verbs, shell extensions, ShellNew) and key ownership. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>NeoContext.Registry</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NeoContext.Core\NeoContext.Core.csproj" />
+  </ItemGroup>
+
+</Project>

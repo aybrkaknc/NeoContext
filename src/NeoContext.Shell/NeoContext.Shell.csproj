@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Shell file formats and APIs: .lnk shortcuts, desktop.ini, the Win+X menu and indirect strings. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RootNamespace>NeoContext.Shell</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NeoContext.Core\NeoContext.Core.csproj" />
+  </ItemGroup>
+
+</Project>
