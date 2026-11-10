@@ -1119,4 +1119,10 @@
   <data name="Analysis_Invalid_Message" xml:space="preserve">
     <value>Bu yolda dosya veya klasör yok.</value>
   </data>
+  <data name="PerceivedType_None" xml:space="preserve">
+    <value>Yok</value>
+  </data>
+  <data name="FileType_PerceivedHeader" xml:space="preserve">
+    <value>{0} için algılanan tür (bu kullanıcı için)</value>
+  </data>
 </root>

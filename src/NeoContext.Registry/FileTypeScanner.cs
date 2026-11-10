@@ -103,6 +103,26 @@ public sealed class FileTypeScanner(
         return [.. classKeys.Distinct(StringComparer.OrdinalIgnoreCase).SelectMany(key => ScanClass(MenuSection.Analysis, key, key))];
     }
 
+    /// <summary>The perceived type of an extension as Explorer sees it, or null when it has none.</summary>
+    public string? GetPerceivedType(string extension) =>
+        RegistryStore.GetString(roots.Merged / extension, "PerceivedType") is { Length: > 0 } type ? type.Trim() : null;
+
+    /// <summary>
+    /// Sets the perceived type of an extension for this user (null removes the per-user value). A machine-wide
+    /// value still applies when there is no per-user one.
+    /// </summary>
+    public Core.Results.Result SetPerceivedType(string extension, string? type)
+    {
+        var path = roots.Writable[0].Path / extension;
+        if (type is null)
+        {
+            var removed = RegistryStore.DeleteValues(path, "PerceivedType");
+            return removed.Error?.Kind == Core.Results.ErrorKind.NotFound ? Core.Results.Result.Success() : removed;
+        }
+
+        return RegistryStore.SetString(path, "PerceivedType", type.ToLowerInvariant(), create: true);
+    }
+
     /// <summary>Every extension registered on this PC, for suggestions in the picker.</summary>
     public IReadOnlyList<string> KnownExtensions()
     {

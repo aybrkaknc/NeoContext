@@ -118,6 +118,10 @@
                                     Command="{x:Bind ViewModel.ClearExtensionsCommand}"
                                     Visibility="{x:Bind ToVisible(ViewModel.HasSelectedExtensions), Mode=OneWay}" />
                         </Grid>
+                        <ComboBox Header="{x:Bind ViewModel.ExtensionPerceivedHeader, Mode=OneWay}" MinWidth="260"
+                                  ItemsSource="{x:Bind ViewModel.ExtensionPerceivedChoices}" DisplayMemberPath="Label"
+                                  SelectedIndex="{x:Bind ViewModel.ExtensionPerceivedIndex, Mode=TwoWay}"
+                                  Visibility="{x:Bind ToVisible(ViewModel.HasSingleExtension), Mode=OneWay}" />
                     </StackPanel>
 
                     <!-- Perceived type and folder type pickers -->

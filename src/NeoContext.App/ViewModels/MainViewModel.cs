@@ -99,7 +99,16 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     /// <summary>Only the pages that map to registry classes can take a new verb or handler.</summary>
     public bool CanCreate => SelectedSection is { } section
-        && (ShellScopes.Keys.ContainsKey(section.Section) || section.Section is MenuSection.SendTo or MenuSection.OpenWith or MenuSection.WinX or MenuSection.GuidBlocked);
+        && (ShellScopes.Keys.ContainsKey(section.Section) || PickedClassKey is not null
+            || section.Section is MenuSection.SendTo or MenuSection.OpenWith or MenuSection.WinX or MenuSection.GuidBlocked);
+
+    /// <summary>The class shown on the perceived or folder type page, once a type is picked.</summary>
+    private string? PickedClassKey => SelectedSection?.Section switch
+    {
+        MenuSection.PerceivedType when _perceivedType is { } type => $@"SystemFileAssociations\{type}",
+        MenuSection.DirectoryType when _folderType is { } type => $@"SystemFileAssociations\Directory.{type}",
+        _ => null,
+    };
 
     public bool IsWinXPage => SelectedSection?.Section == MenuSection.WinX;
 
@@ -225,8 +234,56 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     private Task PickerChangedAsync()
     {
         OnPropertyChanged(nameof(PickerSummary));
+        OnPropertyChanged(nameof(CanCreate));
         OnPropertyChanged(nameof(EmptyMessage));
         return RefreshAsync();
+    }
+
+    /// <summary>"None" first, then the perceived types; offered when exactly one extension is picked.</summary>
+    public IReadOnlyList<PickerChoice> ExtensionPerceivedChoices { get; } =
+        [new PickerChoice("", Strings.Get("PerceivedType_None")), .. FileTypeScanner.PerceivedTypes.Select(t => new PickerChoice(t, Strings.Get($"PerceivedType_{t}")))];
+
+    public bool HasSingleExtension => _extensions.Length == 1;
+
+    public string ExtensionPerceivedHeader => HasSingleExtension ? Strings.Format("FileType_PerceivedHeader", _extensions[0]) : "";
+
+    private bool _loadingPerceived;
+
+    [ObservableProperty]
+    public partial int ExtensionPerceivedIndex { get; set; }
+
+    partial void OnExtensionPerceivedIndexChanged(int value)
+    {
+        if (_loadingPerceived || !HasSingleExtension || value < 0)
+        {
+            return;
+        }
+
+        _ = SetExtensionPerceivedAsync(_extensions[0], value == 0 ? null : ExtensionPerceivedChoices[value].Key);
+    }
+
+    private async Task SetExtensionPerceivedAsync(string extension, string? type)
+    {
+        var result = await RunBusyAsync(() => host.FileTypes.SetPerceivedType(extension, type));
+        if (!result.IsSuccess)
+        {
+            AppLog.Warn($"Could not set the perceived type of {extension}: {result.Error}");
+            ShowNotice(InfoBarSeverity.Error, Strings.Get($"Error_{result.Error!.Kind}"), Describe(result.Error), NoticeAction.None);
+            LoadExtensionPerceived();
+            return;
+        }
+
+        await RefreshAsync();
+    }
+
+    /// <summary>Shows the stored perceived type of the single picked extension without writing it back.</summary>
+    private void LoadExtensionPerceived()
+    {
+        _loadingPerceived = true;
+        var current = HasSingleExtension ? host.FileTypes.GetPerceivedType(_extensions[0]) : null;
+        var index = current is null ? 0 : ExtensionPerceivedChoices.ToList().FindIndex(c => string.Equals(c.Key, current, StringComparison.OrdinalIgnoreCase));
+        ExtensionPerceivedIndex = index < 0 ? 0 : index;
+        _loadingPerceived = false;
     }
 
     public bool HasSelectedExtensions => _extensions.Length > 0;
@@ -269,6 +326,9 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         _extensions = extensions;
         OnPropertyChanged(nameof(HasSelectedExtensions));
         OnPropertyChanged(nameof(FileTypeSummary));
+        OnPropertyChanged(nameof(HasSingleExtension));
+        OnPropertyChanged(nameof(ExtensionPerceivedHeader));
+        LoadExtensionPerceived();
         OnPropertyChanged(nameof(EmptyMessage));
         await RefreshAsync();
     }
@@ -555,7 +615,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
             var pool = _all.Where(e => e.Section == MenuSection.CommandStore)
                 .OrderBy(e => e.DisplayName, StringComparer.CurrentCultureIgnoreCase)
                 .Select(e => new SharedChoiceViewModel(e.Key, e.DisplayName));
-            Creating = new NewItemViewModel(section.Section, pool);
+            Creating = new NewItemViewModel(section.Section, pool) { ClassKey = PickedClassKey };
         }
     }
 
@@ -607,7 +667,9 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
                     return;
                 }
 
-                create = () => host.Creator.CreateHandler(creating.Section, clsid, creating.AllUsers);
+                create = creating.ClassKey is { } handlerClass
+                    ? () => host.Creator.CreateHandler(handlerClass, clsid, creating.AllUsers)
+                    : () => host.Creator.CreateHandler(creating.Section, clsid, creating.AllUsers);
             }
         }
         else
@@ -618,7 +680,9 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
             }
 
             name = verb.Name;
-            create = () => host.Creator.CreateVerb(creating.Section, verb, creating.AllUsers);
+            create = creating.ClassKey is { } verbClass
+                ? () => host.Creator.CreateVerb(verbClass, verb, creating.AllUsers)
+                : () => host.Creator.CreateVerb(creating.Section, verb, creating.AllUsers);
         }
 
         Creating = null;

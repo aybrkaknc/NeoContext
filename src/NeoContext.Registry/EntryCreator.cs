@@ -16,13 +16,14 @@ public sealed class EntryCreator(ClassesRoots roots, string scriptsDirectory)
     /// <summary>True when the CLSID is registered on this PC.</summary>
     public bool ClsidExists(Guid clsid) => RegistryStore.Exists(roots.Merged / "CLSID" / clsid.ToString("B"));
 
-    public Result CreateVerb(MenuSection section, NewVerb verb, bool allUsers)
-    {
-        if (!TryGetClassKey(section, out var classKey))
-        {
-            return Result.Failure(ErrorKind.NotSupported, $"Nothing can be added to {section}.");
-        }
+    public Result CreateVerb(MenuSection section, NewVerb verb, bool allUsers) =>
+        TryGetClassKey(section, out var classKey)
+            ? CreateVerb(classKey, verb, allUsers)
+            : Result.Failure(ErrorKind.NotSupported, $"Nothing can be added to {section}.");
 
+    /// <summary>Creates the verb under <c>&lt;class key&gt;\shell</c>, for pages whose class is picked at run time.</summary>
+    public Result CreateVerb(string classKey, NewVerb verb, bool allUsers)
+    {
         var shell = PickRoot(allUsers).Path / classKey / "shell";
         var keyName = ShellCommands.KeyName(verb.Name, name => RegistryStore.Exists(shell / name));
         var path = shell / keyName;
@@ -85,13 +86,13 @@ public sealed class EntryCreator(ClassesRoots roots, string scriptsDirectory)
         return result;
     }
 
-    public Result CreateHandler(MenuSection section, Guid clsid, bool allUsers)
-    {
-        if (!TryGetClassKey(section, out var classKey))
-        {
-            return Result.Failure(ErrorKind.NotSupported, $"Nothing can be added to {section}.");
-        }
+    public Result CreateHandler(MenuSection section, Guid clsid, bool allUsers) =>
+        TryGetClassKey(section, out var classKey)
+            ? CreateHandler(classKey, clsid, allUsers)
+            : Result.Failure(ErrorKind.NotSupported, $"Nothing can be added to {section}.");
 
+    public Result CreateHandler(string classKey, Guid clsid, bool allUsers)
+    {
         var path = PickRoot(allUsers).Path / classKey / "shellex" / ShellExtensionProvider.ActiveKey / clsid.ToString("B");
         return RegistryStore.Exists(path)
             ? Result.Failure(ErrorKind.InvalidInput, $"The handler {clsid:B} is already listed here.")

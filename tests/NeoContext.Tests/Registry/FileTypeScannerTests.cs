@@ -89,4 +89,30 @@ public sealed class FileTypeScannerTests : IDisposable
         Assert.Empty(NeoContext.Core.Rules.EntryFilter.Apply([entry], "Findable", null));
         Assert.Single(NeoContext.Core.Rules.EntryFilter.Apply([entry], "", MenuSection.Analysis));
     }
+
+    [Fact]
+    public void The_perceived_type_of_an_extension_is_written_for_this_user_and_removed_again()
+    {
+        var scanner = Scanner();
+        Assert.Null(scanner.GetPerceivedType(".xyz"));
+
+        Assert.True(scanner.SetPerceivedType(".xyz", "Image").IsSuccess);
+        Assert.Equal("image", scanner.GetPerceivedType(".xyz"));
+
+        Assert.True(scanner.SetPerceivedType(".xyz", null).IsSuccess);
+        Assert.Null(scanner.GetPerceivedType(".xyz"));
+        Assert.True(scanner.SetPerceivedType(".none", null).IsSuccess); // nothing to remove
+    }
+
+    [Fact]
+    public void A_verb_can_be_created_under_a_class_picked_at_run_time()
+    {
+        var creator = new EntryCreator(_sandbox.Classes, _folder);
+        var verb = new NewVerb("Resize", "resize.exe \"%1\"", null, null, new VerbAttributes(), []);
+
+        Assert.True(creator.CreateVerb(@"SystemFileAssociations\Image", verb, allUsers: false).IsSuccess);
+
+        var entry = Assert.Single(Scanner().ScanClass(MenuSection.PerceivedType, @"SystemFileAssociations\Image", "Image"));
+        Assert.Equal("Resize", entry.DisplayName);
+    }
 }

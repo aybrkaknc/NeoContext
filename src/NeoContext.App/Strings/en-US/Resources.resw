@@ -1119,4 +1119,10 @@
   <data name="Analysis_Invalid_Message" xml:space="preserve">
     <value>There is no file or folder at that path.</value>
   </data>
+  <data name="PerceivedType_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="FileType_PerceivedHeader" xml:space="preserve">
+    <value>Perceived type of {0} (for this user)</value>
+  </data>
 </root>

@@ -46,6 +46,9 @@ public sealed partial class NewItemViewModel : ObservableObject
 
     public MenuSection Section { get; }
 
+    /// <summary>The class to write to on pages whose class is picked at run time (perceived and folder types); null otherwise.</summary>
+    public string? ClassKey { get; init; }
+
     /// <summary>True on pages that only take a shell extension by GUID (Blocked GUIDs): no kind choice, per-user only.</summary>
     public bool HandlerOnly { get; init; }
 

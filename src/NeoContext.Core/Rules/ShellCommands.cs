@@ -11,8 +11,9 @@ public static class ShellCommands
     /// </summary>
     public static string SelectionToken(MenuSection section) => section switch
     {
-        MenuSection.Files or MenuSection.FilesAndFolders => "\"%1\"",
-        MenuSection.Directory or MenuSection.Folder or MenuSection.FolderBackground or MenuSection.Drives or MenuSection.Library => "\"%V\"",
+        MenuSection.Files or MenuSection.FilesAndFolders or MenuSection.Unknown or MenuSection.PerceivedType => "\"%1\"",
+        MenuSection.Directory or MenuSection.Folder or MenuSection.FolderBackground or MenuSection.Drives or MenuSection.Library
+            or MenuSection.DirectoryType => "\"%V\"",
         _ => "",
     };
 
