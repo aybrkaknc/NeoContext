@@ -131,6 +131,8 @@ public sealed class ProviderTests : IDisposable
         var cache = _sandbox.Create("ExplorerCache", ("Classes", ".neo"));
         var provider = new ShellNewProvider(_sandbox.Classes, NullIndirectStringResolver.Instance, cache);
 
+        Assert.True(provider.ChangesRequireExplorerRestart);
+
         var entry = Single(provider.Load(), ".neo");
         Assert.Equal("Neo document", entry.DisplayName);
         Assert.Equal(MenuSection.NewMenu, entry.Section);

@@ -32,7 +32,12 @@ public sealed class ShellNewProvider(ClassesRoots roots, IIndirectStringResolver
 
     public EntryKind Kind => EntryKind.ShellNew;
 
-    public bool ChangesRequireExplorerRestart => false;
+    /// <summary>
+    /// Explorer keeps the New-menu type list in memory while it runs, so a change is only picked up
+    /// after Explorer restarts. Clearing the persisted cache (see <see cref="InvalidateExplorerCache"/>)
+    /// does not refresh a running Explorer; it only makes the restart rebuild the list from the registry.
+    /// </summary>
+    public bool ChangesRequireExplorerRestart => true;
 
     public Result<IReadOnlyList<ContextMenuEntry>> Load()
     {
@@ -146,6 +151,6 @@ public sealed class ShellNewProvider(ClassesRoots roots, IIndirectStringResolver
         return result;
     }
 
-    /// <summary>Removes Explorer's cached type list so the next "New" menu reflects the change.</summary>
+    /// <summary>Removes Explorer's persisted type list so a restarted Explorer rebuilds it from the registry.</summary>
     private void InvalidateExplorerCache() => RegistryStore.DeleteValues(_explorerCache, "Classes");
 }

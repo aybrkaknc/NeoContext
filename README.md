@@ -110,7 +110,7 @@ the right next step (restart as administrator, take ownership, restart Explorer)
 
 - Windows 11 shows registry-based entries under **Show more options**; NeoContext manages them there.
   Entries in the new Windows 11 menu come from packaged apps and are on the **Store apps** page.
-- Win+X and Store-app changes appear after Explorer restarts; NeoContext offers to restart it.
+- New-menu (ShellNew), Win+X and Store-app changes appear after Explorer restarts; NeoContext offers to restart it.
 - New-menu items cannot be renamed, because that would rename the file type everywhere in Windows.
 - Renaming a shell extension is not supported; its name comes from the COM class.
 
