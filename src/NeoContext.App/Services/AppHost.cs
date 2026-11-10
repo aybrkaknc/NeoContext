@@ -1,4 +1,6 @@
+using System.Globalization;
 using NeoContext.Core.Abstractions;
+using NeoContext.Core.Dictionaries;
 using NeoContext.Core.Rules;
 using NeoContext.Core.Services;
 using NeoContext.Core.Settings;
@@ -37,6 +39,13 @@ public sealed class AppHost
         OpenWith = new OpenWithProvider(classes, resolver);
         WinX = new WinXProvider(WinXProvider.DefaultRoot, resolver, WinXPathGeneralizer.ForCurrentSystem());
 
+        // The dictionary texts follow the app language (settings), otherwise the Windows language.
+        var dictionaryCulture = CultureInfo.GetCultureInfo(string.IsNullOrEmpty(Settings.Language) ? CultureInfo.CurrentUICulture.Name : Settings.Language);
+        var enhance = new EnhanceMenuProvider(
+            new EnhanceMenuStore(classes, Path.Combine(AppInfo.DataDirectory, "Scripts")),
+            resolver,
+            () => EnhanceMenus.LoadEmbedded(dictionaryCulture));
+
         IEntryProvider[] providers =
         [
             verbs,
@@ -45,6 +54,7 @@ public sealed class AppHost
             WinX,
             SendTo,
             OpenWith,
+            enhance,
             new PackagedMenuProvider(new WindowsPackageSource(), BlockedShellExtensions.Default),
         ];
 

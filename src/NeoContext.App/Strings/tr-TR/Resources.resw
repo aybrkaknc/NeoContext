@@ -729,6 +729,24 @@
   <data name="NewTarget_NoGroups" xml:space="preserve">
     <value>Win+X grubu bulunamadı.</value>
   </data>
+  <data name="Section_Enhance" xml:space="preserve">
+    <value>Hazır menüler</value>
+  </data>
+  <data name="Section_Enhance_Description" xml:space="preserve">
+    <value>Yerleşik sözlükten tek tıkla açabileceğiniz yararlı menü öğeleri. Birini kapatmak onu yeniden kaldırır.</value>
+  </data>
+  <data name="Kind_Enhance" xml:space="preserve">
+    <value>Hazır öğe</value>
+  </data>
+  <data name="Desc_From_Enhance" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Desc_Generic_Enhance" xml:space="preserve">
+    <value>Hazır bir menü öğesi. Eklediği komutu görmek için ayrıntıları açın.</value>
+  </data>
+  <data name="Group_OtherRules" xml:space="preserve">
+    <value>Diğer kurallar</value>
+  </data>
   <data name="WinX_Group" xml:space="preserve">
     <value>Grup {0}</value>
   </data>

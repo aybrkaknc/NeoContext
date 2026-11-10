@@ -6,4 +6,9 @@
     <RootNamespace>NeoContext.Core</RootNamespace>
   </PropertyGroup>
 
+  <!-- Dictionaries that ship with the app (ContextMenuManager schema, GPL-3.0, with Turkish texts added). -->
+  <ItemGroup>
+    <EmbeddedResource Include="Dictionaries\*.xml" LogicalName="NeoContext.Dictionaries.%(Filename)%(Extension)" />
+  </ItemGroup>
+
 </Project>

@@ -214,6 +214,7 @@ public sealed partial class EntryViewModel : ObservableObject
     {
         EntryKind.SendTo => "",
         EntryKind.OpenWith => "",
+        EntryKind.Enhance => "",
         EntryKind.ShellVerb => "",
         EntryKind.ShellExtension => "",
         EntryKind.ShellNew => "",

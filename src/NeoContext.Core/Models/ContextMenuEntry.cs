@@ -21,6 +21,9 @@ public enum EntryKind
     /// <summary>An app registered under <c>Applications\&lt;exe&gt;</c> for the "Open with" menu.</summary>
     OpenWith,
 
+    /// <summary>A ready-made menu item from the dictionary, switched on by writing its registry keys.</summary>
+    Enhance,
+
     /// <summary>A context menu verb declared by a packaged (MSIX/UWP) app.</summary>
     PackagedApp,
 }
@@ -73,6 +76,9 @@ public enum MenuSection
 
     /// <summary>The "Open with" submenu.</summary>
     OpenWith,
+
+    /// <summary>Ready-made menu items from the dictionary.</summary>
+    Enhance,
 
     /// <summary>The Win+X menu.</summary>
     WinX,

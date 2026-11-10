@@ -36,6 +36,7 @@ public sealed class SectionItem(MenuSection section, string glyph)
             new(MenuSection.PackagedApps, ""),
         ]),
         new("Group_FileTypes", "", [new(MenuSection.FileTypes, "")]),
+        new("Group_OtherRules", "", [new(MenuSection.Enhance, "")]),
     ];
 
     public static IReadOnlyList<SectionItem> All { get; } = [.. Groups.SelectMany(g => g.Items)];

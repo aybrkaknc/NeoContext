@@ -232,13 +232,28 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     private void ApplyFilter()
     {
-        Entries.Clear();
-
         // A search looks through every section, so each row also shows which one it belongs to.
         var searching = IsSearching;
-        foreach (var entry in EntryFilter.Apply(_all, SearchText, SelectedSection?.Section))
+        var rows = EntryFilter.Apply(_all, SearchText, SelectedSection?.Section)
+            .Select(entry => new EntryViewModel(entry, this, showSection: searching, query: searching ? SearchText : ""))
+            .ToList();
+
+        // After a toggle the same rows come back in the same order. Replacing them one by one keeps the list's
+        // scroll position; clearing the list would jump back to the top.
+        if (rows.Count == Entries.Count && rows.Select((row, i) => row.Entry.Id == Entries[i].Entry.Id).All(same => same))
         {
-            Entries.Add(new EntryViewModel(entry, this, showSection: searching, query: searching ? SearchText : ""));
+            for (var i = 0; i < rows.Count; i++)
+            {
+                Entries[i] = rows[i];
+            }
+        }
+        else
+        {
+            Entries.Clear();
+            foreach (var row in rows)
+            {
+                Entries.Add(row);
+            }
         }
 
         IsEmpty = Entries.Count == 0;

@@ -38,14 +38,21 @@ public static class ShellCommands
     /// </summary>
     public static string ScriptContent(NewVerbScript script)
     {
-        var lines = new List<string>
+        var lines = new List<string> { "param([string]$Target)" };
+
+        // A template marks where the clicked item goes (%1, %V); otherwise the item is appended in quotes.
+        if (HasPlaceholder(script.Arguments))
         {
-            "param([string]$Target)",
-            $"$arguments = {PowerShellQuote(script.Arguments.Trim())}",
-            "if ($Target) { $arguments = ($arguments + ' \"' + $Target + '\"').Trim() }",
-            $"$start = @{{ FilePath = {PowerShellQuote(script.Program.Trim().Trim('"'))} }}",
-            "if ($arguments) { $start.ArgumentList = $arguments }",
-        };
+            lines.Add($"$arguments = {PowerShellQuote(script.Arguments.Trim())}.Replace('%1', $Target).Replace('%V', $Target).Replace('%v', $Target)");
+        }
+        else
+        {
+            lines.Add($"$arguments = {PowerShellQuote(script.Arguments.Trim())}");
+            lines.Add("if ($Target) { $arguments = ($arguments + ' \"' + $Target + '\"').Trim() }");
+        }
+
+        lines.Add($"$start = @{{ FilePath = {PowerShellQuote(script.Program.Trim().Trim('"'))} }}");
+        lines.Add("if ($arguments) { $start.ArgumentList = $arguments }");
 
         if (script.RunAsAdministrator)
         {
@@ -56,10 +63,18 @@ public static class ShellCommands
         {
             lines.Add("$start.WindowStyle = 'Hidden'");
         }
+        else if (script.Maximized)
+        {
+            lines.Add("$start.WindowStyle = 'Maximized'");
+        }
 
         lines.Add("Start-Process @start");
         return string.Join("\r\n", lines) + "\r\n";
     }
+
+    /// <summary>True when the arguments say where the clicked item goes, with %1 or %V (Explorer reads %v too).</summary>
+    public static bool HasPlaceholder(string arguments) =>
+        arguments.Contains("%1", StringComparison.Ordinal) || arguments.Contains("%V", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>PowerShell reads a single-quoted string literally, except that a quote is doubled. Typographic quotes count as quotes too.</summary>
     private static string PowerShellQuote(string text)
