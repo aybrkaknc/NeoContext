@@ -1028,6 +1028,8 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
     }
 
+    /// <summary>Restarts Explorer after asking the user. Bound to the header button and to the notice action.</summary>
+    [RelayCommand]
     private async Task RestartExplorerAsync()
     {
         // Restarting closes every open Explorer window and the taskbar for a moment, so ask first.

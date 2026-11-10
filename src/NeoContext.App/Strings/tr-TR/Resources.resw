@@ -888,6 +888,12 @@
   <data name="WinX_Group" xml:space="preserve">
     <value>Grup {0}</value>
   </data>
+  <data name="RestartExplorerBtn.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Explorer'ı yeniden başlat</value>
+  </data>
+  <data name="RestartExplorerBtn.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Explorer'ı yeniden başlat</value>
+  </data>
   <data name="State_On" xml:space="preserve">
     <value>Açık</value>
   </data>

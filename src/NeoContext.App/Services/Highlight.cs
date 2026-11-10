@@ -37,7 +37,9 @@ public static class Highlight
         var position = 0;
         while (query.Length > 0)
         {
-            var index = text.IndexOf(query, position, StringComparison.CurrentCultureIgnoreCase);
+            // Ordinal matching keeps the match the same length as the query. Culture-aware matching can
+            // match text of a different length, and the Substring below then throws.
+            var index = text.IndexOf(query, position, StringComparison.OrdinalIgnoreCase);
             if (index < 0)
             {
                 break;
