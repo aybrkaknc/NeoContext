@@ -24,6 +24,15 @@ public enum EntryKind
     /// <summary>A ready-made menu item from the dictionary, switched on by writing its registry keys.</summary>
     Enhance,
 
+    /// <summary>A setting from the "Detailed editing" dictionary, switched by registry values.</summary>
+    Detailed,
+
+    /// <summary>One of the choices for what a right-button drag and drop does by default.</summary>
+    DropEffect,
+
+    /// <summary>A shell extension listed in a <c>Shell Extensions\Blocked</c> key.</summary>
+    GuidBlocked,
+
     /// <summary>A context menu verb declared by a packaged (MSIX/UWP) app.</summary>
     PackagedApp,
 }
@@ -79,6 +88,21 @@ public enum MenuSection
 
     /// <summary>Ready-made menu items from the dictionary.</summary>
     Enhance,
+
+    /// <summary>Settings of Windows and of common programs from the dictionary.</summary>
+    Detailed,
+
+    /// <summary>The menu shown after a right-button drag and drop.</summary>
+    DragDrop,
+
+    /// <summary>The shared pool of commands (<c>CommandStore</c>) that menus can refer to.</summary>
+    CommandStore,
+
+    /// <summary>Shell extensions Explorer is told to skip.</summary>
+    GuidBlocked,
+
+    /// <summary>The <c>shell</c> and <c>shellex</c> keys under a registry key the user chose.</summary>
+    CustomPath,
 
     /// <summary>The Win+X menu.</summary>
     WinX,
@@ -179,6 +203,9 @@ public sealed record ContextMenuEntry(
 
     /// <summary>Only shown when Shift is held while right-clicking.</summary>
     public bool ExtendedOnly { get; init; }
+
+    /// <summary>True when a change to this entry only shows up after Explorer restarts, whatever its provider says.</summary>
+    public bool RestartExplorer { get; init; }
 
     /// <summary>The verb's position and flags, for entries that can be edited.</summary>
     public VerbAttributes? Attributes { get; init; }

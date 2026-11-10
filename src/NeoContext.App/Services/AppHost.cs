@@ -1,4 +1,5 @@
 using System.Globalization;
+using Microsoft.Win32;
 using NeoContext.Core.Abstractions;
 using NeoContext.Core.Dictionaries;
 using NeoContext.Core.Rules;
@@ -31,20 +32,31 @@ public sealed class AppHost
         var classes = ClassesRoots.Default;
         Protection = new ProtectionPolicy(Settings.ProtectEssentialEntries);
 
-        var verbs = new ShellVerbProvider(classes, resolver);
-        var shellExtensions = new ShellExtensionProvider(classes, resolver);
+        // The dictionary texts follow the app language (settings), otherwise the Windows language.
+        var dictionaryCulture = CultureInfo.GetCultureInfo(string.IsNullOrEmpty(Settings.Language) ? CultureInfo.CurrentUICulture.Name : Settings.Language);
+
+        // The shared command pool lives in the machine-wide registry; the custom key is whatever the user chose.
+        var commandStore = new RegistryPath(RegistryHive.LocalMachine, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell");
+        var guidInfo = GuidInfoCatalog.LoadEmbedded(dictionaryCulture);
+        var verbs = new ShellVerbProvider(classes, resolver, commandStore, () => Settings.CustomRegistryPath);
+        var shellExtensions = new ShellExtensionProvider(classes, resolver, guidInfo, () => Settings.CustomRegistryPath);
         FileTypes = new FileTypeScanner(classes, verbs, shellExtensions);
         Creator = new EntryCreator(classes, Path.Combine(AppInfo.DataDirectory, "Scripts"));
         SendTo = new SendToProvider(SendToProvider.DefaultDirectory, resolver);
         OpenWith = new OpenWithProvider(classes, resolver);
         WinX = new WinXProvider(WinXProvider.DefaultRoot, resolver, WinXPathGeneralizer.ForCurrentSystem());
 
-        // The dictionary texts follow the app language (settings), otherwise the Windows language.
-        var dictionaryCulture = CultureInfo.GetCultureInfo(string.IsNullOrEmpty(Settings.Language) ? CultureInfo.CurrentUICulture.Name : Settings.Language);
         var enhance = new EnhanceMenuProvider(
             new EnhanceMenuStore(classes, Path.Combine(AppInfo.DataDirectory, "Scripts")),
             resolver,
             () => EnhanceMenus.LoadEmbedded(dictionaryCulture));
+        Blocked = BlockedShellExtensions.Default;
+        var dropEffect = new DropEffectProvider(classes, Strings.Get);
+        var guidBlocked = new GuidBlockedProvider(Blocked, classes, resolver, guidInfo);
+        var detailed = new DetailedEditProvider(
+            new DetailedEditStore(classes),
+            resolver,
+            () => DetailedEdit.LoadEmbedded(dictionaryCulture));
 
         IEntryProvider[] providers =
         [
@@ -55,6 +67,9 @@ public sealed class AppHost
             SendTo,
             OpenWith,
             enhance,
+            detailed,
+            dropEffect,
+            guidBlocked,
             new PackagedMenuProvider(new WindowsPackageSource(), BlockedShellExtensions.Default),
         ];
 
@@ -81,6 +96,8 @@ public sealed class AppHost
     public SendToProvider SendTo { get; }
 
     public OpenWithProvider OpenWith { get; }
+
+    public BlockedShellExtensions Blocked { get; }
 
     public WinXProvider WinX { get; }
 

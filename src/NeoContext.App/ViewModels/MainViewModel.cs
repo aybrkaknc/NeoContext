@@ -50,7 +50,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     public bool IsElevated => SystemActions.IsElevated;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage), nameof(CanCreate), nameof(IsWinXPage))]
+    [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage), nameof(CanCreate), nameof(IsWinXPage), nameof(IsCustomPathPage))]
     public partial SectionItem? SelectedSection { get; set; }
 
     [ObservableProperty]
@@ -91,9 +91,16 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     public bool IsNewOpen => Creating is not null;
 
     /// <summary>Only the pages that map to registry classes can take a new verb or handler.</summary>
-    public bool CanCreate => SelectedSection is { } section && (ShellScopes.Keys.ContainsKey(section.Section) || section.Section is MenuSection.SendTo or MenuSection.OpenWith or MenuSection.WinX);
+    public bool CanCreate => SelectedSection is { } section
+        && (ShellScopes.Keys.ContainsKey(section.Section) || section.Section is MenuSection.SendTo or MenuSection.OpenWith or MenuSection.WinX or MenuSection.GuidBlocked);
 
     public bool IsWinXPage => SelectedSection?.Section == MenuSection.WinX;
+
+    public bool IsCustomPathPage => SelectedSection?.Section == MenuSection.CustomPath;
+
+    [RelayCommand]
+    private void ChooseCustomPath() =>
+        Targeting = new NewTargetViewModel(MenuSection.CustomPath) { Target = host.Settings.CustomRegistryPath };
 
     public IconPickerViewModel IconPicker { get; } = new();
 
@@ -124,10 +131,15 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     public string SectionDescription => IsSearching
         ? Strings.Format("Search_Description", Entries.Count)
-        : SelectedSection?.Description ?? "";
+        : IsCustomPathPage && host.Settings.CustomRegistryPath.Length > 0
+            ? Strings.Format("CustomPath_Current", host.Settings.CustomRegistryPath)
+            : SelectedSection?.Description ?? "";
 
     public string EmptyMessage => Strings.Get(
-        IsSearching ? "Empty_Search" : IsFileTypesPage && _extensions.Length == 0 ? "Empty_FileTypes" : "Empty_Page");
+        IsSearching ? "Empty_Search"
+        : IsFileTypesPage && _extensions.Length == 0 ? "Empty_FileTypes"
+        : IsCustomPathPage && host.Settings.CustomRegistryPath.Length == 0 ? "Empty_CustomPath"
+        : "Empty_Page");
 
     /// <summary>True on the "File types" page, which shows the extension picker.</summary>
     public bool IsFileTypesPage => SelectedSection?.Section == MenuSection.FileTypes;
@@ -423,7 +435,11 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
 
         // Shortcut pages ask for a target; registry pages ask for a verb or a handler.
-        if (section.Section == MenuSection.WinX)
+        if (section.Section == MenuSection.GuidBlocked)
+        {
+            Creating = new NewItemViewModel(section.Section) { HandlerOnly = true, TypeIndex = 1 };
+        }
+        else if (section.Section == MenuSection.WinX)
         {
             var groups = host.WinX.GroupNames()
                 .Select(name => new GroupOption(name, Strings.Format("WinX_Group", name.StartsWith("Group", StringComparison.OrdinalIgnoreCase) ? name[5..] : name)))
@@ -474,14 +490,22 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
                 return;
             }
 
-            if (!host.Creator.ClsidExists(clsid))
-            {
-                creating.Error = Strings.Get("New_ClsidMissing");
-                return;
-            }
-
             name = clsid.ToString("B");
-            create = () => host.Creator.CreateHandler(creating.Section, clsid, creating.AllUsers);
+            if (creating.Section == MenuSection.GuidBlocked)
+            {
+                // Blocking a CLSID that is not installed yet is fine, so it is not checked.
+                create = () => host.Blocked.Block(clsid);
+            }
+            else
+            {
+                if (!host.Creator.ClsidExists(clsid))
+                {
+                    creating.Error = Strings.Get("New_ClsidMissing");
+                    return;
+                }
+
+                create = () => host.Creator.CreateHandler(creating.Section, clsid, creating.AllUsers);
+            }
         }
         else
         {
@@ -530,6 +554,16 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     {
         if (Targeting is not { } form || !form.Validate())
         {
+            return;
+        }
+
+        if (form.Section == MenuSection.CustomPath)
+        {
+            host.UpdateSettings(s => s with { CustomRegistryPath = form.Target.Trim() });
+            Targeting = null;
+            await RefreshAsync();
+            OnPropertyChanged(nameof(SectionDescription));
+            OnPropertyChanged(nameof(EmptyMessage));
             return;
         }
 

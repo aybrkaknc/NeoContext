@@ -1,4 +1,5 @@
 using NeoContext.Core.Abstractions;
+using NeoContext.Core.Dictionaries;
 using NeoContext.Core.Models;
 using NeoContext.Core.Results;
 using NeoContext.Core.Rules;
@@ -13,10 +14,15 @@ namespace NeoContext.Registry.Providers;
 /// here as disabled and can be re-enabled.
 /// </para>
 /// </summary>
-public sealed class ShellExtensionProvider(ClassesRoots roots, IIndirectStringResolver resolver) : IEntryProvider
+public sealed class ShellExtensionProvider(
+    ClassesRoots roots,
+    IIndirectStringResolver resolver,
+    GuidInfoCatalog? guidInfo = null,
+    Func<string?>? customPath = null) : IEntryProvider
 {
     internal const string ActiveKey = "ContextMenuHandlers";
     internal const string DisabledKey = "-ContextMenuHandlers";
+    internal const string DragDropKey = "DragDropHandlers";
 
     private const EntryCapabilities Capabilities = EntryCapabilities.Toggle | EntryCapabilities.Delete;
 
@@ -35,24 +41,43 @@ public sealed class ShellExtensionProvider(ClassesRoots roots, IIndirectStringRe
             }
         }
 
-        return entries;
-    }
-
-    /// <summary>Handlers under <c>&lt;class key&gt;\shellex</c> in every writable root. Also used for per-extension classes.</summary>
-    public List<ContextMenuEntry> LoadClass(MenuSection section, string classKey)
-    {
-        var entries = new List<ContextMenuEntry>();
-        foreach (var root in roots.Writable)
+        foreach (var classKey in ShellScopes.DragDropClasses)
         {
-            var shellex = root.Path / classKey / "shellex";
-            AddHandlers(entries, section, root, shellex / ActiveKey, EntryState.Enabled);
-            AddHandlers(entries, section, root, shellex / DisabledKey, EntryState.Disabled);
+            entries.AddRange(LoadClass(MenuSection.DragDrop, classKey, DragDropKey));
+        }
+
+        if (RegistryPath.TryParse(customPath?.Invoke(), out var custom))
+        {
+            var shellex = custom / "shellex";
+            var label = ShellVerbProvider.ScopeLabel(custom);
+            AddHandlers(entries, MenuSection.CustomPath, label, shellex / ActiveKey, EntryState.Enabled);
+            AddHandlers(entries, MenuSection.CustomPath, label, shellex / DisabledKey, EntryState.Disabled);
         }
 
         return entries;
     }
 
-    private void AddHandlers(List<ContextMenuEntry> entries, MenuSection section, ClassesRoot root, RegistryPath handlersPath, EntryState state)
+    /// <summary>Handlers under <c>&lt;class key&gt;\shellex</c> in every writable root. Also used for per-extension classes.</summary>
+    public List<ContextMenuEntry> LoadClass(MenuSection section, string classKey) => LoadClass(section, classKey, ActiveKey);
+
+    /// <summary>
+    /// Handlers in <paramref name="handlerKey"/> (<c>ContextMenuHandlers</c> or <c>DragDropHandlers</c>) and in its
+    /// disabled twin with a leading minus sign.
+    /// </summary>
+    private List<ContextMenuEntry> LoadClass(MenuSection section, string classKey, string handlerKey)
+    {
+        var entries = new List<ContextMenuEntry>();
+        foreach (var root in roots.Writable)
+        {
+            var shellex = root.Path / classKey / "shellex";
+            AddHandlers(entries, section, root.Label, shellex / handlerKey, EntryState.Enabled);
+            AddHandlers(entries, section, root.Label, shellex / $"-{handlerKey}", EntryState.Disabled);
+        }
+
+        return entries;
+    }
+
+    private void AddHandlers(List<ContextMenuEntry> entries, MenuSection section, string label, RegistryPath handlersPath, EntryState state)
     {
         using var handlers = RegistryStore.OpenRead(handlersPath);
         if (handlers is null)
@@ -82,11 +107,11 @@ public sealed class ShellExtensionProvider(ClassesRoots roots, IIndirectStringRe
                 Location: path.ToString(),
                 Capabilities: Capabilities)
             {
-                Detail = root.Label,
+                Detail = label,
                 Command = server,
                 Description = FileDescriptions.Describe(server) ?? ClassName(clsid),
                 Publisher = FileDescriptions.Publisher(server),
-                IconLocation = InstalledApps.FindIcon(server),
+                IconLocation = guidInfo?.Find(clsid)?.Icon ?? InstalledApps.FindIcon(server),
             });
         }
     }
@@ -100,6 +125,12 @@ public sealed class ShellExtensionProvider(ClassesRoots roots, IIndirectStringRe
         if (!Guid.TryParse(keyName, out _))
         {
             return keyName;
+        }
+
+        // The dictionary names the menu item itself, which says more than the COM class name.
+        if (guidInfo?.Find(clsid) is { } info && DisplayText.FirstReadable(resolver, [.. info.Names]) is { } known)
+        {
+            return known;
         }
 
         var className = RegistryStore.GetString(roots.Merged / "CLSID" / clsid.ToString("B"), "");
@@ -122,7 +153,9 @@ public sealed class ShellExtensionProvider(ClassesRoots roots, IIndirectStringRe
             return Result.Failure(ErrorKind.InvalidInput, $"Unexpected handler location: {path}");
         }
 
-        var target = shellex.Value / (state == EntryState.Enabled ? ActiveKey : DisabledKey) / path.Name;
+        // The key the handler sits in says which pair it belongs to: ContextMenuHandlers or DragDropHandlers.
+        var activeKey = path.Parent?.Name.TrimStart('-') ?? ActiveKey;
+        var target = shellex.Value / (state == EntryState.Enabled ? activeKey : $"-{activeKey}") / path.Name;
         return RegistryStore.Move(path, target);
     }
 

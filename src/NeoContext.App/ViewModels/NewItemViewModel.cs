@@ -30,6 +30,13 @@ public sealed partial class NewItemViewModel : ObservableObject
 
     public MenuSection Section { get; }
 
+    /// <summary>True on pages that only take a shell extension by GUID (Blocked GUIDs): no kind choice, per-user only.</summary>
+    public bool HandlerOnly { get; init; }
+
+    public bool ShowTypeChoice => !HandlerOnly;
+
+    public bool ShowAllUsers => !HandlerOnly;
+
     /// <summary>What Explorer fills in for the clicked item on this page; empty when nothing is clicked.</summary>
     public string SelectionToken { get; }
 

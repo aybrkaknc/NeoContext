@@ -675,7 +675,7 @@
   <data name="NewTarget_Name.Header" xml:space="preserve">
     <value>Name in the menu (optional)</value>
   </data>
-  <data name="NewTarget_Target.Header" xml:space="preserve">
+  <data name="NewTarget_TargetHeader" xml:space="preserve">
     <value>Program, file or folder</value>
   </data>
   <data name="NewTarget_BrowseFile.Content" xml:space="preserve">
@@ -746,6 +746,105 @@
   </data>
   <data name="Group_OtherRules" xml:space="preserve">
     <value>Other rules</value>
+  </data>
+  <data name="Section_Detailed" xml:space="preserve">
+    <value>Detailed editing</value>
+  </data>
+  <data name="Section_Detailed_Description" xml:space="preserve">
+    <value>Settings of Windows and of common programs that change their menus. A program's group appears when it is installed.</value>
+  </data>
+  <data name="Kind_Detailed" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="Desc_From_Detailed" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Desc_Generic_Detailed" xml:space="preserve">
+    <value>A setting that changes how a menu or a program behaves</value>
+  </data>
+  <data name="Section_DragDrop" xml:space="preserve">
+    <value>Drag and drop</value>
+  </data>
+  <data name="Section_DragDrop_Description" xml:space="preserve">
+    <value>The default action when you drop files, and the items in the menu after a right-button drag.</value>
+  </data>
+  <data name="Section_CommandStore" xml:space="preserve">
+    <value>Public commands</value>
+  </data>
+  <data name="Section_CommandStore_Description" xml:space="preserve">
+    <value>The shared pool of commands that Windows menus refer to. Change these with care; they need administrator rights.</value>
+  </data>
+  <data name="Section_GuidBlocked" xml:space="preserve">
+    <value>Blocked GUIDs</value>
+  </data>
+  <data name="Section_GuidBlocked_Description" xml:space="preserve">
+    <value>Shell extensions Explorer is told to skip. Remove an entry to unblock it.</value>
+  </data>
+  <data name="Section_CustomPath" xml:space="preserve">
+    <value>Custom registry path</value>
+  </data>
+  <data name="Section_CustomPath_Description" xml:space="preserve">
+    <value>The shell and shellex keys under a registry key you choose.</value>
+  </data>
+  <data name="Kind_DropEffect" xml:space="preserve">
+    <value>Drop action</value>
+  </data>
+  <data name="Kind_GuidBlocked" xml:space="preserve">
+    <value>Blocked extension</value>
+  </data>
+  <data name="Desc_From_DropEffect" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Desc_Generic_DropEffect" xml:space="preserve">
+    <value>What happens when you drop files</value>
+  </data>
+  <data name="Desc_From_GuidBlocked" xml:space="preserve">
+    <value>Explorer skips: {0}</value>
+  </data>
+  <data name="Desc_Generic_GuidBlocked" xml:space="preserve">
+    <value>Explorer skips this shell extension</value>
+  </data>
+  <data name="DropEffect_Group" xml:space="preserve">
+    <value>Default action when dropping</value>
+  </data>
+  <data name="DropEffect_Default" xml:space="preserve">
+    <value>Windows decides</value>
+  </data>
+  <data name="DropEffect_Default_Tip" xml:space="preserve">
+    <value>Copies to another drive and moves on the same drive, as Windows normally does.</value>
+  </data>
+  <data name="DropEffect_Copy" xml:space="preserve">
+    <value>Always copy</value>
+  </data>
+  <data name="DropEffect_Copy_Tip" xml:space="preserve">
+    <value>Applies when you drop without holding a key. Switching it off goes back to "Windows decides".</value>
+  </data>
+  <data name="DropEffect_Move" xml:space="preserve">
+    <value>Always move</value>
+  </data>
+  <data name="DropEffect_Move_Tip" xml:space="preserve">
+    <value>Applies when you drop without holding a key. Switching it off goes back to "Windows decides".</value>
+  </data>
+  <data name="DropEffect_Link" xml:space="preserve">
+    <value>Always create a shortcut</value>
+  </data>
+  <data name="DropEffect_Link_Tip" xml:space="preserve">
+    <value>Applies when you drop without holding a key. Switching it off goes back to "Windows decides".</value>
+  </data>
+  <data name="Empty_CustomPath" xml:space="preserve">
+    <value>Choose a registry key with the button above.</value>
+  </data>
+  <data name="CustomPath_Current" xml:space="preserve">
+    <value>Key: {0}</value>
+  </data>
+  <data name="ChooseCustomPathButton.Content" xml:space="preserve">
+    <value>Choose a registry key</value>
+  </data>
+  <data name="NewTarget_RegistryPathHeader" xml:space="preserve">
+    <value>Registry key (leave empty to clear)</value>
+  </data>
+  <data name="NewTarget_RegistryPathInvalid" xml:space="preserve">
+    <value>That is not a registry path. Example: HKEY_CLASSES_ROOT\Directory</value>
   </data>
   <data name="WinX_Group" xml:space="preserve">
     <value>Group {0}</value>

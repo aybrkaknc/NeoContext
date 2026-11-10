@@ -25,7 +25,7 @@ public static class EntryFilter
             .ThenBy(e => e.Section switch
             {
                 MenuSection.WinX => $"{e.Detail}/{e.Key}",
-                MenuSection.Enhance => "", // keeps the dictionary's own order (the sort is stable)
+                MenuSection.Enhance or MenuSection.Detailed => "", // keeps the dictionary's own order (the sort is stable)
                 _ => e.DisplayName,
             }, StringComparer.CurrentCultureIgnoreCase)];
     }

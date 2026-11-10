@@ -3,6 +3,9 @@ using NeoContext.Core.Results;
 
 namespace NeoContext.Registry;
 
+/// <summary>A blocked shell extension and the list it is blocked in.</summary>
+public sealed record BlockedEntry(Guid Clsid, RegistryPath List, string Label);
+
 /// <summary>
 /// The <c>Shell Extensions\Blocked</c> lists. Explorer skips any COM shell extension whose CLSID
 /// is a value name in one of these keys. It is the supported way to hide entries that live outside
@@ -21,6 +24,29 @@ public sealed class BlockedShellExtensions(RegistryPath userList, RegistryPath m
         new RegistryPath(RegistryHive.LocalMachine, SubKey));
 
     public bool IsBlocked(Guid clsid) => Contains(userList, clsid) || Contains(machineList, clsid);
+
+    /// <summary>Every blocked CLSID with the list it is in (per-user or machine-wide).</summary>
+    public IReadOnlyList<BlockedEntry> List()
+    {
+        var found = new List<BlockedEntry>();
+        foreach (var (list, label) in new[] { (userList, ClassesRoots.CurrentUserLabel), (machineList, ClassesRoots.AllUsersLabel) })
+        {
+            using var key = RegistryStore.OpenRead(list);
+            foreach (var name in key?.GetValueNames() ?? [])
+            {
+                if (Guid.TryParse(name, out var clsid))
+                {
+                    found.Add(new BlockedEntry(clsid, list, label));
+                }
+            }
+        }
+
+        return found;
+    }
+
+    /// <summary>Removes a CLSID from one specific list.</summary>
+    public static Result Unblock(Guid clsid, RegistryPath list) =>
+        RegistryStore.Write(list, key => DeleteMatching(key, clsid));
 
     public Result Block(Guid clsid) =>
         RegistryStore.Write(userList, key => key.SetValue(Format(clsid), "", RegistryValueKind.String), create: true);

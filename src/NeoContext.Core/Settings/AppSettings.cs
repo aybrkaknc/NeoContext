@@ -25,6 +25,9 @@ public sealed record AppSettings
     /// <summary>Time of the last successful update check (UTC). Failed checks do not update it.</summary>
     public DateTimeOffset? LastUpdateCheck { get; init; }
 
+    /// <summary>The registry key chosen on the "Custom registry path" page, or empty when none is chosen.</summary>
+    public string CustomRegistryPath { get; init; } = "";
+
     /// <summary>True once the first-run welcome notice has been shown.</summary>
     public bool WelcomeShown { get; init; }
 

@@ -219,7 +219,7 @@ public static class EnhanceMenuParser
         return string.Join("\r\n", lines);
     }
 
-    private static bool Passes(XElement element, DictionaryContext context) =>
+    internal static bool Passes(XElement element, DictionaryContext context) =>
         element.Elements("OSVersion").All(v => VersionPasses(v, context))
         && element.Elements("FileExists").All(f => context.FileExists(f.Value.Trim()));
 
@@ -254,7 +254,7 @@ public static class EnhanceMenuParser
             .Concat(passing.Where(e => !current.Equals("en-US", StringComparison.OrdinalIgnoreCase) && IsCulture(e, current)));
     }
 
-    private static string? Pick(IEnumerable<XElement> elements, DictionaryContext context, Func<XElement, string?> read) =>
+    internal static string? Pick(IEnumerable<XElement> elements, DictionaryContext context, Func<XElement, string?> read) =>
         Layered(elements, context).Select(read).LastOrDefault(v => v is not null);
 
     private static string? CultureOf(XElement element) => NullIfEmpty(element.Element("Culture")?.Value);
@@ -262,5 +262,5 @@ public static class EnhanceMenuParser
     private static bool IsCulture(XElement element, string culture) =>
         CultureOf(element)?.Equals(culture, StringComparison.OrdinalIgnoreCase) == true;
 
-    private static string? NullIfEmpty(string? text) => string.IsNullOrWhiteSpace(text) ? null : text.Trim();
+    internal static string? NullIfEmpty(string? text) => string.IsNullOrWhiteSpace(text) ? null : text.Trim();
 }

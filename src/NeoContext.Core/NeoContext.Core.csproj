@@ -8,7 +8,7 @@
 
   <!-- Dictionaries that ship with the app (ContextMenuManager schema, GPL-3.0, with Turkish texts added). -->
   <ItemGroup>
-    <EmbeddedResource Include="Dictionaries\*.xml" LogicalName="NeoContext.Dictionaries.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Dictionaries\*.xml;Dictionaries\*.ini" LogicalName="NeoContext.Dictionaries.%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

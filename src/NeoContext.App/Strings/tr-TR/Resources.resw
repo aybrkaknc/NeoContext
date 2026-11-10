@@ -675,7 +675,7 @@
   <data name="NewTarget_Name.Header" xml:space="preserve">
     <value>Menüdeki ad (isteğe bağlı)</value>
   </data>
-  <data name="NewTarget_Target.Header" xml:space="preserve">
+  <data name="NewTarget_TargetHeader" xml:space="preserve">
     <value>Program, dosya veya klasör</value>
   </data>
   <data name="NewTarget_BrowseFile.Content" xml:space="preserve">
@@ -746,6 +746,105 @@
   </data>
   <data name="Group_OtherRules" xml:space="preserve">
     <value>Diğer kurallar</value>
+  </data>
+  <data name="Section_Detailed" xml:space="preserve">
+    <value>Ayrıntılı düzenleme</value>
+  </data>
+  <data name="Section_Detailed_Description" xml:space="preserve">
+    <value>Windows'un ve yaygın programların menülerini değiştiren ayarlar. Bir programın grubu, yüklüyse görünür.</value>
+  </data>
+  <data name="Kind_Detailed" xml:space="preserve">
+    <value>Ayar</value>
+  </data>
+  <data name="Desc_From_Detailed" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Desc_Generic_Detailed" xml:space="preserve">
+    <value>Bir menünün veya programın davranışını değiştiren ayar</value>
+  </data>
+  <data name="Section_DragDrop" xml:space="preserve">
+    <value>Sürükle-bırak</value>
+  </data>
+  <data name="Section_DragDrop_Description" xml:space="preserve">
+    <value>Dosyaları bıraktığınızda varsayılan eylem ve sağ tuşla sürüklemeden sonra çıkan menüdeki öğeler.</value>
+  </data>
+  <data name="Section_CommandStore" xml:space="preserve">
+    <value>Ortak komutlar</value>
+  </data>
+  <data name="Section_CommandStore_Description" xml:space="preserve">
+    <value>Windows menülerinin başvurduğu ortak komut havuzu. Dikkatli değiştirin; yönetici hakkı gerekir.</value>
+  </data>
+  <data name="Section_GuidBlocked" xml:space="preserve">
+    <value>Engellenen GUID'ler</value>
+  </data>
+  <data name="Section_GuidBlocked_Description" xml:space="preserve">
+    <value>Explorer'a atlaması söylenen kabuk uzantıları. Engeli kaldırmak için girdiyi kaldırın.</value>
+  </data>
+  <data name="Section_CustomPath" xml:space="preserve">
+    <value>Özel kayıt yolu</value>
+  </data>
+  <data name="Section_CustomPath_Description" xml:space="preserve">
+    <value>Seçtiğiniz bir kayıt defteri anahtarının altındaki shell ve shellex anahtarları.</value>
+  </data>
+  <data name="Kind_DropEffect" xml:space="preserve">
+    <value>Bırakma eylemi</value>
+  </data>
+  <data name="Kind_GuidBlocked" xml:space="preserve">
+    <value>Engellenen uzantı</value>
+  </data>
+  <data name="Desc_From_DropEffect" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="Desc_Generic_DropEffect" xml:space="preserve">
+    <value>Dosyaları bıraktığınızda ne olacağı</value>
+  </data>
+  <data name="Desc_From_GuidBlocked" xml:space="preserve">
+    <value>Explorer atlıyor: {0}</value>
+  </data>
+  <data name="Desc_Generic_GuidBlocked" xml:space="preserve">
+    <value>Explorer bu kabuk uzantısını atlıyor</value>
+  </data>
+  <data name="DropEffect_Group" xml:space="preserve">
+    <value>Bırakırken varsayılan eylem</value>
+  </data>
+  <data name="DropEffect_Default" xml:space="preserve">
+    <value>Windows karar verir</value>
+  </data>
+  <data name="DropEffect_Default_Tip" xml:space="preserve">
+    <value>Windows'un normalde yaptığı gibi başka sürücüye kopyalar, aynı sürücüde taşır.</value>
+  </data>
+  <data name="DropEffect_Copy" xml:space="preserve">
+    <value>Her zaman kopyala</value>
+  </data>
+  <data name="DropEffect_Copy_Tip" xml:space="preserve">
+    <value>Tuşa basmadan bıraktığınızda geçerlidir. Kapatmak "Windows karar verir"e döndürür.</value>
+  </data>
+  <data name="DropEffect_Move" xml:space="preserve">
+    <value>Her zaman taşı</value>
+  </data>
+  <data name="DropEffect_Move_Tip" xml:space="preserve">
+    <value>Tuşa basmadan bıraktığınızda geçerlidir. Kapatmak "Windows karar verir"e döndürür.</value>
+  </data>
+  <data name="DropEffect_Link" xml:space="preserve">
+    <value>Her zaman kısayol oluştur</value>
+  </data>
+  <data name="DropEffect_Link_Tip" xml:space="preserve">
+    <value>Tuşa basmadan bıraktığınızda geçerlidir. Kapatmak "Windows karar verir"e döndürür.</value>
+  </data>
+  <data name="Empty_CustomPath" xml:space="preserve">
+    <value>Yukarıdaki düğmeyle bir kayıt defteri anahtarı seçin.</value>
+  </data>
+  <data name="CustomPath_Current" xml:space="preserve">
+    <value>Anahtar: {0}</value>
+  </data>
+  <data name="ChooseCustomPathButton.Content" xml:space="preserve">
+    <value>Kayıt defteri anahtarı seç</value>
+  </data>
+  <data name="NewTarget_RegistryPathHeader" xml:space="preserve">
+    <value>Kayıt defteri anahtarı (temizlemek için boş bırakın)</value>
+  </data>
+  <data name="NewTarget_RegistryPathInvalid" xml:space="preserve">
+    <value>Bu bir kayıt defteri yolu değil. Örnek: HKEY_CLASSES_ROOT\Directory</value>
   </data>
   <data name="WinX_Group" xml:space="preserve">
     <value>Grup {0}</value>

@@ -49,4 +49,7 @@ public static class ShellScopes
         [MenuSection.RecycleBin] = [@"CLSID\{645FF040-5081-101B-9F08-00AA002F954E}"],
         [MenuSection.Library] = ["LibraryFolder", @"LibraryFolder\Background", "UserLibraryFolder"],
     };
+
+    /// <summary>The classes whose <c>shellex\DragDropHandlers</c> shape the menu after a right-button drag and drop.</summary>
+    public static IReadOnlyList<string> DragDropClasses { get; } = ["Folder", "Directory", "Drive", "AllFilesystemObjects"];
 }

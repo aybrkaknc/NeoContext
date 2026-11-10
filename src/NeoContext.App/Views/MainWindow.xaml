@@ -82,6 +82,8 @@
                     </Grid>
 
                     <StackPanel Grid.Row="1" Spacing="8">
+                    <Button x:Uid="ChooseCustomPathButton" HorizontalAlignment="Left" Command="{x:Bind ViewModel.ChooseCustomPathCommand}"
+                            Visibility="{x:Bind ToVisible(ViewModel.IsCustomPathPage), Mode=OneWay}" />
                     <Button x:Uid="RestoreWinXButton" HorizontalAlignment="Left" Command="{x:Bind ViewModel.RestoreWinXDefaultsCommand}"
                             Visibility="{x:Bind ToVisible(ViewModel.IsWinXPage), Mode=OneWay}" />
                     <Button x:Uid="NewItemButton" HorizontalAlignment="Left" Command="{x:Bind ViewModel.BeginNewCommand}"
@@ -312,7 +314,8 @@
                                        TextWrapping="Wrap" />
                             <ScrollViewer Grid.Row="1">
                                 <StackPanel Spacing="12" Margin="0,0,16,0">
-                                    <RadioButtons x:Uid="New_Type" SelectedIndex="{x:Bind ViewModel.Creating.TypeIndex, Mode=TwoWay}">
+                                    <RadioButtons x:Uid="New_Type" SelectedIndex="{x:Bind ViewModel.Creating.TypeIndex, Mode=TwoWay}"
+                                                  Visibility="{x:Bind ToVisible(ViewModel.Creating.ShowTypeChoice), Mode=OneWay}">
                                         <RadioButton x:Uid="New_TypeVerb" />
                                         <RadioButton x:Uid="New_TypeHandler" />
                                     </RadioButtons>
@@ -391,7 +394,8 @@
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                     </StackPanel>
 
-                                    <CheckBox x:Uid="New_AllUsers" IsChecked="{x:Bind ViewModel.Creating.AllUsers, Mode=TwoWay}" />
+                                    <CheckBox x:Uid="New_AllUsers" IsChecked="{x:Bind ViewModel.Creating.AllUsers, Mode=TwoWay}"
+                                              Visibility="{x:Bind ToVisible(ViewModel.Creating.ShowAllUsers), Mode=OneWay}" />
                                     <TextBlock Text="{x:Bind ViewModel.Creating.Error, Mode=OneWay}" TextWrapping="Wrap"
                                                Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
                                 </StackPanel>
@@ -414,13 +418,15 @@
                         <StackPanel Spacing="12">
                             <TextBlock Text="{x:Bind ViewModel.Targeting.Title, Mode=OneWay}" Style="{StaticResource SubtitleTextBlockStyle}"
                                        TextWrapping="Wrap" />
-                            <TextBox x:Uid="NewTarget_Name" Text="{x:Bind ViewModel.Targeting.Name, Mode=TwoWay}" />
+                            <TextBox x:Uid="NewTarget_Name" Text="{x:Bind ViewModel.Targeting.Name, Mode=TwoWay}"
+                                     Visibility="{x:Bind ToVisible(ViewModel.Targeting.ShowName), Mode=OneWay}" />
                             <ComboBox x:Uid="NewTarget_Group" ItemsSource="{x:Bind ViewModel.Targeting.Groups}" DisplayMemberPath="Label"
                                       SelectedIndex="{x:Bind ViewModel.Targeting.GroupIndex, Mode=TwoWay}"
                                       Visibility="{x:Bind ToVisible(ViewModel.Targeting.ShowGroup), Mode=OneWay}" />
-                            <TextBox x:Uid="NewTarget_Target" Text="{x:Bind ViewModel.Targeting.Target, Mode=TwoWay}" />
+                            <TextBox Header="{x:Bind ViewModel.Targeting.TargetHeader, Mode=OneWay}" Text="{x:Bind ViewModel.Targeting.Target, Mode=TwoWay}" />
                             <StackPanel Orientation="Horizontal" Spacing="8">
-                                <Button x:Uid="NewTarget_BrowseFile" Click="OnBrowseTargetFile" />
+                                <Button x:Uid="NewTarget_BrowseFile" Click="OnBrowseTargetFile"
+                                        Visibility="{x:Bind ToVisible(ViewModel.Targeting.ShowFileButton), Mode=OneWay}" />
                                 <Button x:Uid="NewTarget_BrowseFolder" Click="OnBrowseTargetFolder"
                                         Visibility="{x:Bind ToVisible(ViewModel.Targeting.ShowFolderButton), Mode=OneWay}" />
                             </StackPanel>

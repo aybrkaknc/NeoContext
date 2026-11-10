@@ -13,7 +13,11 @@ namespace NeoContext.Registry.Providers;
 /// alone: that value holds other flags too, and the original app wiped it.
 /// </para>
 /// </summary>
-public sealed class ShellVerbProvider(ClassesRoots roots, IIndirectStringResolver resolver) : IEntryProvider, IEntryEditor
+public sealed class ShellVerbProvider(
+    ClassesRoots roots,
+    IIndirectStringResolver resolver,
+    RegistryPath? commandStore = null,
+    Func<string?>? customPath = null) : IEntryProvider, IEntryEditor
 {
     internal const string LegacyDisable = "LegacyDisable";
     internal const string ProgrammaticAccessOnly = "ProgrammaticAccessOnly";
@@ -37,8 +41,23 @@ public sealed class ShellVerbProvider(ClassesRoots roots, IIndirectStringResolve
             }
         }
 
+        // The shared command pool, and the key the user picked on the "Custom registry path" page.
+        if (commandStore is { } store)
+        {
+            entries.AddRange(LoadVerbs(MenuSection.CommandStore, store, ClassesRoots.AllUsersLabel));
+        }
+
+        if (RegistryPath.TryParse(customPath?.Invoke(), out var custom))
+        {
+            entries.AddRange(LoadVerbs(MenuSection.CustomPath, custom / "shell", ScopeLabel(custom)));
+        }
+
         return entries;
     }
+
+    /// <summary>The scope label for a key the user chose: per-user for HKCU, otherwise machine-wide.</summary>
+    internal static string ScopeLabel(RegistryPath path) =>
+        path.Hive == Microsoft.Win32.RegistryHive.CurrentUser ? ClassesRoots.CurrentUserLabel : ClassesRoots.AllUsersLabel;
 
     /// <summary>Verbs under <c>&lt;class key&gt;\shell</c> in every writable root. Also used for per-extension classes.</summary>
     public List<ContextMenuEntry> LoadClass(MenuSection section, string classKey)
@@ -46,27 +65,35 @@ public sealed class ShellVerbProvider(ClassesRoots roots, IIndirectStringResolve
         var entries = new List<ContextMenuEntry>();
         foreach (var root in roots.Writable)
         {
-            var shellPath = root.Path / classKey / "shell";
-            using var shellKey = RegistryStore.OpenRead(shellPath);
-            if (shellKey is null)
-            {
-                continue;
-            }
+            entries.AddRange(LoadVerbs(section, root.Path / classKey / "shell", root.Label));
+        }
 
-            foreach (var verb in shellKey.GetSubKeyNames())
+        return entries;
+    }
+
+    /// <summary>The verbs directly under a <c>shell</c> key.</summary>
+    private List<ContextMenuEntry> LoadVerbs(MenuSection section, RegistryPath shellPath, string label)
+    {
+        var entries = new List<ContextMenuEntry>();
+        using var shellKey = RegistryStore.OpenRead(shellPath);
+        if (shellKey is null)
+        {
+            return entries;
+        }
+
+        foreach (var verb in shellKey.GetSubKeyNames())
+        {
+            using var verbKey = shellKey.OpenSubKey(verb);
+            if (verbKey is not null)
             {
-                using var verbKey = shellKey.OpenSubKey(verb);
-                if (verbKey is not null)
-                {
-                    entries.Add(ToEntry(section, root, shellPath / verb, verbKey));
-                }
+                entries.Add(ToEntry(section, label, shellPath / verb, verbKey));
             }
         }
 
         return entries;
     }
 
-    private ContextMenuEntry ToEntry(MenuSection section, ClassesRoot root, RegistryPath path, Microsoft.Win32.RegistryKey key)
+    private ContextMenuEntry ToEntry(MenuSection section, string label, RegistryPath path, Microsoft.Win32.RegistryKey key)
     {
         var verb = path.Name;
         var names = key.GetValueNames();
@@ -87,7 +114,8 @@ public sealed class ShellVerbProvider(ClassesRoots roots, IIndirectStringResolve
             DisplayName: displayName,
             State: disabled ? EntryState.Disabled : EntryState.Enabled,
             Location: path.ToString(),
-            Capabilities: Capabilities)
+            // The shared command pool belongs to Windows: its verbs can be switched off or edited, but not deleted.
+            Capabilities: section == MenuSection.CommandStore ? Capabilities & ~EntryCapabilities.Delete : Capabilities)
         {
             Command = command,
             Description = FileDescriptions.Describe(command),
@@ -109,7 +137,7 @@ public sealed class ShellVerbProvider(ClassesRoots roots, IIndirectStringResolve
                 ShowAsDisabledIfHidden = Has("ShowAsDisabledIfHidden"),
                 Shield = Has("HasLUAShield"),
             },
-            Detail = root.Label,
+            Detail = label,
         };
     }
 

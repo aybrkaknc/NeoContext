@@ -61,7 +61,7 @@ public sealed class ContextMenuService
 
     /// <summary>True when a change to this entry only shows up after Explorer restarts.</summary>
     public bool RequiresExplorerRestart(ContextMenuEntry entry) =>
-        _providers.TryGetValue(entry.Kind, out var provider) && provider.ChangesRequireExplorerRestart;
+        entry.RestartExplorer || (_providers.TryGetValue(entry.Kind, out var provider) && provider.ChangesRequireExplorerRestart);
 
     public Result SetState(ContextMenuEntry entry, EntryState state)
     {
