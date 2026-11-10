@@ -28,9 +28,12 @@ public sealed class ShellVerbProvider(ClassesRoots roots, IIndirectStringResolve
     public Result<IReadOnlyList<ContextMenuEntry>> Load()
     {
         var entries = new List<ContextMenuEntry>();
-        foreach (var (section, classKey) in ShellScopes.Keys)
+        foreach (var (section, classKeys) in ShellScopes.Keys)
         {
-            entries.AddRange(LoadClass(section, classKey));
+            foreach (var classKey in classKeys)
+            {
+                entries.AddRange(LoadClass(section, classKey));
+            }
         }
 
         return entries;

@@ -29,11 +29,56 @@ public sealed partial class MainWindow : Window
         }
 
         SettingsPanel.ViewModel = new SettingsViewModel(host, dialogs);
-        Navigation.SelectedItem = ViewModel.Sections[0];
+        BuildNavigation();
         _ = ViewModel.RefreshAsync();
     }
 
     public MainViewModel ViewModel { get; }
+
+    /// <summary>Fills the left menu: each group is expandable; a group with one page is shown as that page.</summary>
+    private void BuildNavigation()
+    {
+        NavigationViewItem? first = null;
+        foreach (var group in ViewModel.SectionGroups)
+        {
+            var items = group.Items.Select(CreateItem).ToList();
+            first ??= items[0];
+
+            if (items.Count == 1)
+            {
+                Navigation.MenuItems.Add(items[0]);
+                continue;
+            }
+
+            var parent = new NavigationViewItem
+            {
+                Content = group.Title,
+                Icon = new FontIcon { Glyph = group.Glyph },
+                SelectsOnInvoked = false,
+                IsExpanded = true,
+            };
+            foreach (var item in items)
+            {
+                parent.MenuItems.Add(item);
+            }
+
+            Navigation.MenuItems.Add(parent);
+        }
+
+        Navigation.SelectedItem = first;
+    }
+
+    private static NavigationViewItem CreateItem(SectionItem section)
+    {
+        var item = new NavigationViewItem
+        {
+            Content = section.Title,
+            Tag = section,
+            Icon = new FontIcon { Glyph = section.Glyph },
+        };
+        ToolTipService.SetToolTip(item, section.Description);
+        return item;
+    }
 
     public void ShowUpdateAvailable(ReleaseInfo release) => DispatcherQueue.TryEnqueue(() => ViewModel.ShowUpdateAvailable(release));
 
@@ -116,7 +161,7 @@ public sealed partial class MainWindow : Window
         SettingsPanel.Visibility = showSettings ? Visibility.Visible : Visibility.Collapsed;
         EntriesPanel.Visibility = showSettings ? Visibility.Collapsed : Visibility.Visible;
 
-        if (!showSettings && args.SelectedItem is SectionItem section)
+        if (!showSettings && args.SelectedItem is NavigationViewItem { Tag: SectionItem section })
         {
             ViewModel.SearchText = "";
             ViewModel.SelectedSection = section;

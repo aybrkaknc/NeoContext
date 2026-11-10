@@ -35,13 +35,18 @@ public sealed record ClassesRoots(IReadOnlyList<ClassesRoot> Writable, RegistryP
 /// <summary>The class key behind each context menu section.</summary>
 public static class ShellScopes
 {
-    public static IReadOnlyDictionary<MenuSection, string> Keys { get; } = new Dictionary<MenuSection, string>
+    /// <summary>A section can span several class keys (a library has three).</summary>
+    public static IReadOnlyDictionary<MenuSection, string[]> Keys { get; } = new Dictionary<MenuSection, string[]>
     {
-        [MenuSection.Files] = "*",
-        [MenuSection.FilesAndFolders] = "AllFilesystemObjects",
-        [MenuSection.Folders] = "Directory",
-        [MenuSection.FolderBackground] = @"Directory\Background",
-        [MenuSection.Desktop] = "DesktopBackground",
-        [MenuSection.Drives] = "Drive",
+        [MenuSection.Files] = ["*"],
+        [MenuSection.FilesAndFolders] = ["AllFilesystemObjects"],
+        [MenuSection.Directory] = ["Directory"],
+        [MenuSection.Folder] = ["Folder"],
+        [MenuSection.FolderBackground] = [@"Directory\Background"],
+        [MenuSection.Desktop] = ["DesktopBackground"],
+        [MenuSection.Drives] = ["Drive"],
+        [MenuSection.Computer] = [@"CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}"],
+        [MenuSection.RecycleBin] = [@"CLSID\{645FF040-5081-101B-9F08-00AA002F954E}"],
+        [MenuSection.Library] = ["LibraryFolder", @"LibraryFolder\Background", "UserLibraryFolder"],
     };
 }

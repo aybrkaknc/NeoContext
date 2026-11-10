@@ -15,17 +15,36 @@ public sealed class SectionItem(MenuSection section, string glyph)
 
     public string Description { get; } = Strings.Get($"Section_{section}_Description");
 
-    public static IReadOnlyList<SectionItem> All { get; } =
+    public static IReadOnlyList<SectionGroup> Groups { get; } =
     [
-        new(MenuSection.Files, ""),
-        new(MenuSection.FileTypes, ""),
-        new(MenuSection.Folders, ""),
-        new(MenuSection.FolderBackground, ""),
-        new(MenuSection.Desktop, ""),
-        new(MenuSection.Drives, ""),
-        new(MenuSection.FilesAndFolders, ""),
-        new(MenuSection.NewMenu, ""),
-        new(MenuSection.WinX, ""),
-        new(MenuSection.PackagedApps, ""),
+        new("Group_Home", "",
+        [
+            new(MenuSection.Files, ""),
+            new(MenuSection.Folder, ""),
+            new(MenuSection.Directory, ""),
+            new(MenuSection.FolderBackground, ""),
+            new(MenuSection.Desktop, ""),
+            new(MenuSection.Drives, ""),
+            new(MenuSection.FilesAndFolders, ""),
+            new(MenuSection.Computer, ""),
+            new(MenuSection.RecycleBin, ""),
+            new(MenuSection.Library, ""),
+            new(MenuSection.NewMenu, ""),
+            new(MenuSection.WinX, ""),
+            new(MenuSection.PackagedApps, ""),
+        ]),
+        new("Group_FileTypes", "", [new(MenuSection.FileTypes, "")]),
     ];
+
+    public static IReadOnlyList<SectionItem> All { get; } = [.. Groups.SelectMany(g => g.Items)];
+}
+
+/// <summary>A group of pages in the navigation pane. A group with a single page is shown as that page.</summary>
+public sealed class SectionGroup(string titleKey, string glyph, IReadOnlyList<SectionItem> items)
+{
+    public string Title { get; } = Strings.Get(titleKey);
+
+    public string Glyph { get; } = glyph;
+
+    public IReadOnlyList<SectionItem> Items { get; } = items;
 }

@@ -132,11 +132,41 @@
   <data name="Section_FilesAndFolders_Description" xml:space="preserve">
     <value>Her dosya ve klasör için gösterilir.</value>
   </data>
-  <data name="Section_Folders" xml:space="preserve">
-    <value>Klasörler</value>
+  <data name="Section_Directory" xml:space="preserve">
+    <value>Dizin</value>
   </data>
-  <data name="Section_Folders_Description" xml:space="preserve">
-    <value>Bir klasöre sağ tıklandığında gösterilir.</value>
+  <data name="Section_Directory_Description" xml:space="preserve">
+    <value>Diskteki gerçek bir klasöre sağ tıklandığında gösterilir (Bu Bilgisayar gibi sanal klasörler hariç).</value>
+  </data>
+  <data name="Section_Folder" xml:space="preserve">
+    <value>Klasör</value>
+  </data>
+  <data name="Section_Folder_Description" xml:space="preserve">
+    <value>Bu Bilgisayar ve Denetim Masası gibi sanal klasörler dahil, her klasör için gösterilir.</value>
+  </data>
+  <data name="Section_Computer" xml:space="preserve">
+    <value>Bu Bilgisayar</value>
+  </data>
+  <data name="Section_Computer_Description" xml:space="preserve">
+    <value>Bu Bilgisayar'a sağ tıklandığında gösterilir.</value>
+  </data>
+  <data name="Section_RecycleBin" xml:space="preserve">
+    <value>Geri Dönüşüm Kutusu</value>
+  </data>
+  <data name="Section_RecycleBin_Description" xml:space="preserve">
+    <value>Geri Dönüşüm Kutusu'na sağ tıklandığında gösterilir.</value>
+  </data>
+  <data name="Section_Library" xml:space="preserve">
+    <value>Kütüphaneler</value>
+  </data>
+  <data name="Section_Library_Description" xml:space="preserve">
+    <value>Belgeler veya Resimler gibi bir kütüphaneye sağ tıklandığında gösterilir.</value>
+  </data>
+  <data name="Group_Home" xml:space="preserve">
+    <value>Ana sayfa</value>
+  </data>
+  <data name="Group_FileTypes" xml:space="preserve">
+    <value>Dosya türleri</value>
   </data>
   <data name="Section_FolderBackground" xml:space="preserve">
     <value>Klasör arka planı</value>

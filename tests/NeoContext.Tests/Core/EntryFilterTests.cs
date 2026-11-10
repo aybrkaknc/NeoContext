@@ -14,7 +14,7 @@ public sealed class EntryFilterTests
     private readonly ContextMenuEntry[] _entries =
     [
         Entry("Open with Code", MenuSection.Files, command: @"C:\Code\code.exe ""%1"""),
-        Entry("Open in Terminal", MenuSection.Folders),
+        Entry("Open in Terminal", MenuSection.Directory),
         Entry("Scan with Defender", MenuSection.FilesAndFolders, key: "EPP"),
         Entry("Zip", MenuSection.NewMenu),
     ];
@@ -22,7 +22,7 @@ public sealed class EntryFilterTests
     [Fact]
     public void Without_a_query_a_page_shows_only_its_own_section()
     {
-        var shown = EntryFilter.Apply(_entries, "", MenuSection.Folders);
+        var shown = EntryFilter.Apply(_entries, "", MenuSection.Directory);
 
         Assert.Equal("Open in Terminal", Assert.Single(shown).DisplayName);
     }
@@ -38,7 +38,22 @@ public sealed class EntryFilterTests
     {
         var shown = EntryFilter.Apply(_entries, "open", MenuSection.NewMenu);
 
-        Assert.Equal(["Open in Terminal", "Open with Code"], shown.Select(e => e.DisplayName));
+        // Results are grouped by section (Files comes before Directory), not sorted by name across sections.
+        Assert.Equal(["Open with Code", "Open in Terminal"], shown.Select(e => e.DisplayName));
+    }
+
+    [Fact]
+    public void Search_results_inside_one_section_are_sorted_by_name()
+    {
+        ContextMenuEntry[] entries =
+        [
+            Entry("Zip", MenuSection.Files, key: "z"),
+            Entry("Archive", MenuSection.Files, key: "z"),
+        ];
+
+        var shown = EntryFilter.Apply(entries, "z", null);
+
+        Assert.Equal(["Archive", "Zip"], shown.Select(e => e.DisplayName));
     }
 
     [Theory]

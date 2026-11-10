@@ -43,7 +43,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     private string[] _extensions = [];
     private IReadOnlyList<string>? _knownExtensions;
 
-    public IReadOnlyList<SectionItem> Sections => SectionItem.All;
+    public IReadOnlyList<SectionGroup> SectionGroups => SectionItem.Groups;
 
     public ObservableCollection<EntryViewModel> Entries { get; } = [];
 

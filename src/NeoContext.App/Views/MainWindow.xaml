@@ -44,19 +44,9 @@
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="True"
             OpenPaneLength="250"
-            MenuItemsSource="{x:Bind ViewModel.Sections}"
             SelectionChanged="OnNavigationSelectionChanged">
 
-            <NavigationView.MenuItemTemplate>
-                <DataTemplate x:DataType="vm:SectionItem">
-                    <NavigationViewItem Content="{x:Bind Title}" ToolTipService.ToolTip="{x:Bind Description}">
-                        <NavigationViewItem.Icon>
-                            <FontIcon Glyph="{x:Bind Glyph}" />
-                        </NavigationViewItem.Icon>
-                    </NavigationViewItem>
-                </DataTemplate>
-            </NavigationView.MenuItemTemplate>
-
+            <!-- The page list is built in MainWindow.xaml.cs, because the groups are expandable. -->
             <Grid>
                 <!-- Entry pages -->
                 <Grid x:Name="EntriesPanel" Padding="32,16,32,0" RowSpacing="12">

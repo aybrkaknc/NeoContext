@@ -35,8 +35,11 @@ public enum MenuSection
     /// <summary>Right click on any file or folder (<c>HKCR\AllFilesystemObjects</c>).</summary>
     FilesAndFolders,
 
-    /// <summary>Right click on a folder (<c>HKCR\Directory</c>).</summary>
-    Folders,
+    /// <summary>Right click on a real folder (<c>HKCR\Directory</c>).</summary>
+    Directory,
+
+    /// <summary>Right click on any folder, virtual ones such as This PC included (<c>HKCR\Folder</c>).</summary>
+    Folder,
 
     /// <summary>Right click on the empty area inside a folder (<c>HKCR\Directory\Background</c>).</summary>
     FolderBackground,
@@ -46,6 +49,15 @@ public enum MenuSection
 
     /// <summary>Right click on a drive (<c>HKCR\Drive</c>).</summary>
     Drives,
+
+    /// <summary>Right click on "This PC".</summary>
+    Computer,
+
+    /// <summary>Right click on the Recycle Bin.</summary>
+    RecycleBin,
+
+    /// <summary>Right click on a library such as Documents or Pictures.</summary>
+    Library,
 
     /// <summary>The Explorer "New" submenu.</summary>
     NewMenu,
