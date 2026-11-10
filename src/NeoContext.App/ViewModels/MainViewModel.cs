@@ -69,6 +69,13 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     [NotifyPropertyChangedFor(nameof(IsSearching), nameof(SectionTitle), nameof(SectionDescription), nameof(EmptyMessage))]
     public partial string SearchText { get; set; } = "";
 
+    /// <summary>True when the current page lists at least one key that Windows protects. Only then is "Take ownership" shown.</summary>
+    [ObservableProperty]
+    public partial bool ShowTakeOwnership { get; set; }
+
+    // Whether each registry key needs ownership. Cached so typing in the search box does not probe the registry again.
+    private readonly Dictionary<string, bool> _needsOwnership = new(StringComparer.OrdinalIgnoreCase);
+
     [ObservableProperty]
     public partial bool IsBusy { get; set; }
 
@@ -342,9 +349,31 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     partial void OnSearchTextChanged(string value) => ApplyFilter();
 
+    /// <summary>Shows "Take ownership" only when a listed key is protected. Checks each key once per refresh.</summary>
+    private async Task UpdateTakeOwnershipAsync()
+    {
+        var missing = Entries.Select(e => e.Location).Distinct(StringComparer.OrdinalIgnoreCase)
+            .Where(location => !_needsOwnership.ContainsKey(location))
+            .ToArray();
+
+        if (missing.Length > 0)
+        {
+            var results = await Task.Run(() => missing
+                .Select(location => (location, needs: RegistryPath.TryParse(location, out var path) && host.Ownership.NeedsOwnership(path)))
+                .ToArray());
+            foreach (var (location, needs) in results)
+            {
+                _needsOwnership[location] = needs;
+            }
+        }
+
+        ShowTakeOwnership = Entries.Any(e => _needsOwnership.TryGetValue(e.Location, out var needs) && needs);
+    }
+
     [RelayCommand]
     public async Task RefreshAsync()
     {
+        _needsOwnership.Clear();
         IsBusy = true;
         try
         {
@@ -435,6 +464,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
         IsEmpty = Entries.Count == 0;
         OnPropertyChanged(nameof(SectionDescription));
+        _ = UpdateTakeOwnershipAsync();
     }
 
     /// <summary>Applies a toggle. Returns false when the switch must flip back.</summary>

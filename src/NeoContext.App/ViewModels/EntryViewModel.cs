@@ -189,11 +189,16 @@ public sealed partial class EntryViewModel : ObservableObject
         : Entry.Location;
 
     /// <summary>The short tag on the right: scope, extension, Win+X group or item types.</summary>
+    /// <summary>"On" or "Off" next to the switch, so the state is readable without knowing what the colour means.</summary>
+    public string StateText => IsEnabled ? Strings.Get("State_On") : Strings.Get("State_Off");
+
     public string Detail => Entry.Detail switch
     {
         null => "",
-        ClassesRoots.CurrentUserLabel => Strings.Get("Scope_CurrentUser"),
-        ClassesRoots.AllUsersLabel => Strings.Get("Scope_AllUsers"),
+
+        // Scope ("All users" / "Current user") is not shown: it does not help the user decide anything.
+        ClassesRoots.CurrentUserLabel => "",
+        ClassesRoots.AllUsersLabel => "",
         var group when Entry.Kind == EntryKind.WinX && group.StartsWith("Group", StringComparison.OrdinalIgnoreCase) =>
             Strings.Format("WinX_Group", group[5..]),
         var detail => detail

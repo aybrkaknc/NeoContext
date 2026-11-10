@@ -75,11 +75,23 @@
   <data name="Settings_Protect.Text" xml:space="preserve">
     <value>Protect essential entries</value>
   </data>
-  <data name="MoreCommandsButton.Content" xml:space="preserve">
+  <data name="NewItemLabel.Text" xml:space="preserve">
+    <value>New item</value>
+  </data>
+  <data name="NewItemBtn.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>New item</value>
+  </data>
+  <data name="TakeOwnershipLabel.Text" xml:space="preserve">
+    <value>Take ownership</value>
+  </data>
+  <data name="TakeOwnershipBtn.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Take ownership of protected entries</value>
+  </data>
+  <data name="MoreLabel.Text" xml:space="preserve">
     <value>More</value>
   </data>
-  <data name="TakeOwnershipPageButton.Content" xml:space="preserve">
-    <value>Take ownership of protected entries</value>
+  <data name="MoreBtn.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>More commands</value>
   </data>
   <data name="Settings_Silent.Text" xml:space="preserve">
     <value>Take ownership automatically when running as administrator</value>
@@ -591,9 +603,6 @@
   <data name="IconPicker_Empty" xml:space="preserve">
     <value>This file has no icons.</value>
   </data>
-  <data name="NewItemButton.Content" xml:space="preserve">
-    <value>New item</value>
-  </data>
   <data name="New_Title" xml:space="preserve">
     <value>New item: {0}</value>
   </data>
@@ -878,6 +887,12 @@
   </data>
   <data name="WinX_Group" xml:space="preserve">
     <value>Group {0}</value>
+  </data>
+  <data name="State_On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="State_Off" xml:space="preserve">
+    <value>Off</value>
   </data>
   <data name="Scope_CurrentUser" xml:space="preserve">
     <value>Current user</value>

@@ -75,11 +75,23 @@
   <data name="Settings_Protect.Text" xml:space="preserve">
     <value>Temel girdileri koru</value>
   </data>
-  <data name="MoreCommandsButton.Content" xml:space="preserve">
+  <data name="NewItemLabel.Text" xml:space="preserve">
+    <value>Yeni öğe</value>
+  </data>
+  <data name="NewItemBtn.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Yeni öğe</value>
+  </data>
+  <data name="TakeOwnershipLabel.Text" xml:space="preserve">
+    <value>Sahipliği al</value>
+  </data>
+  <data name="TakeOwnershipBtn.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Korumalı girdilerin sahipliğini al</value>
+  </data>
+  <data name="MoreLabel.Text" xml:space="preserve">
     <value>Diğer</value>
   </data>
-  <data name="TakeOwnershipPageButton.Content" xml:space="preserve">
-    <value>Korumalı girdilerin sahipliğini al</value>
+  <data name="MoreBtn.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Diğer komutlar</value>
   </data>
   <data name="Settings_Silent.Text" xml:space="preserve">
     <value>Yönetici iken sahipliği otomatik al</value>
@@ -591,9 +603,6 @@
   <data name="IconPicker_Empty" xml:space="preserve">
     <value>Bu dosyada simge yok.</value>
   </data>
-  <data name="NewItemButton.Content" xml:space="preserve">
-    <value>Yeni öğe</value>
-  </data>
   <data name="New_Title" xml:space="preserve">
     <value>Yeni öğe: {0}</value>
   </data>
@@ -878,6 +887,12 @@
   </data>
   <data name="WinX_Group" xml:space="preserve">
     <value>Grup {0}</value>
+  </data>
+  <data name="State_On" xml:space="preserve">
+    <value>Açık</value>
+  </data>
+  <data name="State_Off" xml:space="preserve">
+    <value>Kapalı</value>
   </data>
   <data name="Scope_CurrentUser" xml:space="preserve">
     <value>Geçerli kullanıcı</value>

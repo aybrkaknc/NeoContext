@@ -30,7 +30,7 @@ public sealed class SectionItem(MenuSection section, string glyph)
             new(MenuSection.RecycleBin, ""),
             new(MenuSection.Library, ""),
         ]),
-        new("Group_AppsAndMenus", "",
+        new("Group_AppsAndMenus", "\uE71D",
         [
             new(MenuSection.NewMenu, ""),
             new(MenuSection.SendTo, ""),

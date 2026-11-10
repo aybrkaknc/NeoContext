@@ -25,9 +25,12 @@ public sealed partial class MainWindow : Window
         AppWindow.Resize(new Windows.Graphics.SizeInt32(1180, 780));
         if (AppWindow.Presenter is OverlappedPresenter presenter)
         {
-            presenter.PreferredMinimumWidth = 720;
-            presenter.PreferredMinimumHeight = 480;
+            presenter.PreferredMinimumWidth = WindowMinimumSize.MinWidth;
+            presenter.PreferredMinimumHeight = WindowMinimumSize.MinHeight;
         }
+
+        // The presenter's minimum is not always enforced, so the window also answers the resize limit itself.
+        WindowMinimumSize.Install(WinRT.Interop.WindowNative.GetWindowHandle(this));
 
         SettingsPanel.ViewModel = new SettingsViewModel(host, dialogs);
         BuildNavigation();
@@ -83,6 +86,44 @@ public sealed partial class MainWindow : Window
         };
         ToolTipService.SetToolTip(item, section.Description);
         return item;
+    }
+
+    private enum HeaderMode
+    {
+        Wide,
+        Medium,
+        Narrow,
+    }
+
+    private HeaderMode? _headerMode;
+
+    /// <summary>
+    /// Fits the page header to the room it really has. The window width is not enough for this, because the
+    /// navigation pane is open or collapsed depending on the window size and takes a different share of it.
+    /// </summary>
+    private void OnHeaderSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var width = e.NewSize.Width;
+        var mode = width >= 880 ? HeaderMode.Wide : width >= 580 ? HeaderMode.Medium : HeaderMode.Narrow;
+        if (mode == _headerMode)
+        {
+            return;
+        }
+
+        _headerMode = mode;
+
+        // Wide: text on the buttons. Medium: icons only. Narrow: icons only, and the search box under the title.
+        var labels = mode == HeaderMode.Wide ? Visibility.Visible : Visibility.Collapsed;
+        NewItemLabel.Visibility = labels;
+        TakeOwnershipLabel.Visibility = labels;
+        MoreLabel.Visibility = labels;
+
+        var narrow = mode == HeaderMode.Narrow;
+        SearchBox.Width = mode switch { HeaderMode.Wide => 260, HeaderMode.Medium => 200, _ => double.NaN };
+        SearchBox.Margin = narrow ? new Thickness(0, 8, 0, 0) : new Thickness(0);
+        Grid.SetRow(SearchBox, narrow ? 1 : 0);
+        Grid.SetColumn(SearchBox, narrow ? 0 : 1);
+        Grid.SetColumnSpan(SearchBox, narrow ? 4 : 1);
     }
 
     public void ShowUpdateAvailable(ReleaseInfo release) => DispatcherQueue.TryEnqueue(() => ViewModel.ShowUpdateAvailable(release));

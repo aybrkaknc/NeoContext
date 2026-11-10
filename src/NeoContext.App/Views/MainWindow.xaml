@@ -56,18 +56,25 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Grid ColumnSpacing="8">
+                    <Grid x:Name="HeaderGrid" ColumnSpacing="8" SizeChanged="OnHeaderSizeChanged">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Spacing="2">
-                            <TextBlock Text="{x:Bind ViewModel.SectionTitle, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
-                            <TextBlock Text="{x:Bind ViewModel.SectionDescription, Mode=OneWay}" TextWrapping="Wrap"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        </StackPanel>
+                        <TextBlock MinWidth="160" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
+                                   Text="{x:Bind ViewModel.SectionTitle, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}"
+                                   ToolTipService.ToolTip="{x:Bind ViewModel.SectionTitle, Mode=OneWay}" />
+                        <!-- The description gets the whole width, so it wraps by words instead of squeezing into the title column. -->
+                        <TextBlock Grid.Row="2" Grid.ColumnSpan="4" Margin="0,2,0,0" TextWrapping="Wrap"
+                                   Text="{x:Bind ViewModel.SectionDescription, Mode=OneWay}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                         <AutoSuggestBox x:Name="SearchBox" x:Uid="SearchBox" Grid.Column="1" Width="260" VerticalAlignment="Center"
                                         PlaceholderText="Search" QueryIcon="Find"
                                         Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -76,10 +83,25 @@
                             </AutoSuggestBox.KeyboardAccelerators>
                         </AutoSuggestBox>
                         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                            <Button x:Uid="NewItemButton" Command="{x:Bind ViewModel.BeginNewCommand}"
-                                    Visibility="{x:Bind ToVisible(ViewModel.CanCreate), Mode=OneWay}" />
-                            <Button x:Uid="TakeOwnershipPageButton" Command="{x:Bind ViewModel.TakeOwnershipForPageCommand}" />
-                            <DropDownButton x:Uid="MoreCommandsButton" Visibility="{x:Bind ToVisible(ViewModel.ShowMoreCommands), Mode=OneWay}">
+                            <Button x:Name="NewItemBtn" x:Uid="NewItemBtn" Command="{x:Bind ViewModel.BeginNewCommand}"
+                                    Visibility="{x:Bind ToVisible(ViewModel.CanCreate), Mode=OneWay}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <FontIcon Glyph="&#xE710;" FontSize="14" />
+                                    <TextBlock x:Name="NewItemLabel" x:Uid="NewItemLabel" />
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="TakeOwnershipBtn" x:Uid="TakeOwnershipBtn" Command="{x:Bind ViewModel.TakeOwnershipForPageCommand}"
+                                    Visibility="{x:Bind ToVisible(ViewModel.ShowTakeOwnership), Mode=OneWay}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <FontIcon Glyph="&#xE83D;" FontSize="14" />
+                                    <TextBlock x:Name="TakeOwnershipLabel" x:Uid="TakeOwnershipLabel" />
+                                </StackPanel>
+                            </Button>
+                            <DropDownButton x:Name="MoreBtn" x:Uid="MoreBtn" Visibility="{x:Bind ToVisible(ViewModel.ShowMoreCommands), Mode=OneWay}">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <FontIcon Glyph="&#xE712;" FontSize="14" />
+                                    <TextBlock x:Name="MoreLabel" x:Uid="MoreLabel" />
+                                </StackPanel>
                                 <DropDownButton.Flyout>
                                     <Flyout>
                                         <StackPanel Spacing="4">
@@ -263,9 +285,13 @@
                                                    Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
                                     </StackPanel>
 
-                                    <ToggleSwitch Grid.Column="3" MinWidth="0" OnContent="" OffContent="" VerticalAlignment="Center"
-                                                  AutomationProperties.Name="{x:Bind Name}"
-                                                  IsOn="{x:Bind IsEnabled, Mode=TwoWay}" IsEnabled="{x:Bind CanToggle}" />
+                                    <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                        <TextBlock Text="{x:Bind StateText, Mode=OneWay}" MinWidth="44" TextAlignment="Right"
+                                                   VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                        <ToggleSwitch MinWidth="0" OnContent="" OffContent=""
+                                                      AutomationProperties.Name="{x:Bind Name}"
+                                                      IsOn="{x:Bind IsEnabled, Mode=TwoWay}" IsEnabled="{x:Bind CanToggle}" />
+                                    </StackPanel>
 
                                     <Button x:Uid="MoreButton" Grid.Column="4" Background="Transparent" BorderThickness="0" VerticalAlignment="Center"
                                             AutomationProperties.Name="More options" ToolTipService.ToolTip="More options">
