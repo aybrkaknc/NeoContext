@@ -75,6 +75,9 @@
   <data name="Settings_Protect.Text" xml:space="preserve">
     <value>Temel girdileri koru</value>
   </data>
+  <data name="MoreCommandsButton.Content" xml:space="preserve">
+    <value>Diğer</value>
+  </data>
   <data name="TakeOwnershipPageButton.Content" xml:space="preserve">
     <value>Korumalı girdilerin sahipliğini al</value>
   </data>

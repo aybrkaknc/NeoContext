@@ -75,6 +75,9 @@
   <data name="Settings_Protect.Text" xml:space="preserve">
     <value>Protect essential entries</value>
   </data>
+  <data name="MoreCommandsButton.Content" xml:space="preserve">
+    <value>More</value>
+  </data>
   <data name="TakeOwnershipPageButton.Content" xml:space="preserve">
     <value>Take ownership of protected entries</value>
   </data>

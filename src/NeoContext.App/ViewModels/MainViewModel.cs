@@ -59,8 +59,11 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage), nameof(CanCreate), nameof(IsWinXPage), nameof(IsCustomPathPage),
-        nameof(IsPerceivedPage), nameof(IsFolderTypePage), nameof(IsChoicePage), nameof(IsAnalysisPage), nameof(PickerChoices), nameof(PickerSummary))]
+        nameof(IsPerceivedPage), nameof(IsFolderTypePage), nameof(IsChoicePage), nameof(IsAnalysisPage), nameof(PickerChoices), nameof(PickerSummary), nameof(ShowMoreCommands))]
     public partial SectionItem? SelectedSection { get; set; }
+
+    /// <summary>True on the pages that have commands in the "More" menu.</summary>
+    public bool ShowMoreCommands => IsCustomPathPage || IsWinXPage;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsSearching), nameof(SectionTitle), nameof(SectionDescription), nameof(EmptyMessage))]
@@ -447,7 +450,9 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
 
         var result = await RunBusyAsync(() => host.Menus.SetState(entry, state));
-        return await CompleteAsync(result, entry, () => host.Menus.SetState(entry, state));
+
+        // The switch already shows the new state. Reloading every row would replace all switches on the page.
+        return await CompleteAsync(result, entry, () => host.Menus.SetState(entry, state), reload: false);
     }
 
     internal Task ShowDetailsAsync(EntryViewModel item)
@@ -873,8 +878,8 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
     }
 
-    /// <summary>Shows the outcome of a change and reloads the list.</summary>
-    private async Task<bool> CompleteAsync(Result result, ContextMenuEntry entry, Func<Result> retry)
+    /// <summary>Shows the outcome of a change and, unless told otherwise, reloads the list.</summary>
+    private async Task<bool> CompleteAsync(Result result, ContextMenuEntry entry, Func<Result> retry, bool reload = true)
     {
         if (!result.IsSuccess)
         {
@@ -893,7 +898,11 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
             ShowNotice(InfoBarSeverity.Success, Strings.Get("Notice_Done_Title"), Strings.Format("Notice_Done_Message", entry.DisplayName), NoticeAction.None);
         }
 
-        await RefreshAsync();
+        if (reload)
+        {
+            await RefreshAsync();
+        }
+
         return true;
     }
 
