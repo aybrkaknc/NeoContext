@@ -4,8 +4,7 @@
 
 English | [Türkçe](#türkçe)
 
-The earlier 0.1.0 and 0.2.0 downloads were withdrawn: the packaged app closed right after start-up. This
-release fixes that and adds a round of usability work.
+This release adds a round of usability work.
 
 ### Fixed
 
@@ -59,8 +58,7 @@ launch. The ARM64 zip is built the same way but has not been run on an ARM devic
 
 ## 1.2.0 (Türkçe)
 
-Önceki 0.1.0 ve 0.2.0 indirmeleri geri çekildi: paketlenmiş uygulama açılır açılmaz kapanıyordu. Bu sürüm bunu
-düzeltiyor ve kullanım kolaylığı için bir dizi iyileştirme getiriyor.
+Bu sürüm, kullanım kolaylığı için bir dizi iyileştirme getiriyor.
 
 ### Düzeltmeler
 
