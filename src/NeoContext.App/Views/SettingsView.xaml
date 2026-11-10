@@ -19,7 +19,7 @@
         <StackPanel Padding="32,16,32,32" Spacing="8" MaxWidth="900" HorizontalAlignment="Left">
             <TextBlock x:Uid="Settings_Title" Text="Settings" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,12" />
 
-            <!-- General -->
+            <!-- 1. General: language and the introduction guide -->
             <TextBlock x:Uid="Settings_General" Text="General" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
 
             <Grid Style="{StaticResource CardStyle}">
@@ -47,6 +47,19 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                <TextBlock x:Uid="Settings_Guide" Text="Introduction guide" VerticalAlignment="Center" />
+                <Button x:Uid="Settings_GuideButton" Grid.Column="1" Content="Show" VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.ShowGuideCommand}" />
+            </Grid>
+
+            <!-- 2. Protection and permissions: what NeoContext refuses to touch, and how ownership is handled -->
+            <TextBlock x:Uid="Settings_Permissions" Text="Protection and permissions" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,16,0,0" />
+
+            <Grid Style="{StaticResource CardStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <StackPanel>
                     <TextBlock x:Name="ProtectLabel" x:Uid="Settings_Protect" Text="Protect essential entries" />
                     <TextBlock x:Uid="Settings_Protect_Hint" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
@@ -63,12 +76,33 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Uid="Settings_Guide" Text="Introduction guide" VerticalAlignment="Center" />
-                <Button x:Uid="Settings_GuideButton" Grid.Column="1" Content="Show" VerticalAlignment="Center"
-                        Command="{x:Bind ViewModel.ShowGuideCommand}" />
+                <StackPanel>
+                    <TextBlock x:Name="SilentOwnershipLabel" x:Uid="Settings_Silent" Text="Take ownership automatically when running as administrator" />
+                    <TextBlock x:Uid="Settings_Silent_Hint" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource SystemFillColorCautionBrush}"
+                               Text="Off by default. When on, protected keys are taken over without asking, and each change is backed up. Turn it on only if you accept that keys owned by Windows may change." />
+                </StackPanel>
+                <ToggleSwitch Grid.Column="1" MinWidth="0" OnContent="" OffContent=""
+                              AutomationProperties.LabeledBy="{x:Bind SilentOwnershipLabel}"
+                              IsOn="{x:Bind ViewModel.SilentOwnershipWhenElevated, Mode=TwoWay}" />
             </Grid>
 
-            <!-- Updates -->
+            <Grid Style="{StaticResource CardStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock x:Uid="Settings_Ownership" Text="Restore original key owners" />
+                    <TextBlock Text="{x:Bind ViewModel.OwnershipStatus, Mode=OneWay}" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               AutomationProperties.LiveSetting="Polite"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+                <Button x:Uid="Settings_RestoreOwnership" Grid.Column="1" Content="Restore" VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.RestorePermissionsCommand}" />
+            </Grid>
+
+            <!-- 3. Updates: the program and the dictionaries it uses -->
             <TextBlock x:Uid="Settings_Updates" Text="Updates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,16,0,0" />
 
             <Grid Style="{StaticResource CardStyle}">
@@ -128,39 +162,8 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Permissions -->
-            <TextBlock x:Uid="Settings_Permissions" Text="Permissions" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,16,0,0" />
-
-            <Grid Style="{StaticResource CardStyle}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel>
-                    <TextBlock x:Name="SilentOwnershipLabel" x:Uid="Settings_Silent" Text="Take ownership automatically when running as administrator" />
-                    <TextBlock x:Uid="Settings_Silent_Hint" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
-                               Foreground="{ThemeResource SystemFillColorCautionBrush}"
-                               Text="Off by default. When on, protected keys are taken over without asking, and each change is backed up. Turn it on only if you accept that keys owned by Windows may change." />
-                </StackPanel>
-                <ToggleSwitch Grid.Column="1" MinWidth="0" OnContent="" OffContent=""
-                              AutomationProperties.LabeledBy="{x:Bind SilentOwnershipLabel}"
-                              IsOn="{x:Bind ViewModel.SilentOwnershipWhenElevated, Mode=TwoWay}" />
-            </Grid>
-
-            <Grid Style="{StaticResource CardStyle}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel>
-                    <TextBlock x:Uid="Settings_Ownership" Text="Restore original key owners" />
-                    <TextBlock Text="{x:Bind ViewModel.OwnershipStatus, Mode=OneWay}" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
-                               AutomationProperties.LiveSetting="Polite"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                </StackPanel>
-                <Button x:Uid="Settings_RestoreOwnership" Grid.Column="1" Content="Restore" VerticalAlignment="Center"
-                        Command="{x:Bind ViewModel.RestorePermissionsCommand}" />
-            </Grid>
+            <!-- 4. Data: where settings and backups live -->
+            <TextBlock x:Uid="Settings_DataSection" Text="Data" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,16,0,0" />
 
             <Grid Style="{StaticResource CardStyle}">
                 <Grid.ColumnDefinitions>
@@ -176,7 +179,7 @@
                         Command="{x:Bind ViewModel.OpenDataFolderCommand}" />
             </Grid>
 
-            <!-- About -->
+            <!-- 5. About -->
             <TextBlock x:Uid="Settings_About" Text="About" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,16,0,0" />
 
             <Grid Style="{StaticResource CardStyle}">

@@ -80,7 +80,7 @@ public sealed class KeyOwnershipService(string backupFilePath)
     /// True when the key exists and the current user cannot write to it, so ownership would be needed.
     /// Only opens the key for writing and closes it again; nothing is changed.
     /// </summary>
-    public bool NeedsOwnership(RegistryPath path)
+    public static bool NeedsOwnership(RegistryPath path)
     {
         if (path.Hive == RegistryHive.ClassesRoot)
         {

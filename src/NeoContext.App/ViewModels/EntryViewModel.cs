@@ -278,6 +278,14 @@ public sealed partial class EntryViewModel : ObservableObject
     [RelayCommand]
     private Task ShowDetailsAsync() => _owner.ShowDetailsAsync(this);
 
+    /// <summary>Opens a Google search for the entry's name in the default browser, for entries the user does not recognise.</summary>
+    [RelayCommand]
+    private void SearchWeb()
+    {
+        var query = Uri.EscapeDataString(string.IsNullOrWhiteSpace(Name) ? Entry.Key : Name);
+        SystemActions.OpenUrl($"https://www.google.com/search?q={query}");
+    }
+
     [RelayCommand]
     private void Edit() => _owner.BeginEdit(this);
 

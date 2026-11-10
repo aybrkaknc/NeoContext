@@ -304,6 +304,9 @@
                                                 <MenuFlyoutItem x:Uid="Menu_Details" Text="Details" Command="{x:Bind ShowDetailsCommand}">
                                                     <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE946;" /></MenuFlyoutItem.Icon>
                                                 </MenuFlyoutItem>
+                                                <MenuFlyoutItem x:Uid="Menu_SearchWeb" Text="Search the web" Command="{x:Bind SearchWebCommand}">
+                                                    <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE721;" /></MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
                                                 <MenuFlyoutSeparator />
                                                 <MenuFlyoutItem x:Uid="Menu_Edit" Text="Edit" Command="{x:Bind EditCommand}" IsEnabled="{x:Bind CanEdit}">
                                                     <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE70F;" /></MenuFlyoutItem.Icon>

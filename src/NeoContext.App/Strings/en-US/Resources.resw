@@ -139,7 +139,10 @@
     <value>Check now</value>
   </data>
   <data name="Settings_Permissions.Text" xml:space="preserve">
-    <value>Permissions</value>
+    <value>Protection and permissions</value>
+  </data>
+  <data name="Settings_DataSection.Text" xml:space="preserve">
+    <value>Data</value>
   </data>
   <data name="Settings_Ownership.Text" xml:space="preserve">
     <value>Restore original key owners</value>
@@ -440,6 +443,9 @@
   </data>
   <data name="Guide_Close" xml:space="preserve">
     <value>Get started</value>
+  </data>
+  <data name="Menu_SearchWeb.Text" xml:space="preserve">
+    <value>Search the web</value>
   </data>
   <data name="Menu_Details.Text" xml:space="preserve">
     <value>Details</value>

@@ -7,6 +7,7 @@ using NeoContext.Core.Models;
 using NeoContext.Core.Results;
 using NeoContext.Core.Rules;
 using NeoContext.Registry;
+using NeoContext.Registry.Ownership;
 using NeoContext.Shell;
 using NeoContext.Updates;
 
@@ -359,7 +360,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         if (missing.Length > 0)
         {
             var results = await Task.Run(() => missing
-                .Select(location => (location, needs: RegistryPath.TryParse(location, out var path) && host.Ownership.NeedsOwnership(path)))
+                .Select(location => (location, needs: RegistryPath.TryParse(location, out var path) && KeyOwnershipService.NeedsOwnership(path)))
                 .ToArray());
             foreach (var (location, needs) in results)
             {
@@ -1070,7 +1071,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
             targets = await Task.Run(() => locations
                 .Where(l => RegistryPath.TryParse(l, out _))
                 .Select(RegistryPath.Parse)
-                .Where(host.Ownership.NeedsOwnership)
+                .Where(KeyOwnershipService.NeedsOwnership)
                 .ToArray());
         }
         finally

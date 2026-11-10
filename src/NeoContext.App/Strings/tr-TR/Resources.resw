@@ -139,7 +139,10 @@
     <value>Şimdi denetle</value>
   </data>
   <data name="Settings_Permissions.Text" xml:space="preserve">
-    <value>İzinler</value>
+    <value>Koruma ve izinler</value>
+  </data>
+  <data name="Settings_DataSection.Text" xml:space="preserve">
+    <value>Veriler</value>
   </data>
   <data name="Settings_Ownership.Text" xml:space="preserve">
     <value>Anahtarların özgün sahiplerini geri yükle</value>
@@ -440,6 +443,9 @@
   </data>
   <data name="Guide_Close" xml:space="preserve">
     <value>Başla</value>
+  </data>
+  <data name="Menu_SearchWeb.Text" xml:space="preserve">
+    <value>Web'de ara</value>
   </data>
   <data name="Menu_Details.Text" xml:space="preserve">
     <value>Ayrıntılar</value>
