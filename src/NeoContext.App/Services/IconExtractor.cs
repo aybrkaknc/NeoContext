@@ -11,6 +11,9 @@ public sealed record IconPixels(int Width, int Height, byte[] Bgra);
 /// </summary>
 internal static partial class IconExtractor
 {
+    /// <summary>How many icons the file holds (0 when it has none or cannot be read).</summary>
+    public static int Count(string file) => (int)Math.Min(ExtractIconEx(file, -1, null, null, 0), 5000);
+
     public static IconPixels? Extract(string file, int index)
     {
         var large = new IntPtr[1];

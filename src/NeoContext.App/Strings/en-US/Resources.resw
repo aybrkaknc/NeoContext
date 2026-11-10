@@ -489,6 +489,171 @@
   <data name="ClearFileTypes.Content" xml:space="preserve">
     <value>Clear</value>
   </data>
+  <data name="Menu_Edit.Text" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Edit_Command.Header" xml:space="preserve">
+    <value>Command</value>
+  </data>
+  <data name="Edit_Icon.Header" xml:space="preserve">
+    <value>Icon (file,index)</value>
+  </data>
+  <data name="Edit_ChooseIcon.Content" xml:space="preserve">
+    <value>Choose...</value>
+  </data>
+  <data name="Edit_Position.Header" xml:space="preserve">
+    <value>Position in the menu</value>
+  </data>
+  <data name="Position_Default.Content" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Position_Top.Content" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="Position_Bottom.Content" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="Attr_Shield.Content" xml:space="preserve">
+    <value>Show the UAC shield icon</value>
+  </data>
+  <data name="Attr_Extended.Content" xml:space="preserve">
+    <value>Only when Shift is held</value>
+  </data>
+  <data name="Attr_OnlyBrowser.Content" xml:space="preserve">
+    <value>Only in the Explorer window (not on the desktop)</value>
+  </data>
+  <data name="Attr_NoWorkingDir.Content" xml:space="preserve">
+    <value>No working directory</value>
+  </data>
+  <data name="Attr_NeverDefault.Content" xml:space="preserve">
+    <value>Never the default item</value>
+  </data>
+  <data name="Attr_ShowDisabled.Content" xml:space="preserve">
+    <value>Show as disabled when hidden</value>
+  </data>
+  <data name="EditCancel.Content" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="EditSave.Content" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Edit_CommandRequired" xml:space="preserve">
+    <value>The command cannot be empty.</value>
+  </data>
+  <data name="IconPicker_Title.Text" xml:space="preserve">
+    <value>Choose an icon</value>
+  </data>
+  <data name="IconPicker_File.PlaceholderText" xml:space="preserve">
+    <value>Icon file, for example shell32.dll</value>
+  </data>
+  <data name="IconPicker_Load.Content" xml:space="preserve">
+    <value>Load</value>
+  </data>
+  <data name="IconPicker_Browse.Content" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="IconPicker_Close.Content" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="IconPicker_NotFound" xml:space="preserve">
+    <value>File not found.</value>
+  </data>
+  <data name="IconPicker_Empty" xml:space="preserve">
+    <value>This file has no icons.</value>
+  </data>
+  <data name="NewItemButton.Content" xml:space="preserve">
+    <value>New item</value>
+  </data>
+  <data name="New_Title" xml:space="preserve">
+    <value>New item: {0}</value>
+  </data>
+  <data name="New_Type.Header" xml:space="preserve">
+    <value>What do you want to add?</value>
+  </data>
+  <data name="New_TypeVerb.Content" xml:space="preserve">
+    <value>A command that runs a program</value>
+  </data>
+  <data name="New_TypeHandler.Content" xml:space="preserve">
+    <value>A shell extension (by GUID)</value>
+  </data>
+  <data name="New_Name.Header" xml:space="preserve">
+    <value>Name in the menu</value>
+  </data>
+  <data name="New_Mode.Header" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="New_ModeSingle.Content" xml:space="preserve">
+    <value>Single item</value>
+  </data>
+  <data name="New_ModeSubmenu.Content" xml:space="preserve">
+    <value>Submenu</value>
+  </data>
+  <data name="New_Program.Header" xml:space="preserve">
+    <value>Program</value>
+  </data>
+  <data name="New_Browse.Content" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="New_Arguments.Header" xml:space="preserve">
+    <value>Arguments</value>
+  </data>
+  <data name="New_PassSelected.Content" xml:space="preserve">
+    <value>Pass the clicked item to the program</value>
+  </data>
+  <data name="New_Hidden.Content" xml:space="preserve">
+    <value>Run with a hidden window</value>
+  </data>
+  <data name="New_RunAs.Content" xml:space="preserve">
+    <value>Run as administrator</value>
+  </data>
+  <data name="New_Children.Text" xml:space="preserve">
+    <value>Items in the submenu</value>
+  </data>
+  <data name="New_ChildName.PlaceholderText" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="New_ChildCommand.PlaceholderText" xml:space="preserve">
+    <value>Command</value>
+  </data>
+  <data name="New_RemoveChild.AutomationProperties.Name" xml:space="preserve">
+    <value>Remove this item</value>
+  </data>
+  <data name="New_AddChild.Content" xml:space="preserve">
+    <value>Add an item</value>
+  </data>
+  <data name="New_Guid.Header" xml:space="preserve">
+    <value>Shell extension GUID</value>
+  </data>
+  <data name="New_PasteGuid.Content" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="New_GuidHint.Text" xml:space="preserve">
+    <value>The GUID must belong to a COM class registered on this PC, for example {C2FBB630-2971-11D1-A18C-00C04FD75D13}.</value>
+  </data>
+  <data name="New_AllUsers.Content" xml:space="preserve">
+    <value>For all users (needs administrator rights)</value>
+  </data>
+  <data name="NewCancel.Content" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="NewCreate.Content" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="New_ChildrenInvalid" xml:space="preserve">
+    <value>Every submenu item needs a name and a command.</value>
+  </data>
+  <data name="New_ProgramRequired" xml:space="preserve">
+    <value>Choose or type a program.</value>
+  </data>
+  <data name="New_GuidInvalid" xml:space="preserve">
+    <value>That is not a valid GUID.</value>
+  </data>
+  <data name="New_ClsidMissing" xml:space="preserve">
+    <value>No COM class with this GUID is registered on this PC.</value>
+  </data>
+  <data name="Notice_Created_Message" xml:space="preserve">
+    <value>"{0}" was added.</value>
+  </data>
   <data name="WinX_Group" xml:space="preserve">
     <value>Group {0}</value>
   </data>

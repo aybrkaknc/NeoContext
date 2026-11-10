@@ -2,6 +2,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Windows.Storage.Pickers;
 using NeoContext.App.Services;
 using NeoContext.App.ViewModels;
 using NeoContext.Updates;
@@ -101,8 +102,105 @@ public sealed partial class MainWindow : Window
     /// <summary>Taps on the card stay on the card, so only taps outside it close the overlay.</summary>
     private void OnCardTapped(object sender, TappedRoutedEventArgs e) => e.Handled = true;
 
+    private void OnRemoveChild(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: NewChildViewModel child } && ViewModel.Creating is { } creating)
+        {
+            creating.Children.Remove(child);
+        }
+    }
+
+    private async void OnBrowseProgram(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var picker = new FileOpenPicker();
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(this));
+            foreach (var extension in new[] { ".exe", ".bat", ".cmd", ".ps1", ".vbs", ".com" })
+            {
+                picker.FileTypeFilter.Add(extension);
+            }
+
+            if (await picker.PickSingleFileAsync() is { } file && ViewModel.Creating is { } creating)
+            {
+                creating.Program = file.Path;
+                if (string.IsNullOrWhiteSpace(creating.Name))
+                {
+                    creating.Name = Path.GetFileNameWithoutExtension(file.Path);
+                }
+            }
+        }
+        catch (System.Runtime.InteropServices.COMException ex)
+        {
+            AppLog.Warn($"File picker failed: {ex.Message}");
+        }
+    }
+
+    private void OnIconPickerBackdropTapped(object sender, TappedRoutedEventArgs e) => ViewModel.CloseIconPickerCommand.Execute(null);
+
+    private void OnIconClick(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is IconPickItem item)
+        {
+            ViewModel.ChooseIcon(item);
+        }
+    }
+
+    private void OnLoadIconFile(object sender, RoutedEventArgs e) => _ = ViewModel.LoadIconFileAsync(IconFileBox.Text);
+
+    private void OnQuickIconFile(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: string file })
+        {
+            _ = ViewModel.LoadIconFileAsync(file);
+        }
+    }
+
+    private async void OnBrowseIconFile(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var picker = new FileOpenPicker();
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(this));
+            foreach (var extension in new[] { ".exe", ".dll", ".ico", ".icl", ".ocx" })
+            {
+                picker.FileTypeFilter.Add(extension);
+            }
+
+            if (await picker.PickSingleFileAsync() is { } file)
+            {
+                await ViewModel.LoadIconFileAsync(file.Path);
+            }
+        }
+        catch (System.Runtime.InteropServices.COMException ex)
+        {
+            AppLog.Warn($"File picker failed: {ex.Message}");
+        }
+    }
+
     private void OnEscape(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
+        if (ViewModel.IsIconPickerOpen)
+        {
+            ViewModel.CloseIconPickerCommand.Execute(null);
+            args.Handled = true;
+            return;
+        }
+
+        if (ViewModel.IsEditOpen)
+        {
+            ViewModel.CancelEditCommand.Execute(null);
+            args.Handled = true;
+            return;
+        }
+
+        if (ViewModel.IsNewOpen)
+        {
+            ViewModel.CancelNewCommand.Execute(null);
+            args.Handled = true;
+            return;
+        }
+
         if (ViewModel.IsDetailsOpen)
         {
             ViewModel.CloseDetailsCommand.Execute(null);

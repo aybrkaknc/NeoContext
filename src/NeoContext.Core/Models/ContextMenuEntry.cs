@@ -80,7 +80,44 @@ public enum EntryCapabilities
     Toggle = 1,
     Rename = 2,
     Delete = 4,
+
+    /// <summary>Command, icon and attributes can be edited.</summary>
+    Edit = 8,
 }
+
+/// <summary>Where a verb sits in the menu.</summary>
+public enum VerbPosition
+{
+    Default,
+    Top,
+    Bottom,
+}
+
+/// <summary>The switches Explorer reads from a verb's registry key.</summary>
+public sealed record VerbAttributes
+{
+    public VerbPosition Position { get; init; }
+
+    /// <summary>Only shown when Shift is held (<c>Extended</c>).</summary>
+    public bool Extended { get; init; }
+
+    public bool OnlyInBrowserWindow { get; init; }
+
+    public bool NoWorkingDirectory { get; init; }
+
+    public bool NeverDefault { get; init; }
+
+    public bool ShowAsDisabledIfHidden { get; init; }
+
+    /// <summary>Shows the UAC shield next to the item (<c>HasLUAShield</c>).</summary>
+    public bool Shield { get; init; }
+}
+
+/// <summary>
+/// A change to a verb. <paramref name="Command"/> null leaves the command alone;
+/// <paramref name="IconLocation"/> null leaves the icon alone and an empty string removes it.
+/// </summary>
+public sealed record EntryEdit(string? Command, string? IconLocation, VerbAttributes Attributes);
 
 /// <summary>
 /// One item in a context menu, as an immutable snapshot. Providers create these on load;
@@ -121,6 +158,9 @@ public sealed record ContextMenuEntry(
 
     /// <summary>Only shown when Shift is held while right-clicking.</summary>
     public bool ExtendedOnly { get; init; }
+
+    /// <summary>The verb's position and flags, for entries that can be edited.</summary>
+    public VerbAttributes? Attributes { get; init; }
 
     public bool IsEnabled => State == EntryState.Enabled;
 

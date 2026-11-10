@@ -99,6 +99,28 @@ public sealed class ContextMenuService
         return WithProvider(entry, p => p.Rename(entry, newName.Trim()));
     }
 
+    public Result Edit(ContextMenuEntry entry, EntryEdit edit)
+    {
+        if (!entry.Can(EntryCapabilities.Edit))
+        {
+            return NotSupported(entry, "edited");
+        }
+
+        if (_protection.IsProtected(entry))
+        {
+            return Result.Failure(ErrorKind.Protected, $"'{entry.DisplayName}' is protected and cannot be edited.");
+        }
+
+        if (edit.Command is { } command && string.IsNullOrWhiteSpace(command))
+        {
+            return Result.Failure(ErrorKind.InvalidInput, "The command cannot be empty.");
+        }
+
+        return _providers.TryGetValue(entry.Kind, out var provider) && provider is IEntryEditor editor
+            ? editor.Edit(entry, edit)
+            : Result.Failure(ErrorKind.NotSupported, $"No editor is registered for {entry.Kind}.");
+    }
+
     public Result Delete(ContextMenuEntry entry)
     {
         if (!entry.Can(EntryCapabilities.Delete))

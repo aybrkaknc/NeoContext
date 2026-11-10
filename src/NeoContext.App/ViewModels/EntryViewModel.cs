@@ -6,8 +6,6 @@ using NeoContext.App.Services;
 using NeoContext.Core.Models;
 using NeoContext.Core.Rules;
 using NeoContext.Registry;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 
@@ -119,11 +117,7 @@ public sealed partial class EntryViewModel : ObservableObject
                 return null;
             }
 
-            var bitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, pixels.Width, pixels.Height, BitmapAlphaMode.Premultiplied);
-            bitmap.CopyFromBuffer(pixels.Bgra.AsBuffer());
-            var source = new SoftwareBitmapSource();
-            await source.SetBitmapAsync(bitmap);
-            return source;
+            return await IconImage.FromPixelsAsync(pixels);
         }
         catch (Exception ex) when (ex is System.Runtime.InteropServices.COMException or FileNotFoundException or UnauthorizedAccessException or ArgumentException)
         {
@@ -210,6 +204,8 @@ public sealed partial class EntryViewModel : ObservableObject
 
     public bool CanDelete => Entry.Can(EntryCapabilities.Delete);
 
+    public bool CanEdit => Entry.Can(EntryCapabilities.Edit);
+
     public bool IsRegistryEntry => RegistryPath.TryParse(Entry.Location, out _);
 
     public string Glyph => Entry.Kind switch
@@ -261,6 +257,9 @@ public sealed partial class EntryViewModel : ObservableObject
 
     [RelayCommand]
     private Task ShowDetailsAsync() => _owner.ShowDetailsAsync(this);
+
+    [RelayCommand]
+    private void Edit() => _owner.BeginEdit(this);
 
     [RelayCommand]
     private Task RenameAsync() => _owner.RenameAsync(this);

@@ -82,6 +82,9 @@
                     </Grid>
 
                     <StackPanel Grid.Row="1" Spacing="8">
+                    <Button x:Uid="NewItemButton" HorizontalAlignment="Left" Command="{x:Bind ViewModel.BeginNewCommand}"
+                            Visibility="{x:Bind ToVisible(ViewModel.CanCreate), Mode=OneWay}" />
+
                     <!-- File type picker: only on the "File types" page -->
                     <StackPanel Spacing="8" Visibility="{x:Bind ToVisible(ViewModel.IsFileTypesPage), Mode=OneWay}">
                         <ItemsControl ItemsSource="{x:Bind ViewModel.FileTypeChoices}">
@@ -205,6 +208,9 @@
                                                     <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE946;" /></MenuFlyoutItem.Icon>
                                                 </MenuFlyoutItem>
                                                 <MenuFlyoutSeparator />
+                                                <MenuFlyoutItem x:Uid="Menu_Edit" Text="Edit" Command="{x:Bind EditCommand}" IsEnabled="{x:Bind CanEdit}">
+                                                    <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE70F;" /></MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
                                                 <MenuFlyoutItem x:Uid="Menu_Rename" Text="Rename" Command="{x:Bind RenameCommand}" IsEnabled="{x:Bind CanRename}">
                                                     <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE8AC;" /></MenuFlyoutItem.Icon>
                                                 </MenuFlyoutItem>
@@ -229,6 +235,220 @@
 
                 <!-- Settings page -->
                 <views:SettingsView x:Name="SettingsPanel" Visibility="Collapsed" />
+
+                <!-- Edit form: closes with Save, Cancel or Esc -->
+                <Grid x:Name="EditOverlay" Background="#80000000"
+                      Visibility="{x:Bind ToVisible(ViewModel.IsEditOpen), Mode=OneWay}">
+                    <Border MaxWidth="560" MaxHeight="640" Margin="24" Padding="24" CornerRadius="8"
+                            BorderThickness="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid RowSpacing="12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{x:Bind ViewModel.Editing.Title, Mode=OneWay}" Style="{StaticResource SubtitleTextBlockStyle}"
+                                       TextWrapping="Wrap" />
+                            <ScrollViewer Grid.Row="1">
+                                <StackPanel Spacing="12" Margin="0,0,16,0">
+                                    <TextBox x:Uid="Edit_Command" Text="{x:Bind ViewModel.Editing.Command, Mode=TwoWay}"
+                                             Visibility="{x:Bind ToVisible(ViewModel.Editing.HasCommand), Mode=OneWay}" />
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Uid="Edit_Icon" Text="{x:Bind ViewModel.Editing.Icon, Mode=TwoWay}" />
+                                        <Button x:Uid="Edit_ChooseIcon" Grid.Column="1" VerticalAlignment="Bottom"
+                                                Command="{x:Bind ViewModel.OpenIconPickerCommand}" />
+                                    </Grid>
+                                    <ComboBox x:Uid="Edit_Position" SelectedIndex="{x:Bind ViewModel.Editing.PositionIndex, Mode=TwoWay}">
+                                        <ComboBoxItem x:Uid="Position_Default" />
+                                        <ComboBoxItem x:Uid="Position_Top" />
+                                        <ComboBoxItem x:Uid="Position_Bottom" />
+                                    </ComboBox>
+                                    <CheckBox x:Uid="Attr_Shield" IsChecked="{x:Bind ViewModel.Editing.Shield, Mode=TwoWay}" />
+                                    <CheckBox x:Uid="Attr_Extended" IsChecked="{x:Bind ViewModel.Editing.Extended, Mode=TwoWay}" />
+                                    <CheckBox x:Uid="Attr_OnlyBrowser" IsChecked="{x:Bind ViewModel.Editing.OnlyInBrowserWindow, Mode=TwoWay}" />
+                                    <CheckBox x:Uid="Attr_NoWorkingDir" IsChecked="{x:Bind ViewModel.Editing.NoWorkingDirectory, Mode=TwoWay}" />
+                                    <CheckBox x:Uid="Attr_NeverDefault" IsChecked="{x:Bind ViewModel.Editing.NeverDefault, Mode=TwoWay}" />
+                                    <CheckBox x:Uid="Attr_ShowDisabled" IsChecked="{x:Bind ViewModel.Editing.ShowAsDisabledIfHidden, Mode=TwoWay}" />
+                                    <TextBlock Text="{x:Bind ViewModel.Editing.Error, Mode=OneWay}" TextWrapping="Wrap"
+                                               Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+                                </StackPanel>
+                            </ScrollViewer>
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                                <Button x:Uid="EditCancel" Command="{x:Bind ViewModel.CancelEditCommand}" />
+                                <Button x:Uid="EditSave" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveEditCommand}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- New item form: closes with Create, Cancel or Esc -->
+                <Grid x:Name="NewItemOverlay" Background="#80000000"
+                      Visibility="{x:Bind ToVisible(ViewModel.IsNewOpen), Mode=OneWay}">
+                    <Border MaxWidth="600" MaxHeight="700" Margin="24" Padding="24" CornerRadius="8"
+                            BorderThickness="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid RowSpacing="12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{x:Bind ViewModel.Creating.Title, Mode=OneWay}" Style="{StaticResource SubtitleTextBlockStyle}"
+                                       TextWrapping="Wrap" />
+                            <ScrollViewer Grid.Row="1">
+                                <StackPanel Spacing="12" Margin="0,0,16,0">
+                                    <RadioButtons x:Uid="New_Type" SelectedIndex="{x:Bind ViewModel.Creating.TypeIndex, Mode=TwoWay}">
+                                        <RadioButton x:Uid="New_TypeVerb" />
+                                        <RadioButton x:Uid="New_TypeHandler" />
+                                    </RadioButtons>
+
+                                    <!-- Shell verb -->
+                                    <StackPanel Spacing="12" Visibility="{x:Bind ToVisible(ViewModel.Creating.IsVerb), Mode=OneWay}">
+                                        <TextBox x:Uid="New_Name" Text="{x:Bind ViewModel.Creating.Name, Mode=TwoWay}" />
+                                        <RadioButtons x:Uid="New_Mode" SelectedIndex="{x:Bind ViewModel.Creating.ModeIndex, Mode=TwoWay}">
+                                            <RadioButton x:Uid="New_ModeSingle" />
+                                            <RadioButton x:Uid="New_ModeSubmenu" />
+                                        </RadioButtons>
+
+                                        <StackPanel Spacing="12" Visibility="{x:Bind ToVisible(ViewModel.Creating.ShowSingle), Mode=OneWay}">
+                                            <Grid ColumnSpacing="8">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox x:Uid="New_Program" Text="{x:Bind ViewModel.Creating.Program, Mode=TwoWay}" />
+                                                <Button x:Uid="New_Browse" Grid.Column="1" VerticalAlignment="Bottom" Click="OnBrowseProgram" />
+                                            </Grid>
+                                            <TextBox x:Uid="New_Arguments" Text="{x:Bind ViewModel.Creating.Arguments, Mode=TwoWay}" />
+                                            <CheckBox x:Uid="New_PassSelected" IsChecked="{x:Bind ViewModel.Creating.PassSelected, Mode=TwoWay}"
+                                                      Visibility="{x:Bind ToVisible(ViewModel.Creating.ShowSelectionOption), Mode=OneWay}" />
+                                            <CheckBox x:Uid="New_Hidden" IsChecked="{x:Bind ViewModel.Creating.Hidden, Mode=TwoWay}" />
+                                            <CheckBox x:Uid="New_RunAs" IsChecked="{x:Bind ViewModel.Creating.RunAsAdministrator, Mode=TwoWay}" />
+                                        </StackPanel>
+
+                                        <StackPanel Spacing="8" Visibility="{x:Bind ToVisible(ViewModel.Creating.ShowSubmenu), Mode=OneWay}">
+                                            <TextBlock x:Uid="New_Children" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                            <ItemsControl ItemsSource="{x:Bind ViewModel.Creating.Children}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:NewChildViewModel">
+                                                        <Grid ColumnSpacing="8" Margin="0,0,0,8">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="2*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBox x:Uid="New_ChildName" Text="{x:Bind Name, Mode=TwoWay}" />
+                                                            <TextBox x:Uid="New_ChildCommand" Grid.Column="1" Text="{x:Bind Command, Mode=TwoWay}" />
+                                                            <Button Grid.Column="2" Tag="{x:Bind}" Click="OnRemoveChild" VerticalAlignment="Center"
+                                                                    x:Uid="New_RemoveChild">
+                                                                <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                                                            </Button>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                            <Button x:Uid="New_AddChild" Command="{x:Bind ViewModel.Creating.AddChildCommand}" />
+                                        </StackPanel>
+
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Uid="Edit_Icon" Text="{x:Bind ViewModel.Creating.Icon, Mode=TwoWay}" />
+                                            <Button x:Uid="Edit_ChooseIcon" Grid.Column="1" VerticalAlignment="Bottom"
+                                                    Command="{x:Bind ViewModel.OpenIconPickerCommand}" />
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <!-- Shell extension -->
+                                    <StackPanel Spacing="8" Visibility="{x:Bind ToVisible(ViewModel.Creating.IsHandler), Mode=OneWay}">
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Uid="New_Guid" Text="{x:Bind ViewModel.Creating.GuidText, Mode=TwoWay}" />
+                                            <Button x:Uid="New_PasteGuid" Grid.Column="1" VerticalAlignment="Bottom"
+                                                    Command="{x:Bind ViewModel.PasteGuidCommand}" />
+                                        </Grid>
+                                        <TextBlock x:Uid="New_GuidHint" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
+
+                                    <CheckBox x:Uid="New_AllUsers" IsChecked="{x:Bind ViewModel.Creating.AllUsers, Mode=TwoWay}" />
+                                    <TextBlock Text="{x:Bind ViewModel.Creating.Error, Mode=OneWay}" TextWrapping="Wrap"
+                                               Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+                                </StackPanel>
+                            </ScrollViewer>
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                                <Button x:Uid="NewCancel" Command="{x:Bind ViewModel.CancelNewCommand}" />
+                                <Button x:Uid="NewCreate" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveNewCommand}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- Icon picker (above the edit form): a click outside the card closes it -->
+                <Grid x:Name="IconPickerOverlay" Background="#80000000" Tapped="OnIconPickerBackdropTapped"
+                      Visibility="{x:Bind ToVisible(ViewModel.IsIconPickerOpen), Mode=OneWay}">
+                    <Border Tapped="OnCardTapped" MaxWidth="640" MaxHeight="600" Margin="24" Padding="24" CornerRadius="8"
+                            BorderThickness="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid RowSpacing="12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Uid="IconPicker_Title" Style="{StaticResource SubtitleTextBlockStyle}" />
+                            <Grid Grid.Row="1" ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="IconFileBox" x:Uid="IconPicker_File" Text="{x:Bind ViewModel.IconPicker.FilePath, Mode=TwoWay}" />
+                                <Button x:Uid="IconPicker_Load" Grid.Column="1" Click="OnLoadIconFile" />
+                                <Button x:Uid="IconPicker_Browse" Grid.Column="2" Click="OnBrowseIconFile" />
+                            </Grid>
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
+                                <Button Content="shell32.dll" Tag="shell32.dll" Click="OnQuickIconFile" />
+                                <Button Content="imageres.dll" Tag="imageres.dll" Click="OnQuickIconFile" />
+                                <Button Content="moricons.dll" Tag="moricons.dll" Click="OnQuickIconFile" />
+                                <ProgressRing Width="20" Height="20" IsActive="{x:Bind ViewModel.IconPicker.IsLoading, Mode=OneWay}" />
+                            </StackPanel>
+                            <GridView Grid.Row="3" ItemsSource="{x:Bind ViewModel.IconPicker.Items}" SelectionMode="None"
+                                      IsItemClickEnabled="True" ItemClick="OnIconClick">
+                                <GridView.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:IconPickItem">
+                                        <Image Source="{x:Bind Image, Mode=OneWay}" Width="32" Height="32" Margin="6"
+                                               ToolTipService.ToolTip="{x:Bind Index}" />
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                            </GridView>
+                            <Grid Grid.Row="4" ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind ViewModel.IconPicker.Status, Mode=OneWay}" VerticalAlignment="Center" TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <Button x:Uid="IconPicker_Close" Grid.Column="1" Command="{x:Bind ViewModel.CloseIconPickerCommand}" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
 
                 <!-- Details overlay: a click outside the card closes it -->
                 <Grid x:Name="DetailsOverlay" Background="#80000000" Tapped="OnOverlayTapped"

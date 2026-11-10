@@ -46,6 +46,20 @@ public static class SystemActions
 
     public static void OpenUrl(string url) => Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
 
+    /// <summary>The text on the clipboard, or null when there is none.</summary>
+    public static async Task<string?> ReadClipboardTextAsync()
+    {
+        try
+        {
+            var content = Clipboard.GetContent();
+            return content.Contains(StandardDataFormats.Text) ? await content.GetTextAsync() : null;
+        }
+        catch (System.Runtime.InteropServices.COMException)
+        {
+            return null;
+        }
+    }
+
     public static void CopyToClipboard(string text)
     {
         var package = new DataPackage();

@@ -32,6 +32,7 @@ public sealed class AppHost
         var verbs = new ShellVerbProvider(classes, resolver);
         var shellExtensions = new ShellExtensionProvider(classes, resolver);
         FileTypes = new FileTypeScanner(classes, verbs, shellExtensions);
+        Creator = new EntryCreator(classes, Path.Combine(AppInfo.DataDirectory, "Scripts"));
 
         IEntryProvider[] providers =
         [
@@ -59,6 +60,8 @@ public sealed class AppHost
     public ContextMenuService Menus { get; }
 
     public FileTypeScanner FileTypes { get; }
+
+    public EntryCreator Creator { get; }
 
     public KeyOwnershipService Ownership { get; }
 

@@ -50,7 +50,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     public bool IsElevated => SystemActions.IsElevated;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage))]
+    [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage), nameof(CanCreate))]
     public partial SectionItem? SelectedSection { get; set; }
 
     [ObservableProperty]
@@ -75,6 +75,28 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     public ObservableCollection<DetailRow> DetailRows { get; } = [];
 
     private string _detailsLocation = "";
+
+    /// <summary>The entry being edited, or null when the edit form is closed.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsEditOpen))]
+    public partial EntryEditViewModel? Editing { get; set; }
+
+    public bool IsEditOpen => Editing is not null;
+
+    /// <summary>The "New item" form, or null when it is closed.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNewOpen))]
+    public partial NewItemViewModel? Creating { get; set; }
+
+    public bool IsNewOpen => Creating is not null;
+
+    /// <summary>Only the pages that map to registry classes can take a new verb or handler.</summary>
+    public bool CanCreate => SelectedSection is { } section && ShellScopes.Keys.ContainsKey(section.Section);
+
+    public IconPickerViewModel IconPicker { get; } = new();
+
+    [ObservableProperty]
+    public partial bool IsIconPickerOpen { get; set; }
 
     [ObservableProperty]
     public partial string NoticeTitle { get; set; } = "";
@@ -293,6 +315,137 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     [RelayCommand]
     private void CopyDetailsLocation() => SystemActions.CopyToClipboard(_detailsLocation);
+
+    internal void BeginEdit(EntryViewModel item) => Editing = new EntryEditViewModel(item.Entry);
+
+    [RelayCommand]
+    private void CancelEdit()
+    {
+        IsIconPickerOpen = false;
+        Editing = null;
+    }
+
+    [RelayCommand]
+    private async Task SaveEditAsync()
+    {
+        if (Editing is not { } editing || editing.ToEdit() is not { } edit)
+        {
+            return;
+        }
+
+        var entry = editing.Entry;
+        Editing = null;
+        var result = await RunBusyAsync(() => host.Menus.Edit(entry, edit));
+        await CompleteAsync(result, entry, () => host.Menus.Edit(entry, edit));
+    }
+
+    [RelayCommand]
+    private async Task OpenIconPickerAsync()
+    {
+        IsIconPickerOpen = true;
+        if (IconPicker.Items.Count == 0)
+        {
+            await IconPicker.LoadAsync("shell32.dll");
+        }
+    }
+
+    [RelayCommand]
+    private void CloseIconPicker() => IsIconPickerOpen = false;
+
+    internal Task LoadIconFileAsync(string file) => IconPicker.LoadAsync(file);
+
+    internal void ChooseIcon(IconPickItem item)
+    {
+        // The picker serves whichever form is open: the new-item form or the edit form.
+        if (Creating is { } creating)
+        {
+            creating.Icon = IconPicker.Compose(item);
+        }
+        else if (Editing is { } editing)
+        {
+            editing.Icon = IconPicker.Compose(item);
+        }
+
+        IsIconPickerOpen = false;
+    }
+
+    [RelayCommand]
+    private void BeginNew()
+    {
+        if (CanCreate && SelectedSection is { } section)
+        {
+            Creating = new NewItemViewModel(section.Section);
+        }
+    }
+
+    [RelayCommand]
+    private void CancelNew()
+    {
+        IsIconPickerOpen = false;
+        Creating = null;
+    }
+
+    [RelayCommand]
+    private async Task PasteGuidAsync()
+    {
+        if (Creating is { } creating && await SystemActions.ReadClipboardTextAsync() is { } text)
+        {
+            creating.GuidText = text.Trim();
+        }
+    }
+
+    [RelayCommand]
+    private async Task SaveNewAsync()
+    {
+        if (Creating is not { } creating)
+        {
+            return;
+        }
+
+        creating.Error = "";
+        Func<Result> create;
+        string name;
+        if (creating.IsHandler)
+        {
+            if (creating.ToGuid() is not { } clsid)
+            {
+                return;
+            }
+
+            if (!host.Creator.ClsidExists(clsid))
+            {
+                creating.Error = Strings.Get("New_ClsidMissing");
+                return;
+            }
+
+            name = clsid.ToString("B");
+            create = () => host.Creator.CreateHandler(creating.Section, clsid, creating.AllUsers);
+        }
+        else
+        {
+            if (creating.ToVerb() is not { } verb)
+            {
+                return;
+            }
+
+            name = verb.Name;
+            create = () => host.Creator.CreateVerb(creating.Section, verb, creating.AllUsers);
+        }
+
+        Creating = null;
+        var result = await RunBusyAsync(create);
+        if (!result.IsSuccess)
+        {
+            AppLog.Warn($"Could not create {name}: {result.Error}");
+            var action = result.Error!.Kind == ErrorKind.RequiresElevation ? NoticeAction.RestartElevated : NoticeAction.None;
+            ShowNotice(InfoBarSeverity.Error, Strings.Get($"Error_{result.Error.Kind}"), Describe(result.Error), action);
+            return;
+        }
+
+        AppLog.Info($"Created {name}");
+        await RefreshAsync();
+        ShowNotice(InfoBarSeverity.Success, Strings.Get("Notice_Done_Title"), Strings.Format("Notice_Created_Message", name), NoticeAction.None);
+    }
 
     internal async Task RenameAsync(EntryViewModel item)
     {
