@@ -8,7 +8,15 @@ namespace NeoContext.Core.Dictionaries;
 /// in order: the first rule whose value matches <see cref="On"/> or <see cref="Off"/> decides, and when no
 /// rule matches the setting counts as on. A null <c>On</c> or <c>Off</c> means "the value does not exist".
 /// </summary>
-public sealed record DetailedRule(string RegPath, string ValueName, RegValueKind Kind, string? On, string? Off);
+public sealed record DetailedRule(string RegPath, string ValueName, RegValueKind Kind, string? On, string? Off)
+{
+    /// <summary>Limits and the Windows default of a number setting.</summary>
+    public int? Min { get; init; }
+
+    public int? Max { get; init; }
+
+    public int? Default { get; init; }
+}
 
 public enum DetailedKind
 {
@@ -77,7 +85,8 @@ public static class DetailedEdit
     private static DetailedItem? ParseItem(XElement item, string groupPath, DictionaryContext context)
     {
         var text = EnhanceMenuParser.Pick(item.Elements("Text"), context, e => (string?)e.Attribute("Value"));
-        var rules = item.Elements("Rule").Select(r => ParseRule(r, groupPath)).ToList();
+        var isText = item.Element("IsStringItem") is not null;
+        var rules = item.Elements("Rule").Select(r => ParseRule(r, groupPath)).Select(r => isText ? r with { Kind = RegValueKind.Text } : r).ToList();
         if (string.IsNullOrWhiteSpace(text) || rules.Count == 0)
         {
             return null;
@@ -104,6 +113,12 @@ public static class DetailedEdit
             _ => RegValueKind.DWord,
         };
 
-        return new DetailedRule(full, (string?)rule.Attribute("ValueName") ?? "", kind, (string?)rule.Attribute("On"), (string?)rule.Attribute("Off"));
+        int? Number(string name) => int.TryParse((string?)rule.Attribute(name), NumberStyles.Integer, CultureInfo.InvariantCulture, out var n) ? n : null;
+        return new DetailedRule(full, (string?)rule.Attribute("ValueName") ?? "", kind, (string?)rule.Attribute("On"), (string?)rule.Attribute("Off"))
+        {
+            Min = Number("Min"),
+            Max = Number("Max"),
+            Default = Number("Default"),
+        };
     }
 }

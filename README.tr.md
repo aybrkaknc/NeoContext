@@ -30,6 +30,12 @@ için tasarlandı.
 | Win+X menüsü | Win+X / Başlat düğmesi menüsündeki kısayollar | Gizli özniteliği; her değişiklikten sonra Win+X hash'i yeniden yazılır; yukarı veya aşağı taşıma, ekleme, varsayılan menüyü geri yükleme |
 | Dosya türleri | Seçilen dosya uzantılarına ait girdiler, örneğin `.mp4` veya `.zip` | Diğer sayfalarla aynı işlemler; grup seçin veya uzantı yazın |
 | Mağaza uygulamaları | Yüklü MSIX / Microsoft Store uygulamalarının bildirdiği bağlam menüsü fiilleri | Kullanıcıya özel `Shell Extensions\Blocked` listesi |
+| Hazır menüler | Yararlı komutların sözlüğü (Sahipliği al, Karma al, Burada PowerShell aç ve çok daha fazlası) | Fiili tek anahtarla kayıt defterine ekler; gizli veya yükseltilmiş komutlar, tıklanan öğeyi parametre olarak alan üretilmiş bir betikle çalışır |
+| Ayrıntılı düzenleme | Menüyü etkileyen Explorer ve program ayarları (yaklaşık 90 öğe, sayı ve metin değerleri dahil) | Sözlüğün listelediği kayıt defteri değerlerini yazar; bir programın grubu yalnızca yüklüyse görünür |
+| Sürükle-bırak | Sağ tuşla sürükleme işleyicileri ve varsayılan bırakma eylemi (kopyala, taşı, bağla) | İşleyiciler `-DragDropHandlers` altına taşınır; dosya ve klasör sınıflarında `DefaultDropEffect` |
+| Ortak komutlar | Alt menülerin işaret edebildiği Windows komut havuzu | Fiillerle aynı anahtarlar; girdiler silinemez. Havuzdaki komutlardan yeni alt menü oluşturulabilir |
+| Engellenen GUID'ler | Bu kullanıcı için engellenmiş kabuk uzantıları | `Shell Extensions\Blocked` girdilerini okunur adlarla listeler; GUID ekleyin veya kaldırın |
+| Özel kayıt yolu | Seçtiğiniz herhangi bir kayıt defteri anahtarı altındaki fiiller ve işleyiciler | Diğer sayfalarla aynı işlemler |
 
 Her sayfada arama vardır ve her girdi Kayıt Defteri Düzenleyicisi veya Explorer'da açılabilir. Fiiller
 düzenlenebilir, yeni öğeler de bunları kabul eden sayfalarda oluşturulabilir. Simge seçici, bir .exe, .dll
@@ -47,6 +53,11 @@ veya .ico dosyasındaki tüm simgeleri gösterir.
 - **Önce kullanıcı.** Kullanıcıya özel ve makine geneli girdiler ayrı okunur ve etiketlenir; çoğu değişiklik
   yönetici hakkı olmadan çalışır. Yükseltme gerektiğinde NeoContext her zaman yönetici olarak çalışmak yerine
   yönetici olarak yeniden başlatmayı önerir.
+- **Sözlükler veridir, betik metni değil.** Hazır komutlar XML ve INI sözlüklerinden gelir (İngilizce ve Türkçe).
+  Tıklanan öğe üretilen betiklere ayrı bir parametre olarak verilir; bu yüzden bir dosya adı komut enjekte edemez.
+  Daha yeni sözlükler bu depodan alınabilir; her dosya yalnızca `dictionaries/manifest.json` içindeki SHA-256
+  özetiyle eşleşirse ve ayrıştırılabilirse saklanır. Bunu *Ayarlar*'dan kapatabilirsiniz; veri klasöründeki
+  `Dictionaries\user` içindeki kendi kopyanız her zaman önceliklidir.
 - **Doğrulanmış güncellemeler.** NeoContext yeni sürümler hakkında yalnızca bilgi verir. Bir sürümü indirmeye karar
   verirseniz, dosya GitHub'da yayımlanan SHA-256 özetiyle eşleşmelidir; eşleşmezse indirme atılır.
   Sürümler henüz kod imzalı değil, bu yüzden SmartScreen ilk açılışta uyarabilir.
@@ -83,12 +94,13 @@ Sürüm paketleri, sürüm iş akışının çalıştırdığı [`build/Publish.
 
 ```
 src/
-  NeoContext.Core       Alan modeli, kurallar ve servisler. Windows API'si yok; birim testi yazılabilir.
+  NeoContext.Core       Alan modeli, kurallar ve servisler; sözlük ayrıştırıcıları ve gömülü sözlükler
+                        (Dictionaries/). Windows API'si yok; birim testi yazılabilir.
   NeoContext.Registry   Kayıt defteri yolları ve erişimi, fiil / kabuk uzantısı / ShellNew sağlayıcıları,
                         anahtar sahipliği (alma ve geri yükleme), .reg dışa aktarma, Shell Extensions\Blocked.
   NeoContext.Shell      .lnk ve özellik deposu iletişimi, Win+X hash'i ve sağlayıcısı, Gönder, desktop.ini.
   NeoContext.Uwp        Yüklü paketlerin AppxManifest.xml dosyalarını okur, bağlam menüsü fiillerini bulur.
-  NeoContext.Updates    GitHub sürüm sorgusu, sürüm karşılaştırma, doğrulanmış indirmeler.
+  NeoContext.Updates    GitHub sürüm sorgusu, sürüm karşılaştırma, doğrulanmış indirmeler, sözlük güncellemeleri.
   NeoContext.App        WinUI 3 görünümleri ve görünüm modelleri (MVVM), kompozisyon kökü (Services/AppHost.cs).
 tests/
   NeoContext.Tests      xUnit testleri; kayıt defteri testleri HKCU altındaki geçici bir anahtarda çalışır.
@@ -121,9 +133,12 @@ mesaja çevirir (yönetici olarak yeniden başlat, sahipliği al, Explorer'ı ye
   NeoContext bunu yapmayı önerir.
 - Yeni menüsü öğeleri yeniden adlandırılamaz; bu, dosya türünün adını Windows'un her yerinde değiştirirdi.
 - Kabuk uzantısı yeniden adlandırılamaz; adı COM sınıfından gelir.
-- Yalnızca fiiller düzenlenebilir. Kabuk uzantıları, yeni menüsü öğeleri ve Mağaza uygulamaları düzenlenemez.
+- Fiiller ile sayı veya metin ayarları düzenlenebilir. Kabuk uzantıları, yeni menüsü öğeleri ve Mağaza uygulamaları düzenlenemez.
 - Win+X grup klasörleri yeniden adlandırılamaz veya kaldırılamaz; varsayılan menü bütün olarak geri yüklenebilir.
 - Başka programlar tarafından oluşturulan alt menüler gösterilir, ancak öğeleri henüz NeoContext'ten düzenlenemez.
+- Bazı sözlük komutları VBScript veya yeni Windows sürümlerinde bulunmayan araçlar kullanır; böyle bir komut hiçbir şey yapmayabilir.
+- Sözlük güncellemeleri imza ile değil özetle doğrulanır: bozuk indirmelere karşı korur, ele geçirilmiş bir depoya karşı korumaz.
+- Ayrıntılı düzenleme sözlüğünün INI biçimli grupları ve Win+X grup klasörleri henüz sunulmuyor.
 
 ## Yerelleştirme
 

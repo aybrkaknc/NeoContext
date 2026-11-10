@@ -1020,4 +1020,13 @@
   <data name="New_SharedNone" xml:space="preserve">
     <value>En az bir ortak komut işaretleyin.</value>
   </data>
+  <data name="Edit_Value.Header" xml:space="preserve">
+    <value>Değer</value>
+  </data>
+  <data name="Edit_ValueHint" xml:space="preserve">
+    <value>{0} ile {1} arasında bir tam sayı. Kutu boşsa Windows {2} kullanır.</value>
+  </data>
+  <data name="Edit_ValueHintText" xml:space="preserve">
+    <value>Değeri kaldırmak için kutuyu boş bırakın.</value>
+  </data>
 </root>

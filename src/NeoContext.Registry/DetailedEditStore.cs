@@ -22,7 +22,7 @@ public sealed class DetailedEditStore(ClassesRoots roots)
         for (var i = 0; i < item.Rules.Count; i++)
         {
             var rule = item.Rules[i];
-            var (value, kind) = Read(rule);
+            var (value, kind, _) = Read(rule);
             if ((value is null || kind != rule.Kind) && i < item.Rules.Count - 1)
             {
                 continue;
@@ -56,6 +56,32 @@ public sealed class DetailedEditStore(ClassesRoots roots)
         }
 
         return first;
+    }
+
+    /// <summary>The stored number or text of a value setting (its first rule), or empty when none is stored.</summary>
+    public static string ReadValue(DetailedItem item) => Read(item.Rules[0]).Raw ?? "";
+
+    /// <summary>
+    /// Writes a number or text setting. An empty text removes the value, so Windows uses its default.
+    /// A number must be a whole number inside the item's limits.
+    /// </summary>
+    public static Result SetValue(DetailedItem item, string text)
+    {
+        var rule = item.Rules[0];
+        text = text.Trim();
+        if (text.Length == 0)
+        {
+            return Apply(rule, null);
+        }
+
+        if (item.Kind == DetailedKind.Number
+            && (!int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number)
+                || number < (rule.Min ?? int.MinValue) || number > (rule.Max ?? int.MaxValue)))
+        {
+            return Result.Failure(ErrorKind.InvalidInput, $"'{text}' is not a whole number from {rule.Min} to {rule.Max}.");
+        }
+
+        return Apply(rule, text);
     }
 
     /// <summary>The file of the program that owns this CLSID, or null when it is not installed.</summary>
@@ -120,19 +146,19 @@ public sealed class DetailedEditStore(ClassesRoots roots)
         }
     }
 
-    /// <summary>The value as lower-case text (numbers in decimal, bytes as "00 01"), and its type; null when it does not exist.</summary>
-    private static (string? Value, RegValueKind? Kind) Read(DetailedRule rule)
+    /// <summary>The value as lower-case text (numbers in decimal, bytes as "00 01"), its type and the text as stored; null when it does not exist.</summary>
+    private static (string? Value, RegValueKind? Kind, string? Raw) Read(DetailedRule rule)
     {
         if (!RegistryPath.TryParse(rule.RegPath, out var path))
         {
-            return (null, null);
+            return (null, null, null);
         }
 
         using var key = RegistryStore.OpenRead(path);
         var raw = key?.GetValue(rule.ValueName, null, RegistryValueOptions.DoNotExpandEnvironmentNames);
         if (raw is null)
         {
-            return (null, null);
+            return (null, null, null);
         }
 
         var kind = key!.GetValueKind(rule.ValueName) switch
@@ -147,6 +173,6 @@ public sealed class DetailedEditStore(ClassesRoots roots)
             byte[] bytes => string.Join(' ', bytes.Select(b => b.ToString("x2", CultureInfo.InvariantCulture))),
             _ => Convert.ToString(raw, CultureInfo.InvariantCulture) ?? "",
         };
-        return (text.ToLowerInvariant(), kind);
+        return (text.ToLowerInvariant(), kind, text);
     }
 }

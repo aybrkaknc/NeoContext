@@ -29,6 +29,12 @@ redesigned around safety, clear structure and an English-first, fully localizabl
 | Win+X menu | Shortcuts in the Win+X / Start-button menu | Hidden attribute; the Win+X hash is rewritten after every change; move up or down, add, restore the default menu |
 | File types | Entries that belong to chosen file extensions, such as `.mp4` or `.zip` | The same actions as the other pages; pick a group or type extensions |
 | Store apps | Context menu verbs declared by installed MSIX / Microsoft Store apps | Per-user `Shell Extensions\Blocked` list |
+| Ready-made menus | A dictionary of useful commands (Take ownership, Get hash, Open PowerShell here and many more) | Adds the verb to the registry with one switch; hidden or elevated commands run through a generated script that gets the clicked item as a parameter |
+| Detailed editing | Explorer and program settings that change the menu (about 90 items, with number and text values) | Writes the registry values listed by the dictionary; a program's group shows only when it is installed |
+| Drag and drop | Right-button drag handlers and the default drop action (copy, move, link) | Handlers moved to `-DragDropHandlers`; `DefaultDropEffect` on the file and folder classes |
+| Shared commands | The Windows command pool that submenus can point to | Same switches as verbs; entries cannot be deleted. A new submenu can be built from pool commands |
+| Blocked GUIDs | Shell extensions blocked for this user | Lists the `Shell Extensions\Blocked` entries with readable names; add or remove a GUID |
+| Custom registry path | Verbs and handlers under any registry key you choose | Same actions as the other pages |
 
 Every page has search, and each entry can be opened in Registry Editor or Explorer. Verbs can be
 edited, and new items can be created on the pages that take them. An icon picker shows every icon in
@@ -46,6 +52,11 @@ an .exe, .dll or .ico file.
 - **Per-user first.** Per-user and machine-wide entries are read separately and labelled, so most
   changes work without administrator rights. When elevation is needed, NeoContext offers to restart
   as administrator instead of always running elevated.
+- **Dictionaries are data, never script text.** Ready-made commands come from XML and INI dictionaries
+  (English and Turkish). The clicked item is passed to generated scripts as a separate parameter, so a
+  file name cannot inject commands. Newer dictionaries can be fetched from this repository; each file is
+  kept only if it matches the SHA-256 digest in `dictionaries/manifest.json` and parses. You can turn this off
+  in *Settings*, and your own copy in `Dictionaries\user` in the data folder always wins.
 - **Verified updates.** NeoContext only notifies you about new releases. If you choose to download
   one, the file must match the SHA-256 digest published on GitHub; otherwise the download is discarded.
   Releases are not code-signed yet, so Windows SmartScreen may warn on first launch.
@@ -81,12 +92,13 @@ Release packages are produced by [`build/Publish.ps1`](build/Publish.ps1), which
 
 ```
 src/
-  NeoContext.Core       Domain model, rules and services. No Windows APIs; fully unit-testable.
+  NeoContext.Core       Domain model, rules and services, and the dictionary parsers and embedded
+                        dictionaries (Dictionaries/). No Windows APIs; fully unit-testable.
   NeoContext.Registry   Registry paths and access, verb / shell extension / ShellNew providers,
                         key ownership (take and restore), .reg export, Shell Extensions\Blocked.
   NeoContext.Shell      .lnk and property-store interop, Win+X hash and provider, desktop.ini.
   NeoContext.Uwp        Reads AppxManifest.xml of installed packages for their context menu verbs.
-  NeoContext.Updates    GitHub release lookup, version comparison, verified downloads.
+  NeoContext.Updates    GitHub release lookup, version comparison, verified downloads, dictionary updates.
   NeoContext.App        WinUI 3 views and view models (MVVM), composition root (Services/AppHost.cs).
 tests/
   NeoContext.Tests      xUnit tests; registry tests run against a throw-away key under HKCU.
@@ -118,9 +130,12 @@ the right next step (restart as administrator, take ownership, restart Explorer)
 - New-menu (ShellNew), Win+X and Store-app changes appear after Explorer restarts; NeoContext offers to restart it.
 - New-menu items cannot be renamed, because that would rename the file type everywhere in Windows.
 - Renaming a shell extension is not supported; its name comes from the COM class.
-- Only verbs can be edited. Shell extensions, New-menu items and Store apps cannot.
+- Verbs and number or text settings can be edited. Shell extensions, New-menu items and Store apps cannot.
 - Win+X group folders cannot be renamed or removed; the default menu can be restored as a whole.
 - Submenus created by other programs are shown, but their items cannot be edited from NeoContext yet.
+- Some dictionary commands use VBScript or tools that newer Windows versions no longer include; such a command may do nothing.
+- Dictionary updates are checked by hash, not by signature: they protect against damaged downloads, not against a compromised repository.
+- Settings kept in INI-style groups of the detailed-editing dictionary, and group folders of the Win+X menu, are not offered yet.
 
 ## Localization
 

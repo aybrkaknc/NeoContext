@@ -1020,4 +1020,13 @@
   <data name="New_SharedNone" xml:space="preserve">
     <value>Tick at least one shared command.</value>
   </data>
+  <data name="Edit_Value.Header" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Edit_ValueHint" xml:space="preserve">
+    <value>A whole number from {0} to {1}. Windows uses {2} when the box is empty.</value>
+  </data>
+  <data name="Edit_ValueHintText" xml:space="preserve">
+    <value>Leave the box empty to remove the value.</value>
+  </data>
 </root>

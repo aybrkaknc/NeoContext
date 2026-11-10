@@ -162,7 +162,17 @@ public sealed record VerbAttributes
 /// A change to a verb. <paramref name="Command"/> null leaves the command alone;
 /// <paramref name="IconLocation"/> null leaves the icon alone and an empty string removes it.
 /// </summary>
-public sealed record EntryEdit(string? Command, string? IconLocation, VerbAttributes Attributes);
+public sealed record EntryEdit(string? Command, string? IconLocation, VerbAttributes Attributes)
+{
+    /// <summary>The new text or number for a setting that holds a value; empty removes the value. Null for other entries.</summary>
+    public string? Value { get; init; }
+}
+
+/// <summary>A setting that holds a number or a text instead of an on/off switch.</summary>
+/// <param name="IsNumber">True for a whole number inside <paramref name="Min"/>..<paramref name="Max"/>.</param>
+/// <param name="Current">The stored value, or empty when none is stored.</param>
+/// <param name="Default">What Windows uses when no value is stored.</param>
+public sealed record ValueSpec(bool IsNumber, string Current, int? Min, int? Max, int? Default);
 
 /// <summary>
 /// One item in a context menu, as an immutable snapshot. Providers create these on load;
@@ -206,6 +216,9 @@ public sealed record ContextMenuEntry(
 
     /// <summary>True when a change to this entry only shows up after Explorer restarts, whatever its provider says.</summary>
     public bool RestartExplorer { get; init; }
+
+    /// <summary>Set for settings that hold a number or text (detailed editing).</summary>
+    public ValueSpec? Value { get; init; }
 
     /// <summary>The verb's position and flags, for entries that can be edited.</summary>
     public VerbAttributes? Attributes { get; init; }

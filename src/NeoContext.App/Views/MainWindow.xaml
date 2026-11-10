@@ -265,26 +265,34 @@
                                 <StackPanel Spacing="12" Margin="0,0,16,0">
                                     <TextBox x:Uid="Edit_Command" Text="{x:Bind ViewModel.Editing.Command, Mode=TwoWay}"
                                              Visibility="{x:Bind ToVisible(ViewModel.Editing.HasCommand), Mode=OneWay}" />
-                                    <Grid ColumnSpacing="8">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBox x:Uid="Edit_Icon" Text="{x:Bind ViewModel.Editing.Icon, Mode=TwoWay}" />
-                                        <Button x:Uid="Edit_ChooseIcon" Grid.Column="1" VerticalAlignment="Bottom"
-                                                Command="{x:Bind ViewModel.OpenIconPickerCommand}" />
-                                    </Grid>
-                                    <ComboBox x:Uid="Edit_Position" SelectedIndex="{x:Bind ViewModel.Editing.PositionIndex, Mode=TwoWay}">
-                                        <ComboBoxItem x:Uid="Position_Default" />
-                                        <ComboBoxItem x:Uid="Position_Top" />
-                                        <ComboBoxItem x:Uid="Position_Bottom" />
-                                    </ComboBox>
-                                    <CheckBox x:Uid="Attr_Shield" IsChecked="{x:Bind ViewModel.Editing.Shield, Mode=TwoWay}" />
-                                    <CheckBox x:Uid="Attr_Extended" IsChecked="{x:Bind ViewModel.Editing.Extended, Mode=TwoWay}" />
-                                    <CheckBox x:Uid="Attr_OnlyBrowser" IsChecked="{x:Bind ViewModel.Editing.OnlyInBrowserWindow, Mode=TwoWay}" />
-                                    <CheckBox x:Uid="Attr_NoWorkingDir" IsChecked="{x:Bind ViewModel.Editing.NoWorkingDirectory, Mode=TwoWay}" />
-                                    <CheckBox x:Uid="Attr_NeverDefault" IsChecked="{x:Bind ViewModel.Editing.NeverDefault, Mode=TwoWay}" />
-                                    <CheckBox x:Uid="Attr_ShowDisabled" IsChecked="{x:Bind ViewModel.Editing.ShowAsDisabledIfHidden, Mode=TwoWay}" />
+                                    <StackPanel Spacing="4" Visibility="{x:Bind ToVisible(ViewModel.Editing.IsValue), Mode=OneWay}">
+                                        <TextBox x:Uid="Edit_Value" Text="{x:Bind ViewModel.Editing.ValueText, Mode=TwoWay}" />
+                                        <TextBlock Text="{x:Bind ViewModel.Editing.ValueHint, Mode=OneWay}" TextWrapping="Wrap"
+                                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
+                                    <StackPanel Spacing="12" Visibility="{x:Bind ToVisible(ViewModel.Editing.ShowVerbFields), Mode=OneWay}">
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Uid="Edit_Icon" Text="{x:Bind ViewModel.Editing.Icon, Mode=TwoWay}" />
+                                            <Button x:Uid="Edit_ChooseIcon" Grid.Column="1" VerticalAlignment="Bottom"
+                                                    Command="{x:Bind ViewModel.OpenIconPickerCommand}" />
+                                        </Grid>
+                                        <ComboBox x:Uid="Edit_Position" SelectedIndex="{x:Bind ViewModel.Editing.PositionIndex, Mode=TwoWay}">
+                                            <ComboBoxItem x:Uid="Position_Default" />
+                                            <ComboBoxItem x:Uid="Position_Top" />
+                                            <ComboBoxItem x:Uid="Position_Bottom" />
+                                        </ComboBox>
+                                        <CheckBox x:Uid="Attr_Shield" IsChecked="{x:Bind ViewModel.Editing.Shield, Mode=TwoWay}" />
+                                        <CheckBox x:Uid="Attr_Extended" IsChecked="{x:Bind ViewModel.Editing.Extended, Mode=TwoWay}" />
+                                        <CheckBox x:Uid="Attr_OnlyBrowser" IsChecked="{x:Bind ViewModel.Editing.OnlyInBrowserWindow, Mode=TwoWay}" />
+                                        <CheckBox x:Uid="Attr_NoWorkingDir" IsChecked="{x:Bind ViewModel.Editing.NoWorkingDirectory, Mode=TwoWay}" />
+                                        <CheckBox x:Uid="Attr_NeverDefault" IsChecked="{x:Bind ViewModel.Editing.NeverDefault, Mode=TwoWay}" />
+                                        <CheckBox x:Uid="Attr_ShowDisabled" IsChecked="{x:Bind ViewModel.Editing.ShowAsDisabledIfHidden, Mode=TwoWay}" />
+                                    </StackPanel>
                                     <TextBlock Text="{x:Bind ViewModel.Editing.Error, Mode=OneWay}" TextWrapping="Wrap"
                                                Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
                                 </StackPanel>

@@ -1,6 +1,7 @@
 using NeoContext.Core.Abstractions;
 using NeoContext.Core.Dictionaries;
 using NeoContext.Core.Models;
+using NeoContext.Core.Results;
 using NeoContext.Core.Rules;
 using NeoContext.Core.Services;
 using NeoContext.Registry;
@@ -125,7 +126,7 @@ public sealed class DetailedEditStoreTests : IDisposable
     }
 
     [Fact]
-    public void The_provider_shows_a_group_only_when_its_program_is_installed_and_lists_toggles_only()
+    public void The_provider_shows_a_group_only_when_its_program_is_installed_and_lists_toggles_and_value_settings()
     {
         var installed = Guid.NewGuid();
         Directory.CreateDirectory(_folder);
@@ -145,7 +146,7 @@ public sealed class DetailedEditStoreTests : IDisposable
 
         var entries = provider.Load().Value;
 
-        Assert.Equal(["Installed program", "Always shown"], entries.Select(e => e.Detail));
+        Assert.Equal(["Installed program", "Installed program", "Always shown"], entries.Select(e => e.Detail));
         var entry = entries[0];
         Assert.Equal("Context menu", entry.DisplayName);
         Assert.Equal("A tip", entry.Description);
@@ -180,5 +181,42 @@ public sealed class DetailedEditStoreTests : IDisposable
         Assert.Equal("Dictionary name", entry.DisplayName);
         Assert.Equal("imageres.dll, -109", entry.IconLocation);
         Assert.Equal(clsid.ToString("B"), Assert.Single(new ShellExtensionProvider(_sandbox.Classes, NullIndirectStringResolver.Instance).Load().Value).DisplayName);
+    }
+
+    [Fact]
+    public void A_number_setting_is_read_checked_against_its_limits_written_and_removed_when_empty()
+    {
+        var rule = Rule("Explorer", "Limit", null, null) with { Min = 1, Max = 20, Default = 6 };
+        var item = new DetailedItem("Limit", null, false, DetailedKind.Number, [rule]);
+
+        Assert.Equal("", DetailedEditStore.ReadValue(item));
+        Assert.True(DetailedEditStore.SetValue(item, " 12 ").IsSuccess);
+        Assert.Equal("12", Value("Explorer", "Limit"));
+        Assert.Equal("12", DetailedEditStore.ReadValue(item));
+
+        Assert.Equal(ErrorKind.InvalidInput, DetailedEditStore.SetValue(item, "21").Error!.Kind);
+        Assert.Equal(ErrorKind.InvalidInput, DetailedEditStore.SetValue(item, "abc").Error!.Kind);
+        Assert.Equal("12", Value("Explorer", "Limit"));
+
+        Assert.True(DetailedEditStore.SetValue(item, "").IsSuccess);
+        Assert.Null(Value("Explorer", "Limit"));
+        Assert.True(DetailedEditStore.SetValue(item, "").IsSuccess); // already gone
+    }
+
+    [Fact]
+    public void A_text_setting_is_written_as_a_string_and_listed_as_an_editable_entry()
+    {
+        var rule = Rule("Menu", "Title", null, null, RegValueKind.Text);
+        var item = new DetailedItem("Menu text", null, false, DetailedKind.Text, [rule]);
+        var provider = new DetailedEditProvider(Store(), NullIndirectStringResolver.Instance, () => [new DetailedGroup("Group", null, [], Path_("Menu"), [item])]);
+
+        var entry = Assert.Single(provider.Load().Value);
+        Assert.True(entry.Can(EntryCapabilities.Edit));
+        Assert.False(entry.Can(EntryCapabilities.Toggle));
+        Assert.False(entry.Value!.IsNumber);
+
+        Assert.True(provider.Edit(entry, new EntryEdit(null, null, new VerbAttributes()) { Value = "Hello" }).IsSuccess);
+        Assert.Equal("Hello", Value("Menu", "Title"));
+        Assert.Equal("Hello", Assert.Single(provider.Load().Value).Value!.Current);
     }
 }

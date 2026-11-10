@@ -7,9 +7,9 @@ namespace NeoContext.Registry.Providers;
 
 /// <summary>
 /// The "Detailed editing" page: switches for Windows and common programs, from the dictionary. A group is
-/// shown only when its program is installed. Number and text settings are not offered yet.
+/// shown only when its program is installed. Number and text settings are edited in the edit form.
 /// </summary>
-public sealed class DetailedEditProvider(DetailedEditStore store, IIndirectStringResolver resolver, Func<IReadOnlyList<DetailedGroup>> groups) : IEntryProvider
+public sealed class DetailedEditProvider(DetailedEditStore store, IIndirectStringResolver resolver, Func<IReadOnlyList<DetailedGroup>> groups) : IEntryProvider, IEntryEditor
 {
     private Dictionary<string, DetailedItem> _index = [];
 
@@ -35,11 +35,6 @@ public sealed class DetailedEditProvider(DetailedEditStore store, IIndirectStrin
             foreach (var item in group.Items)
             {
                 itemNumber++;
-                if (item.Kind != DetailedKind.Toggle)
-                {
-                    continue;
-                }
-
                 var id = $"detailed:{groupNumber}:{itemNumber}";
                 index[id] = item;
                 entries.Add(new ContextMenuEntry(
@@ -48,10 +43,13 @@ public sealed class DetailedEditProvider(DetailedEditStore store, IIndirectStrin
                     Section: MenuSection.Detailed,
                     Key: id,
                     DisplayName: DisplayText.Clean(item.Text, resolver) ?? item.Text,
-                    State: DetailedEditStore.IsOn(item) ? EntryState.Enabled : EntryState.Disabled,
+                    State: item.Kind == DetailedKind.Toggle && !DetailedEditStore.IsOn(item) ? EntryState.Disabled : EntryState.Enabled,
                     Location: item.Rules[0].RegPath,
-                    Capabilities: EntryCapabilities.Toggle)
+                    Capabilities: item.Kind == DetailedKind.Toggle ? EntryCapabilities.Toggle : EntryCapabilities.Edit)
                 {
+                    Value = item.Kind == DetailedKind.Toggle
+                        ? null
+                        : new ValueSpec(item.Kind == DetailedKind.Number, DetailedEditStore.ReadValue(item), item.Rules[0].Min, item.Rules[0].Max, item.Rules[0].Default),
                     Description = item.Tip,
                     Detail = groupName,
                     IconLocation = group.Icon,
@@ -68,6 +66,13 @@ public sealed class DetailedEditProvider(DetailedEditStore store, IIndirectStrin
         _index.TryGetValue(entry.Id, out var item)
             ? DetailedEditStore.Set(item, state == EntryState.Enabled)
             : Result.Failure(ErrorKind.NotFound, $"'{entry.DisplayName}' is no longer in the dictionary.");
+
+    public Result Edit(ContextMenuEntry entry, EntryEdit edit) =>
+        edit.Value is null
+            ? Result.Failure(ErrorKind.InvalidInput, "No value was given.")
+            : _index.TryGetValue(entry.Id, out var item) && item.Kind != DetailedKind.Toggle
+                ? DetailedEditStore.SetValue(item, edit.Value)
+                : Result.Failure(ErrorKind.NotFound, $"'{entry.DisplayName}' is no longer in the dictionary.");
 
     public Result Rename(ContextMenuEntry entry, string newName) =>
         Result.Failure(ErrorKind.NotSupported, "Settings cannot be renamed.");

@@ -11,6 +11,7 @@ public sealed partial class EntryEditViewModel : ObservableObject
     {
         Entry = entry;
         Command = entry.Command ?? "";
+        ValueText = entry.Value?.Current ?? "";
         Icon = entry.IconLocation ?? "";
 
         var attributes = entry.Attributes ?? new VerbAttributes();
@@ -29,6 +30,20 @@ public sealed partial class EntryEditViewModel : ObservableObject
 
     /// <summary>Submenu headers have no command of their own, so the box is hidden for them.</summary>
     public bool HasCommand => Entry.Command is not null;
+
+    /// <summary>True for settings that hold a number or text: only the value is edited.</summary>
+    public bool IsValue => Entry.Value is not null;
+
+    public bool ShowVerbFields => !IsValue;
+
+    public string ValueHint => Entry.Value is not { } spec
+        ? ""
+        : spec.IsNumber
+            ? Strings.Format("Edit_ValueHint", spec.Min ?? 0, spec.Max ?? int.MaxValue, spec.Default ?? 0)
+            : Strings.Get("Edit_ValueHintText");
+
+    [ObservableProperty]
+    public partial string ValueText { get; set; } = "";
 
     [ObservableProperty]
     public partial string Command { get; set; } = "";
@@ -64,6 +79,19 @@ public sealed partial class EntryEditViewModel : ObservableObject
     /// <summary>The change to apply, or null (with <see cref="Error"/> set) when the form is not valid.</summary>
     public EntryEdit? ToEdit()
     {
+        if (IsValue)
+        {
+            if (Entry.Value is { IsNumber: true } spec && ValueText.Trim().Length > 0
+                && !(int.TryParse(ValueText.Trim(), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var number)
+                     && number >= (spec.Min ?? int.MinValue) && number <= (spec.Max ?? int.MaxValue)))
+            {
+                Error = ValueHint;
+                return null;
+            }
+
+            return new EntryEdit(null, null, new VerbAttributes()) { Value = ValueText.Trim() };
+        }
+
         if (HasCommand && string.IsNullOrWhiteSpace(Command))
         {
             Error = Strings.Get("Edit_CommandRequired");
