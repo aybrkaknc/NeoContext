@@ -1,0 +1,30 @@
+using NeoContext.Core.Models;
+
+namespace NeoContext.Core.Rules;
+
+/// <summary>
+/// Decides which entries a page shows. A search is global: while the query is not empty it looks
+/// through every section; with no query a page shows only its own section.
+/// </summary>
+public static class EntryFilter
+{
+    public static bool IsSearch(string? query) => !string.IsNullOrWhiteSpace(query);
+
+    public static IReadOnlyList<ContextMenuEntry> Apply(IEnumerable<ContextMenuEntry> entries, string? query, MenuSection? section)
+    {
+        ArgumentNullException.ThrowIfNull(entries);
+
+        var text = query?.Trim() ?? "";
+        IEnumerable<ContextMenuEntry> matches = text.Length > 0
+            ? entries.Where(e => Matches(e, text))
+            : section is { } only ? entries.Where(e => e.Section == only) : [];
+
+        return [.. matches.OrderBy(e => e.DisplayName, StringComparer.CurrentCultureIgnoreCase)];
+    }
+
+    /// <summary>The name, the registry key or CLSID, or the command line contains the text.</summary>
+    public static bool Matches(ContextMenuEntry entry, string text) =>
+        entry.DisplayName.Contains(text, StringComparison.CurrentCultureIgnoreCase)
+        || entry.Key.Contains(text, StringComparison.OrdinalIgnoreCase)
+        || (entry.Command?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false);
+}

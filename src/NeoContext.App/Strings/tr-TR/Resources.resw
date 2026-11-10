@@ -16,7 +16,16 @@
     <value>Yönetici</value>
   </data>
   <data name="SearchBox.PlaceholderText" xml:space="preserve">
-    <value>Bu sayfada ara</value>
+    <value>Tüm kategorilerde ara</value>
+  </data>
+  <data name="Search_Title" xml:space="preserve">
+    <value>Arama sonuçları</value>
+  </data>
+  <data name="Search_Description" xml:space="preserve">
+    <value>Tüm kategorilerde {0} eşleşen girdi.</value>
+  </data>
+  <data name="Empty_Search" xml:space="preserve">
+    <value>Aramayla eşleşen girdi yok.</value>
   </data>
   <data name="RefreshButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Yenile</value>
@@ -30,7 +39,7 @@
   <data name="MoreButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Diğer seçenekler</value>
   </data>
-  <data name="EmptyText.Text" xml:space="preserve">
+  <data name="Empty_Page" xml:space="preserve">
     <value>Bu sayfada girdi yok.</value>
   </data>
   <data name="ShiftBadge.Text" xml:space="preserve">

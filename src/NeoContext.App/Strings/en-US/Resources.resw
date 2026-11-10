@@ -16,7 +16,16 @@
     <value>Administrator</value>
   </data>
   <data name="SearchBox.PlaceholderText" xml:space="preserve">
-    <value>Search this page</value>
+    <value>Search all categories</value>
+  </data>
+  <data name="Search_Title" xml:space="preserve">
+    <value>Search results</value>
+  </data>
+  <data name="Search_Description" xml:space="preserve">
+    <value>{0} matching entries across all categories.</value>
+  </data>
+  <data name="Empty_Search" xml:space="preserve">
+    <value>No entries match your search.</value>
   </data>
   <data name="RefreshButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Refresh</value>
@@ -30,7 +39,7 @@
   <data name="MoreButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>More options</value>
   </data>
-  <data name="EmptyText.Text" xml:space="preserve">
+  <data name="Empty_Page" xml:space="preserve">
     <value>No entries on this page.</value>
   </data>
   <data name="ShiftBadge.Text" xml:space="preserve">

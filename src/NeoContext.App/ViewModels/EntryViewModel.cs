@@ -13,14 +13,20 @@ public sealed partial class EntryViewModel : ObservableObject
     private bool _isEnabled;
     private bool _isApplying;
 
-    public EntryViewModel(ContextMenuEntry entry, MainViewModel owner)
+    public EntryViewModel(ContextMenuEntry entry, MainViewModel owner, bool showSection = false)
     {
         Entry = entry;
         _owner = owner;
         _isEnabled = entry.IsEnabled;
+        ShowSection = showSection;
     }
 
     public ContextMenuEntry Entry { get; }
+
+    /// <summary>Search results span every page, so they carry a tag naming the page the entry is on.</summary>
+    public bool ShowSection { get; }
+
+    public string SectionLabel => Strings.Get($"Section_{Entry.Section}");
 
     public string Name => Entry.DisplayName;
 

@@ -94,7 +94,7 @@
                     <ProgressRing Grid.Row="2" IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
                                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,48,0,0" />
 
-                    <TextBlock x:Uid="EmptyText" Grid.Row="2" Text="Nothing here."
+                    <TextBlock Grid.Row="2" Text="{x:Bind ViewModel.EmptyMessage, Mode=OneWay}"
                                HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,48,0,0"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                Visibility="{x:Bind ShowEmptyText(ViewModel.IsEmpty, ViewModel.IsBusy), Mode=OneWay}" />
@@ -133,6 +133,10 @@
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                        <Border Visibility="{x:Bind ShowSection}" CornerRadius="4" Padding="6,1"
+                                                Background="{ThemeResource SubtleFillColorSecondaryBrush}">
+                                            <TextBlock Text="{x:Bind SectionLabel}" FontSize="11" />
+                                        </Border>
                                         <Border Visibility="{x:Bind ShowShiftBadge}" CornerRadius="4" Padding="6,1"
                                                 Background="{ThemeResource SubtleFillColorSecondaryBrush}">
                                             <TextBlock x:Uid="ShiftBadge" Text="Shift" FontSize="11" />

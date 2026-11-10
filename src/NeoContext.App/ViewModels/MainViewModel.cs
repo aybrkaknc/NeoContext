@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using NeoContext.App.Services;
 using NeoContext.Core.Models;
 using NeoContext.Core.Results;
+using NeoContext.Core.Rules;
 using NeoContext.Registry;
 using NeoContext.Shell;
 using NeoContext.Updates;
@@ -43,6 +44,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     public partial SectionItem? SelectedSection { get; set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsSearching), nameof(SectionTitle), nameof(SectionDescription), nameof(EmptyMessage))]
     public partial string SearchText { get; set; } = "";
 
     [ObservableProperty]
@@ -71,9 +73,16 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     public string NoticeActionText => PendingAction == NoticeAction.None ? "" : Strings.Get($"Action_{PendingAction}");
 
-    public string SectionTitle => SelectedSection?.Title ?? "";
+    /// <summary>True while the search box has text; the list then covers every section.</summary>
+    public bool IsSearching => EntryFilter.IsSearch(SearchText);
 
-    public string SectionDescription => SelectedSection?.Description ?? "";
+    public string SectionTitle => IsSearching ? Strings.Get("Search_Title") : SelectedSection?.Title ?? "";
+
+    public string SectionDescription => IsSearching
+        ? Strings.Format("Search_Description", Entries.Count)
+        : SelectedSection?.Description ?? "";
+
+    public string EmptyMessage => Strings.Get(IsSearching ? "Empty_Search" : "Empty_Page");
 
     partial void OnSelectedSectionChanged(SectionItem? value) => ApplyFilter();
 
@@ -102,27 +111,16 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     private void ApplyFilter()
     {
         Entries.Clear();
-        if (SelectedSection is null)
-        {
-            IsEmpty = true;
-            return;
-        }
 
-        var query = SearchText.Trim();
-        var matches = _all
-            .Where(e => e.Section == SelectedSection.Section)
-            .Where(e => query.Length == 0
-                || e.DisplayName.Contains(query, StringComparison.CurrentCultureIgnoreCase)
-                || e.Key.Contains(query, StringComparison.OrdinalIgnoreCase)
-                || (e.Command?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false))
-            .OrderBy(e => e.DisplayName, StringComparer.CurrentCultureIgnoreCase);
-
-        foreach (var entry in matches)
+        // A search looks through every section, so each row also shows which one it belongs to.
+        var searching = IsSearching;
+        foreach (var entry in EntryFilter.Apply(_all, SearchText, SelectedSection?.Section))
         {
-            Entries.Add(new EntryViewModel(entry, this));
+            Entries.Add(new EntryViewModel(entry, this, showSection: searching));
         }
 
         IsEmpty = Entries.Count == 0;
+        OnPropertyChanged(nameof(SectionDescription));
     }
 
     /// <summary>Applies a toggle. Returns false when the switch must flip back.</summary>
