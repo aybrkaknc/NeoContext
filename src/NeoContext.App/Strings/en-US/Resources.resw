@@ -72,6 +72,12 @@
   <data name="Settings_Language_Hint.Text" xml:space="preserve">
     <value>Takes effect after restarting NeoContext.</value>
   </data>
+  <data name="Settings_Guide.Text" xml:space="preserve">
+    <value>Introduction guide</value>
+  </data>
+  <data name="Settings_GuideButton.Content" xml:space="preserve">
+    <value>Show</value>
+  </data>
   <data name="Settings_Protect.Text" xml:space="preserve">
     <value>Protect essential entries</value>
   </data>
@@ -417,11 +423,23 @@
   <data name="EntriesList.AutomationProperties.Name" xml:space="preserve">
     <value>Menu entries</value>
   </data>
-  <data name="Notice_Welcome_Title" xml:space="preserve">
+  <data name="Guide_Title" xml:space="preserve">
     <value>Welcome to NeoContext</value>
   </data>
-  <data name="Notice_Welcome_Message" xml:space="preserve">
-    <value>Pick a menu on the left, then use the switch to show or hide an entry. Deleted entries are backed up first, so you can undo. On Windows 11 many entries appear under "Show more options".</value>
+  <data name="Guide_Point1" xml:space="preserve">
+    <value>Choose a page on the left. Each entry's switch shows or hides it in the right-click menu.</value>
+  </data>
+  <data name="Guide_Point2" xml:space="preserve">
+    <value>Deleted entries are backed up first, so you can undo them.</value>
+  </data>
+  <data name="Guide_Point3" xml:space="preserve">
+    <value>On Windows 11, many entries appear under "Show more options".</value>
+  </data>
+  <data name="Guide_Point4" xml:space="preserve">
+    <value>Entries marked "Shift + right-click" appear only when you hold Shift and right-click.</value>
+  </data>
+  <data name="Guide_Close" xml:space="preserve">
+    <value>Get started</value>
   </data>
   <data name="Menu_Details.Text" xml:space="preserve">
     <value>Details</value>

@@ -72,6 +72,12 @@
   <data name="Settings_Language_Hint.Text" xml:space="preserve">
     <value>NeoContext yeniden başlatıldığında uygulanır.</value>
   </data>
+  <data name="Settings_Guide.Text" xml:space="preserve">
+    <value>Tanıtım rehberi</value>
+  </data>
+  <data name="Settings_GuideButton.Content" xml:space="preserve">
+    <value>Göster</value>
+  </data>
   <data name="Settings_Protect.Text" xml:space="preserve">
     <value>Temel girdileri koru</value>
   </data>
@@ -417,11 +423,23 @@
   <data name="EntriesList.AutomationProperties.Name" xml:space="preserve">
     <value>Menü girdileri</value>
   </data>
-  <data name="Notice_Welcome_Title" xml:space="preserve">
+  <data name="Guide_Title" xml:space="preserve">
     <value>NeoContext'e hoş geldiniz</value>
   </data>
-  <data name="Notice_Welcome_Message" xml:space="preserve">
-    <value>Soldan bir menü seçin, sonra anahtarla bir girdiyi gösterin veya gizleyin. Silinen girdilerin önce yedeği alınır, böylece geri alabilirsiniz. Windows 11'de birçok girdi "Daha fazla seçenek göster" altında görünür.</value>
+  <data name="Guide_Point1" xml:space="preserve">
+    <value>Soldan bir sayfa seçin. Her girdinin anahtarı, o girdinin sağ tık menüsünde gösterilip gösterilmeyeceğini belirler.</value>
+  </data>
+  <data name="Guide_Point2" xml:space="preserve">
+    <value>Silinen girdilerin önce yedeği alınır, böylece geri alabilirsiniz.</value>
+  </data>
+  <data name="Guide_Point3" xml:space="preserve">
+    <value>Windows 11'de birçok girdi "Daha fazla seçenek göster" altında görünür.</value>
+  </data>
+  <data name="Guide_Point4" xml:space="preserve">
+    <value>"Shift + sağ tık" etiketli girdiler yalnızca Shift basılıyken görünür.</value>
+  </data>
+  <data name="Guide_Close" xml:space="preserve">
+    <value>Başla</value>
   </data>
   <data name="Menu_Details.Text" xml:space="preserve">
     <value>Ayrıntılar</value>

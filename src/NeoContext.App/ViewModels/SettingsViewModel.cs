@@ -238,6 +238,9 @@ public sealed partial class SettingsViewModel : ObservableObject
     private void OpenDataFolder() => SystemActions.ShowInExplorer(AppInfo.DataDirectory);
 
     [RelayCommand]
+    private Task ShowGuideAsync() => _dialogs.ShowWelcomeGuideAsync();
+
+    [RelayCommand]
     private void OpenRepository() => SystemActions.OpenUrl(AppInfo.RepositoryUrl);
 
     [RelayCommand]

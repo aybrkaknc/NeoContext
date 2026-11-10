@@ -58,6 +58,16 @@
                               IsOn="{x:Bind ViewModel.ProtectEssentialEntries, Mode=TwoWay}" />
             </Grid>
 
+            <Grid Style="{StaticResource CardStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Uid="Settings_Guide" Text="Introduction guide" VerticalAlignment="Center" />
+                <Button x:Uid="Settings_GuideButton" Grid.Column="1" Content="Show" VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.ShowGuideCommand}" />
+            </Grid>
+
             <!-- Updates -->
             <TextBlock x:Uid="Settings_Updates" Text="Updates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,16,0,0" />
 

@@ -418,11 +418,10 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
             IsBusy = false;
         }
 
-        ShowWelcomeOnce();
     }
 
-    /// <summary>A short orientation shown on the very first launch only.</summary>
-    private void ShowWelcomeOnce()
+    /// <summary>A one-page guide on the very first launch only. Called once the window is on screen, so the dialog can open.</summary>
+    public async Task ShowWelcomeOnceAsync()
     {
         if (host.Settings.WelcomeShown)
         {
@@ -430,10 +429,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
 
         host.UpdateSettings(s => s with { WelcomeShown = true });
-        if (!IsNoticeOpen)
-        {
-            ShowNotice(InfoBarSeverity.Informational, Strings.Get("Notice_Welcome_Title"), Strings.Get("Notice_Welcome_Message"), NoticeAction.None);
-        }
+        await dialogs.ShowWelcomeGuideAsync();
     }
 
     private void ApplyFilter()

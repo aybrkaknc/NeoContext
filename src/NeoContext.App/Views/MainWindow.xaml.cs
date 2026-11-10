@@ -18,6 +18,12 @@ public sealed partial class MainWindow : Window
         ViewModel = new MainViewModel(host, dialogs);
         InitializeComponent();
 
+        // The first-run guide is a dialog, so it waits until the window content is loaded.
+        if (Content is FrameworkElement root)
+        {
+            root.Loaded += async (_, _) => await ViewModel.ShowWelcomeOnceAsync();
+        }
+
         Title = "NeoContext";
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);

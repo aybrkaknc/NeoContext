@@ -9,6 +9,12 @@ public interface IDialogService
 {
     Task<bool> ConfirmAsync(string title, string message, string confirmText, bool destructive = false);
 
+    /// <summary>Shows a short guide as a list of points, with one close button.</summary>
+    Task ShowGuideAsync(string title, IReadOnlyList<string> points, string closeText);
+
+    /// <summary>Shows the introduction guide. Used on first launch and from Settings.</summary>
+    Task ShowWelcomeGuideAsync();
+
     /// <summary>Asks for a name. Returns null when the user cancels.</summary>
     Task<string?> PromptForNameAsync(string title, string initialValue);
 }
@@ -24,6 +30,26 @@ public sealed class DialogService(Func<XamlRoot?> xamlRoot) : IDialogService
         dialog.CloseButtonText = Strings.Get("Dialog_Cancel");
         dialog.DefaultButton = destructive ? ContentDialogButton.Close : ContentDialogButton.Primary;
         return await dialog.ShowAsync() == ContentDialogResult.Primary;
+    }
+
+    public Task ShowWelcomeGuideAsync() => ShowGuideAsync(
+        Strings.Get("Guide_Title"),
+        [Strings.Get("Guide_Point1"), Strings.Get("Guide_Point2"), Strings.Get("Guide_Point3"), Strings.Get("Guide_Point4")],
+        Strings.Get("Guide_Close"));
+
+    public async Task ShowGuideAsync(string title, IReadOnlyList<string> points, string closeText)
+    {
+        var panel = new StackPanel { Spacing = 12 };
+        foreach (var point in points)
+        {
+            panel.Children.Add(new TextBlock { Text = point, TextWrapping = TextWrapping.Wrap });
+        }
+
+        var dialog = Create(title);
+        dialog.Content = panel;
+        dialog.CloseButtonText = closeText;
+        dialog.DefaultButton = ContentDialogButton.Close;
+        await dialog.ShowAsync();
     }
 
     public async Task<string?> PromptForNameAsync(string title, string initialValue)
