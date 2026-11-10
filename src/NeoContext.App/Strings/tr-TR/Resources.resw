@@ -43,7 +43,10 @@
     <value>Bu sayfada girdi yok.</value>
   </data>
   <data name="ShiftBadge.Text" xml:space="preserve">
-    <value>Yalnızca Shift</value>
+    <value>Shift + sağ tık</value>
+  </data>
+  <data name="ShiftBadge_Tooltip" xml:space="preserve">
+    <value>Yalnızca Shift basılıyken sağ tıklayınca görünür.</value>
   </data>
   <data name="Menu_Rename.Text" xml:space="preserve">
     <value>Yeniden adlandır</value>
@@ -71,6 +74,27 @@
   </data>
   <data name="Settings_Protect.Text" xml:space="preserve">
     <value>Temel girdileri koru</value>
+  </data>
+  <data name="TakeOwnershipPageButton.Content" xml:space="preserve">
+    <value>Korumalı girdilerin sahipliğini al</value>
+  </data>
+  <data name="Settings_Silent.Text" xml:space="preserve">
+    <value>Yönetici iken sahipliği otomatik al</value>
+  </data>
+  <data name="Settings_Silent_Hint.Text" xml:space="preserve">
+    <value>Varsayılan kapalı. Açıkken korumalı anahtarların sahipliği sorulmadan alınır ve her değişiklik yedeklenir. Windows'un sahip olduğu anahtarların değişebileceğini kabul ediyorsanız açın.</value>
+  </data>
+  <data name="Ownership_Page_Message" xml:space="preserve">
+    <value>Bu sayfadaki {0} anahtar Windows tarafından korunuyor. NeoContext hesabınızı bunların sahibi yapacak. Önceki sahip ve izinler kaydedilir; Ayarlar'dan geri yükleyebilirsiniz.{1}{1}{2}</value>
+  </data>
+  <data name="Ownership_Page_None" xml:space="preserve">
+    <value>Bu sayfada korumalı anahtar yok.</value>
+  </data>
+  <data name="Ownership_Page_Done" xml:space="preserve">
+    <value>{0} anahtarın sahipliği alındı.</value>
+  </data>
+  <data name="Ownership_Page_Failed" xml:space="preserve">
+    <value>{1} anahtardan {0} tanesinin sahipliği alınamadı. Ayrıntılar günlükte.</value>
   </data>
   <data name="Settings_Protect_Hint.Text" xml:space="preserve">
     <value>Explorer'ın çalışması için gereken "Aç" gibi girdilerin kapatılmasını veya silinmesini engeller.</value>
@@ -162,8 +186,11 @@
   <data name="Section_Library_Description" xml:space="preserve">
     <value>Belgeler veya Resimler gibi bir kütüphaneye sağ tıklandığında gösterilir.</value>
   </data>
-  <data name="Group_Home" xml:space="preserve">
-    <value>Ana sayfa</value>
+  <data name="Group_Locations" xml:space="preserve">
+    <value>Konumlar</value>
+  </data>
+  <data name="Group_AppsAndMenus" xml:space="preserve">
+    <value>Uygulamalar ve menüler</value>
   </data>
   <data name="Group_FileTypes" xml:space="preserve">
     <value>Dosya türleri</value>

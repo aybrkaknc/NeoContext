@@ -31,6 +31,7 @@ public sealed partial class SettingsViewModel : ObservableObject
 
         SelectedLanguage = Languages.FirstOrDefault(l => l.Tag == host.Settings.Language) ?? Languages[0];
         ProtectEssentialEntries = host.Settings.ProtectEssentialEntries;
+        SilentOwnershipWhenElevated = host.Settings.SilentOwnershipWhenElevated;
         CheckForUpdates = host.Settings.CheckForUpdates;
         UpdateDictionaries = host.Settings.UpdateDictionaries;
         UpdateStatus = Strings.Format("Settings_Update_Current", AppInfo.Version);
@@ -57,6 +58,9 @@ public sealed partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty]
     public partial bool UpdateDictionaries { get; set; }
+
+    [ObservableProperty]
+    public partial bool SilentOwnershipWhenElevated { get; set; }
 
     [ObservableProperty]
     public partial string DictionaryStatus { get; set; } = "";
@@ -92,6 +96,9 @@ public sealed partial class SettingsViewModel : ObservableObject
 
     partial void OnProtectEssentialEntriesChanged(bool value) =>
         _host.UpdateSettings(s => s with { ProtectEssentialEntries = value });
+
+    partial void OnSilentOwnershipWhenElevatedChanged(bool value) =>
+        _host.UpdateSettings(s => s with { SilentOwnershipWhenElevated = value });
 
     partial void OnCheckForUpdatesChanged(bool value) =>
         _host.UpdateSettings(s => s with { CheckForUpdates = value });

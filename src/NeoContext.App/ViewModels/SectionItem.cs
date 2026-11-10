@@ -17,7 +17,7 @@ public sealed class SectionItem(MenuSection section, string glyph)
 
     public static IReadOnlyList<SectionGroup> Groups { get; } =
     [
-        new("Group_Home", "",
+        new("Group_Locations", "",
         [
             new(MenuSection.Files, ""),
             new(MenuSection.Folder, ""),
@@ -29,6 +29,9 @@ public sealed class SectionItem(MenuSection section, string glyph)
             new(MenuSection.Computer, ""),
             new(MenuSection.RecycleBin, ""),
             new(MenuSection.Library, ""),
+        ]),
+        new("Group_AppsAndMenus", "",
+        [
             new(MenuSection.NewMenu, ""),
             new(MenuSection.SendTo, ""),
             new(MenuSection.OpenWith, ""),

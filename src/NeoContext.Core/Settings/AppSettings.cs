@@ -37,6 +37,12 @@ public sealed record AppSettings
     /// <summary>True once the first-run welcome notice has been shown.</summary>
     public bool WelcomeShown { get; init; }
 
+    /// <summary>
+    /// When NeoContext runs as administrator, take ownership of protected keys without asking.
+    /// Each change is still backed up and can be restored. Off by default.
+    /// </summary>
+    public bool SilentOwnershipWhenElevated { get; init; }
+
     /// <summary>Returns a copy with out-of-range values replaced by their defaults.</summary>
     public AppSettings Normalize() =>
         UpdateCheckIntervalDays is < 1 or > 365

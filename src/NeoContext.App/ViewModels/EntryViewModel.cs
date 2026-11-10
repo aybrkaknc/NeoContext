@@ -133,6 +133,11 @@ public sealed partial class EntryViewModel : ObservableObject
     /// <summary>Search results span every page, so they carry a tag naming the page the entry is on.</summary>
     public bool ShowSection { get; }
 
+    /// <summary>True for entries NeoContext will not disable or delete while protection is on. Shown as a shield.</summary>
+    public bool IsProtected => _owner.IsEntryProtected(Entry);
+
+    public string ProtectedText => Strings.Get("Details_Protected_Text");
+
     public string SectionLabel => Strings.Get($"Section_{Entry.Section}");
 
     public string Name => Entry.DisplayName;
@@ -197,6 +202,8 @@ public sealed partial class EntryViewModel : ObservableObject
     };
 
     public bool ShowShiftBadge => Entry.ExtendedOnly;
+
+    public string ShiftTooltip => Strings.Get("ShiftBadge_Tooltip");
 
     public bool CanToggle => Entry.Can(EntryCapabilities.Toggle);
 

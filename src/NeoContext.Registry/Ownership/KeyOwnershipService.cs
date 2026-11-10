@@ -76,6 +76,29 @@ public sealed class KeyOwnershipService(string backupFilePath)
         }
     }
 
+    /// <summary>
+    /// True when the key exists and the current user cannot write to it, so ownership would be needed.
+    /// Only opens the key for writing and closes it again; nothing is changed.
+    /// </summary>
+    public bool NeedsOwnership(RegistryPath path)
+    {
+        if (path.Hive == RegistryHive.ClassesRoot)
+        {
+            return false;
+        }
+
+        try
+        {
+            using var hive = RegistryKey.OpenBaseKey(path.Hive, RegistryView.Default);
+            using var key = hive.OpenSubKey(path.SubKey, writable: true);
+            return false;
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or System.Security.SecurityException)
+        {
+            return true;
+        }
+    }
+
     /// <summary>Puts the saved owner and permissions back and removes the backup.</summary>
     public Result Restore(OwnershipBackup backup)
     {

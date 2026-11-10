@@ -55,6 +55,8 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     public bool IsElevated => SystemActions.IsElevated;
 
+    internal bool IsEntryProtected(ContextMenuEntry entry) => host.Menus.IsProtected(entry);
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage), nameof(CanCreate), nameof(IsWinXPage), nameof(IsCustomPathPage),
         nameof(IsPerceivedPage), nameof(IsFolderTypePage), nameof(IsChoicePage), nameof(IsAnalysisPage), nameof(PickerChoices), nameof(PickerSummary))]
@@ -913,6 +915,13 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
             var moves = entry.Kind is EntryKind.ShellNew or EntryKind.ShellExtension;
             _ownershipTargets = moves && key.Parent is { } parent ? [key, parent] : [key];
             _retryAfterOwnership = retry;
+
+            if (host.Settings.SilentOwnershipWhenElevated && IsElevated)
+            {
+                // The user opted in on the Settings page. Each change is still backed up before it is made.
+                _ = TakeOwnershipAndRetryAsync(askFirst: false);
+                return;
+            }
         }
 
         var message = error.Kind is ErrorKind.Protected
@@ -1006,7 +1015,79 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
     }
 
-    private async Task TakeOwnershipAndRetryAsync()
+    /// <summary>Takes ownership of every protected key on the current page, after one confirmation that lists them all.</summary>
+    [RelayCommand]
+    private async Task TakeOwnershipForPageAsync()
+    {
+        if (!IsElevated)
+        {
+            ShowNotice(InfoBarSeverity.Error, Strings.Get("Error_RequiresElevation"), Strings.Get("Error_RequiresElevation_Message"), NoticeAction.RestartElevated);
+            return;
+        }
+
+        var locations = Entries.Select(e => e.Location).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+        RegistryPath[] targets;
+        IsBusy = true;
+        try
+        {
+            targets = await Task.Run(() => locations
+                .Where(l => RegistryPath.TryParse(l, out _))
+                .Select(RegistryPath.Parse)
+                .Where(host.Ownership.NeedsOwnership)
+                .ToArray());
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+
+        if (targets.Length == 0)
+        {
+            ShowNotice(InfoBarSeverity.Success, Strings.Get("Notice_Done_Title"), Strings.Get("Ownership_Page_None"), NoticeAction.None);
+            return;
+        }
+
+        var message = Strings.Format("Ownership_Page_Message", targets.Length, Environment.NewLine, string.Join(Environment.NewLine, targets.Select(t => t.ToString())));
+        if (!await dialogs.ConfirmAsync(Strings.Get("Ownership_Title"), message, Strings.Get("Ownership_Confirm")))
+        {
+            return;
+        }
+
+        var failed = 0;
+        IsBusy = true;
+        try
+        {
+            foreach (var target in targets)
+            {
+                var taken = await Task.Run(() => host.Ownership.TakeOwnership(target));
+                if (taken.IsSuccess)
+                {
+                    AppLog.Info($"Took ownership of {target}; previous owner saved.");
+                }
+                else
+                {
+                    failed++;
+                    AppLog.Warn($"{target}: {taken.Error}");
+                }
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+
+        await RefreshAsync();
+        if (failed == 0)
+        {
+            ShowNotice(InfoBarSeverity.Success, Strings.Get("Ownership_Done_Title"), Strings.Format("Ownership_Page_Done", targets.Length), NoticeAction.None);
+        }
+        else
+        {
+            ShowNotice(InfoBarSeverity.Error, Strings.Get("Error_AccessDenied"), Strings.Format("Ownership_Page_Failed", failed, targets.Length), NoticeAction.None);
+        }
+    }
+
+    private async Task TakeOwnershipAndRetryAsync(bool askFirst = true)
     {
         var targets = _ownershipTargets;
         var retry = _retryAfterOwnership;
@@ -1016,7 +1097,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
 
         var message = Strings.Format("Ownership_Message", Environment.NewLine, string.Join(Environment.NewLine, targets.Select(t => t.ToString())));
-        if (!await dialogs.ConfirmAsync(Strings.Get("Ownership_Title"), message, Strings.Get("Ownership_Confirm")))
+        if (askFirst && !await dialogs.ConfirmAsync(Strings.Get("Ownership_Title"), message, Strings.Get("Ownership_Confirm")))
         {
             return;
         }

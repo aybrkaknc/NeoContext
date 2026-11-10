@@ -82,6 +82,7 @@
                     </Grid>
 
                     <StackPanel Grid.Row="1" Spacing="8">
+                    <Button x:Uid="TakeOwnershipPageButton" HorizontalAlignment="Left" Command="{x:Bind ViewModel.TakeOwnershipForPageCommand}" />
                     <Button x:Uid="ChooseCustomPathButton" HorizontalAlignment="Left" Command="{x:Bind ViewModel.ChooseCustomPathCommand}"
                             Visibility="{x:Bind ToVisible(ViewModel.IsCustomPathPage), Mode=OneWay}" />
                     <Button x:Uid="RestoreWinXButton" HorizontalAlignment="Left" Command="{x:Bind ViewModel.RestoreWinXDefaultsCommand}"
@@ -233,13 +234,18 @@
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                        <FontIcon Glyph="&#xE83D;" FontSize="14" Visibility="{x:Bind IsProtected}"
+                                                  Foreground="{ThemeResource SystemFillColorCautionBrush}"
+                                                  ToolTipService.ToolTip="{x:Bind ProtectedText}"
+                                                  AutomationProperties.Name="{x:Bind ProtectedText}" />
                                         <Border Visibility="{x:Bind ShowSection}" CornerRadius="4" Padding="6,1"
                                                 Background="{ThemeResource SubtleFillColorSecondaryBrush}">
                                             <TextBlock Text="{x:Bind SectionLabel}" FontSize="11" />
                                         </Border>
                                         <Border Visibility="{x:Bind ShowShiftBadge}" CornerRadius="4" Padding="6,1"
-                                                Background="{ThemeResource SubtleFillColorSecondaryBrush}">
-                                            <TextBlock x:Uid="ShiftBadge" Text="Shift" FontSize="11" />
+                                                Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                                ToolTipService.ToolTip="{x:Bind ShiftTooltip}">
+                                            <TextBlock x:Uid="ShiftBadge" Text="Shift + right-click" FontSize="11" />
                                         </Border>
                                         <TextBlock Text="{x:Bind Detail}" Style="{StaticResource CaptionTextBlockStyle}" MaxWidth="220"
                                                    TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"

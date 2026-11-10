@@ -40,6 +40,7 @@ public sealed partial class MainWindow : Window
     private void BuildNavigation()
     {
         NavigationViewItem? first = null;
+        var isFirstGroup = true;
         foreach (var group in ViewModel.SectionGroups)
         {
             var items = group.Items.Select(CreateItem).ToList();
@@ -48,16 +49,19 @@ public sealed partial class MainWindow : Window
             if (items.Count == 1)
             {
                 Navigation.MenuItems.Add(items[0]);
+                isFirstGroup = false;
                 continue;
             }
 
+            // Only the first group starts expanded; the others stay folded so the list is shorter.
             var parent = new NavigationViewItem
             {
                 Content = group.Title,
                 Icon = new FontIcon { Glyph = group.Glyph },
                 SelectsOnInvoked = false,
-                IsExpanded = true,
+                IsExpanded = isFirstGroup,
             };
+            isFirstGroup = false;
             foreach (var item in items)
             {
                 parent.MenuItems.Add(item);
