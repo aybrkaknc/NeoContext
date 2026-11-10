@@ -17,11 +17,27 @@ public sealed partial class NewChildViewModel : ObservableObject
     public partial string Command { get; set; } = "";
 }
 
+/// <summary>One shared command the user can tick when building a submenu from the command pool.</summary>
+public sealed partial class SharedChoiceViewModel(string key, string name) : ObservableObject
+{
+    public string Key { get; } = key;
+
+    public string Name { get; } = name;
+
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; }
+}
+
 /// <summary>The form behind "New item": a verb (single command or submenu) or a shell extension by GUID.</summary>
 public sealed partial class NewItemViewModel : ObservableObject
 {
-    public NewItemViewModel(MenuSection section)
+    public NewItemViewModel(MenuSection section, IEnumerable<SharedChoiceViewModel>? sharedCommands = null)
     {
+        foreach (var choice in sharedCommands ?? [])
+        {
+            SharedChoices.Add(choice);
+        }
+
         Section = section;
         SelectionToken = ShellCommands.SelectionToken(section);
         PassSelected = SelectionToken.Length > 0;
@@ -44,14 +60,16 @@ public sealed partial class NewItemViewModel : ObservableObject
 
     public ObservableCollection<NewChildViewModel> Children { get; } = [];
 
+    public ObservableCollection<SharedChoiceViewModel> SharedChoices { get; } = [];
+
     /// <summary>0 = shell verb, 1 = shell extension (GUID).</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsVerb), nameof(IsHandler), nameof(ShowSingle), nameof(ShowSubmenu), nameof(ShowSelectionOption))]
+    [NotifyPropertyChangedFor(nameof(IsVerb), nameof(IsHandler), nameof(ShowSingle), nameof(ShowSubmenu), nameof(ShowShared), nameof(ShowSelectionOption))]
     public partial int TypeIndex { get; set; }
 
-    /// <summary>0 = single command, 1 = submenu.</summary>
+    /// <summary>0 = single command, 1 = submenu, 2 = submenu from the shared command pool.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ShowSingle), nameof(ShowSubmenu), nameof(ShowSelectionOption))]
+    [NotifyPropertyChangedFor(nameof(ShowSingle), nameof(ShowSubmenu), nameof(ShowShared), nameof(ShowSelectionOption))]
     public partial int ModeIndex { get; set; }
 
     public bool IsVerb => TypeIndex == 0;
@@ -61,6 +79,8 @@ public sealed partial class NewItemViewModel : ObservableObject
     public bool ShowSingle => IsVerb && ModeIndex == 0;
 
     public bool ShowSubmenu => IsVerb && ModeIndex == 1;
+
+    public bool ShowShared => IsVerb && ModeIndex == 2;
 
     public bool ShowSelectionOption => ShowSingle && SelectionToken.Length > 0;
 
@@ -108,6 +128,18 @@ public sealed partial class NewItemViewModel : ObservableObject
 
         var icon = string.IsNullOrWhiteSpace(Icon) ? null : Icon.Trim();
         var attributes = new VerbAttributes { Shield = ShowSingle && RunAsAdministrator };
+
+        if (ShowShared)
+        {
+            var keys = SharedChoices.Where(c => c.IsSelected).Select(c => c.Key).ToList();
+            if (keys.Count == 0)
+            {
+                Error = Strings.Get("New_SharedNone");
+                return null;
+            }
+
+            return new NewVerb(Name.Trim(), null, null, icon, attributes, []) { SharedCommands = keys };
+        }
 
         if (ShowSubmenu)
         {

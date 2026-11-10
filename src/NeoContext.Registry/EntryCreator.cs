@@ -50,8 +50,9 @@ public sealed class EntryCreator(ClassesRoots roots, string scriptsDirectory)
             ShellVerbProvider.ApplyIconAndAttributes(key, verb.IconLocation, verb.Attributes);
             if (verb.IsSubmenu)
             {
-                // An empty SubCommands value turns the verb into a cascading menu built from its own "shell" subkey.
-                key.SetValue("SubCommands", "");
+                // An empty SubCommands value turns the verb into a cascading menu built from its own "shell" subkey;
+                // a list of names builds it from verbs of the shared command pool instead.
+                key.SetValue("SubCommands", string.Join(';', verb.SharedCommands));
             }
         }, create: true);
 

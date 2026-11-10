@@ -452,7 +452,10 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
         else
         {
-            Creating = new NewItemViewModel(section.Section);
+            var pool = _all.Where(e => e.Section == MenuSection.CommandStore)
+                .OrderBy(e => e.DisplayName, StringComparer.CurrentCultureIgnoreCase)
+                .Select(e => new SharedChoiceViewModel(e.Key, e.DisplayName));
+            Creating = new NewItemViewModel(section.Section, pool);
         }
     }
 

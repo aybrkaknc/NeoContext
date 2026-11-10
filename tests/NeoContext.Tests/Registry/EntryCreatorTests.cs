@@ -57,6 +57,18 @@ public sealed class EntryCreatorTests : IDisposable
     }
 
     [Fact]
+    public void A_submenu_from_shared_commands_lists_their_names_and_has_no_children()
+    {
+        var verb = Verb("Shared tools") with { SharedCommands = ["Windows.Scan", "Windows.Clean"] };
+
+        Assert.True(Creator().CreateVerb(MenuSection.Directory, verb, false).IsSuccess);
+
+        Assert.Equal("Windows.Scan;Windows.Clean", Value(@"Directory\shell\Sharedtools", "SubCommands"));
+        Assert.False(_sandbox.Exists(@"Directory\shell\Sharedtools\shell"));
+        Assert.False(_sandbox.Exists(@"Directory\shell\Sharedtools\command"));
+    }
+
+    [Fact]
     public void A_submenu_gets_an_empty_SubCommands_value_and_its_children()
     {
         var verb = Verb("Tools", null, null, new NewVerbChild("Scan", "scan.exe"), new NewVerbChild("Clean", "clean.exe"));

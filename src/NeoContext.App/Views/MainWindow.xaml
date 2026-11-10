@@ -326,6 +326,7 @@
                                         <RadioButtons x:Uid="New_Mode" SelectedIndex="{x:Bind ViewModel.Creating.ModeIndex, Mode=TwoWay}">
                                             <RadioButton x:Uid="New_ModeSingle" />
                                             <RadioButton x:Uid="New_ModeSubmenu" />
+                                            <RadioButton x:Uid="New_ModeShared" />
                                         </RadioButtons>
 
                                         <StackPanel Spacing="12" Visibility="{x:Bind ToVisible(ViewModel.Creating.ShowSingle), Mode=OneWay}">
@@ -366,6 +367,17 @@
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
                                             <Button x:Uid="New_AddChild" Command="{x:Bind ViewModel.Creating.AddChildCommand}" />
+                                        </StackPanel>
+
+                                        <StackPanel Spacing="4" Visibility="{x:Bind ToVisible(ViewModel.Creating.ShowShared), Mode=OneWay}">
+                                            <TextBlock x:Uid="New_Shared" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                            <ItemsControl ItemsSource="{x:Bind ViewModel.Creating.SharedChoices}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:SharedChoiceViewModel">
+                                                        <CheckBox Content="{x:Bind Name}" IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
                                         </StackPanel>
 
                                         <Grid ColumnSpacing="8">

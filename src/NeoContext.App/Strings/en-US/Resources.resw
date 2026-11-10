@@ -1011,4 +1011,13 @@
   <data name="Notice_Dictionaries_Message" xml:space="preserve">
     <value>{0} dictionary file(s) were updated. Refresh the list to see the changes.</value>
   </data>
+  <data name="New_ModeShared.Content" xml:space="preserve">
+    <value>Submenu from shared commands</value>
+  </data>
+  <data name="New_Shared.Text" xml:space="preserve">
+    <value>Shared commands to include</value>
+  </data>
+  <data name="New_SharedNone" xml:space="preserve">
+    <value>Tick at least one shared command.</value>
+  </data>
 </root>

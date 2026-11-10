@@ -28,5 +28,8 @@ public sealed record NewVerb(
     VerbAttributes Attributes,
     IReadOnlyList<NewVerbChild> Children)
 {
-    public bool IsSubmenu => Children.Count > 0;
+    /// <summary>Names of verbs from the shared command pool; the submenu is built from them instead of from <see cref="Children"/>.</summary>
+    public IReadOnlyList<string> SharedCommands { get; init; } = [];
+
+    public bool IsSubmenu => Children.Count > 0 || SharedCommands.Count > 0;
 }

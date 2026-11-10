@@ -1011,4 +1011,13 @@
   <data name="Notice_Dictionaries_Message" xml:space="preserve">
     <value>{0} sözlük dosyası güncellendi. Değişiklikleri görmek için listeyi yenileyin.</value>
   </data>
+  <data name="New_ModeShared.Content" xml:space="preserve">
+    <value>Ortak komutlardan alt menü</value>
+  </data>
+  <data name="New_Shared.Text" xml:space="preserve">
+    <value>Eklenecek ortak komutlar</value>
+  </data>
+  <data name="New_SharedNone" xml:space="preserve">
+    <value>En az bir ortak komut işaretleyin.</value>
+  </data>
 </root>
