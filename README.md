@@ -40,8 +40,8 @@ Every page has search, and each entry can be opened in Registry Editor or Explor
   changes work without administrator rights. When elevation is needed, NeoContext offers to restart
   as administrator instead of always running elevated.
 - **Verified updates.** NeoContext only notifies you about new releases. If you choose to download
-  one, the file must match the SHA-256 digest published on GitHub, and installer packages must
-  carry a valid Authenticode signature; otherwise the download is discarded.
+  one, the file must match the SHA-256 digest published on GitHub; otherwise the download is discarded.
+  Releases are not code-signed yet, so Windows SmartScreen may warn on first launch.
 
 ## Requirements
 
@@ -54,9 +54,6 @@ Download the latest build from [Releases](https://github.com/aybrkaknc/NeoContex
 
 - **`NeoContext-<version>-win-x64.zip`** – portable. Extract and run `NeoContext.exe`. Create an empty
   `data` folder next to the executable to keep settings and backups there instead of `%LOCALAPPDATA%`.
-- **`NeoContext-<version>-win-x64.msix`** – installable package (when a signed package is published).
-
-A winget manifest template lives in [`packaging/winget`](packaging/winget).
 
 ## Build from source
 

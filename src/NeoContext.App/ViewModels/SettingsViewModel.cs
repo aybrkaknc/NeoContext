@@ -36,7 +36,7 @@ public sealed partial class SettingsViewModel : ObservableObject
 
     public IReadOnlyList<LanguageOption> Languages { get; }
 
-    public string VersionText => Strings.Format("Settings_About_Version", AppInfo.Version, AppInfo.IsPackaged ? "MSIX" : Strings.Get("Settings_About_Portable"));
+    public string VersionText => Strings.Format("Settings_About_Version", AppInfo.Version, Strings.Get("Settings_About_Portable"));
 
     public string DataDirectory => AppInfo.DataDirectory;
 
@@ -111,8 +111,8 @@ public sealed partial class SettingsViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Downloads the right asset for this install type and verifies it before keeping it:
-    /// the MSIX must be signed; the portable zip is checked by its SHA-256 digest.
+    /// Downloads the portable zip for this architecture and checks it against the SHA-256 digest
+    /// published with the release before keeping it.
     /// </summary>
     [RelayCommand]
     private async Task DownloadUpdateAsync()
@@ -122,7 +122,7 @@ public sealed partial class SettingsViewModel : ObservableObject
             return;
         }
 
-        var extension = AppInfo.IsPackaged ? ".msix" : ".zip";
+        const string extension = ".zip";
         var arch = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
         var asset = _latest.Assets.FirstOrDefault(a => a.Name.EndsWith(extension, StringComparison.OrdinalIgnoreCase) && a.Name.Contains(arch, StringComparison.OrdinalIgnoreCase))
                     ?? _latest.Assets.FirstOrDefault(a => a.Name.EndsWith(extension, StringComparison.OrdinalIgnoreCase));
@@ -136,7 +136,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         UpdateStatus = Strings.Format("Settings_Update_Downloading", asset.Name);
         try
         {
-            var policy = AppInfo.IsPackaged ? SignaturePolicy.Required : SignaturePolicy.NotRequired;
+            var policy = SignaturePolicy.NotRequired;
             var result = await _host.UpdateDownloader.DownloadAsync(asset, AppInfo.DownloadDirectory, policy);
             if (result.IsSuccess)
             {

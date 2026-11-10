@@ -22,7 +22,7 @@ public partial class App : Application
     {
         Host = new AppHost();
         ApplyLanguage(Host.Settings.Language);
-        AppLog.Info($"NeoContext {AppInfo.Version} started (packaged: {AppInfo.IsPackaged}, elevated: {SystemActions.IsElevated}).");
+        AppLog.Info($"NeoContext {AppInfo.Version} started (elevated: {SystemActions.IsElevated}).");
 
         _window = new MainWindow(Host);
         _window.Activate();

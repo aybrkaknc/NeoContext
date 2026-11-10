@@ -12,7 +12,6 @@
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
-    <EnableMsixTooling>true</EnableMsixTooling>
     <DefaultLanguage>en-US</DefaultLanguage>
   </PropertyGroup>
 
@@ -24,7 +23,7 @@
 
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
-    <!-- Logos for the package and the title bar; the .ico is also loaded at runtime for the window icon. -->
+    <!-- Logos for the title bar; the .ico is also loaded at runtime for the window icon. -->
     <Content Include="Assets\*.png;Assets\*.ico" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
@@ -46,11 +45,6 @@
     <ProjectReference Include="..\NeoContext.Shell\NeoContext.Shell.csproj" />
     <ProjectReference Include="..\NeoContext.Uwp\NeoContext.Uwp.csproj" />
     <ProjectReference Include="..\NeoContext.Updates\NeoContext.Updates.csproj" />
-  </ItemGroup>
-
-  <!-- MSIX packaging tool support: lets dotnet build/publish produce a package. -->
-  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)' != 'true' and '$(EnableMsixTooling)' == 'true'">
-    <ProjectCapability Include="Msix" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Generates the app logo PNGs and the .ico used by the MSIX package and the executable.
+    Generates the app logo PNGs and the .ico used by the executable.
 .DESCRIPTION
     The logo is drawn in code so it can be regenerated at any size: a rounded blue tile with
     a stylised context menu (three rows, the middle one highlighted).

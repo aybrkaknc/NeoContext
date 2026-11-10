@@ -16,9 +16,6 @@ public static class AppInfo
         typeof(AppInfo).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
         out var version) ? version : new SemVersion(0, 0, 0);
 
-    /// <summary>True when running from an installed MSIX package.</summary>
-    public static bool IsPackaged { get; } = DetectPackage();
-
     /// <summary>Settings, logs and backups. A <c>data</c> folder next to the exe makes the app portable.</summary>
     public static string DataDirectory { get; } = AppDataLocation.Resolve(
         AppContext.BaseDirectory,
@@ -33,16 +30,4 @@ public static class AppInfo
     public static string LogDirectory => Path.Combine(DataDirectory, "logs");
 
     public static string DownloadDirectory => Path.Combine(DataDirectory, "downloads");
-
-    private static bool DetectPackage()
-    {
-        try
-        {
-            return Windows.ApplicationModel.Package.Current is not null;
-        }
-        catch (InvalidOperationException)
-        {
-            return false;
-        }
-    }
 }
