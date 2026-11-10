@@ -483,3 +483,6 @@ $RECYCLE.BIN/
 
 # Claude Code session lock
 .claude/scheduled_tasks.lock
+
+# Local test launcher (not part of the project)
+run-dev.cmd
