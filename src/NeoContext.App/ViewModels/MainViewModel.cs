@@ -50,7 +50,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     public bool IsElevated => SystemActions.IsElevated;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage), nameof(CanCreate))]
+    [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage), nameof(CanCreate), nameof(IsWinXPage))]
     public partial SectionItem? SelectedSection { get; set; }
 
     [ObservableProperty]
@@ -91,7 +91,9 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     public bool IsNewOpen => Creating is not null;
 
     /// <summary>Only the pages that map to registry classes can take a new verb or handler.</summary>
-    public bool CanCreate => SelectedSection is { } section && ShellScopes.Keys.ContainsKey(section.Section);
+    public bool CanCreate => SelectedSection is { } section && (ShellScopes.Keys.ContainsKey(section.Section) || section.Section is MenuSection.SendTo or MenuSection.OpenWith or MenuSection.WinX);
+
+    public bool IsWinXPage => SelectedSection?.Section == MenuSection.WinX;
 
     public IconPickerViewModel IconPicker { get; } = new();
 
@@ -318,6 +320,34 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     internal void BeginEdit(EntryViewModel item) => Editing = new EntryEditViewModel(item.Entry);
 
+    internal async Task MoveAsync(EntryViewModel item, int direction)
+    {
+        var entry = item.Entry;
+        var result = await RunBusyAsync(() => host.Menus.Move(entry, direction));
+        await CompleteAsync(result, entry, () => host.Menus.Move(entry, direction));
+    }
+
+    /// <summary>Puts Windows' factory Win+X menu back, after a confirmation. The current menu is copied to the backups first.</summary>
+    [RelayCommand]
+    private async Task RestoreWinXDefaultsAsync()
+    {
+        if (!await dialogs.ConfirmAsync(Strings.Get("WinXRestore_Title"), Strings.Format("WinXRestore_Message", AppInfo.RegistryBackupDirectory), Strings.Get("WinXRestore_Confirm"), destructive: true))
+        {
+            return;
+        }
+
+        var result = await RunBusyAsync(() => host.WinX.RestoreDefaults(AppInfo.RegistryBackupDirectory));
+        if (!result.IsSuccess)
+        {
+            AppLog.Warn($"Could not restore the Win+X menu: {result.Error}");
+            ShowNotice(InfoBarSeverity.Error, Strings.Get($"Error_{result.Error!.Kind}"), Describe(result.Error), NoticeAction.None);
+            return;
+        }
+
+        await RefreshAsync();
+        ShowNotice(InfoBarSeverity.Informational, Strings.Get("Notice_RestartExplorer_Title"), Strings.Get("Notice_RestartExplorer_Message"), NoticeAction.RestartExplorer);
+    }
+
     [RelayCommand]
     private void CancelEdit()
     {
@@ -372,7 +402,24 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     [RelayCommand]
     private void BeginNew()
     {
-        if (CanCreate && SelectedSection is { } section)
+        if (!CanCreate || SelectedSection is not { } section)
+        {
+            return;
+        }
+
+        // Shortcut pages ask for a target; registry pages ask for a verb or a handler.
+        if (section.Section == MenuSection.WinX)
+        {
+            var groups = host.WinX.GroupNames()
+                .Select(name => new GroupOption(name, Strings.Format("WinX_Group", name.StartsWith("Group", StringComparison.OrdinalIgnoreCase) ? name[5..] : name)))
+                .ToList();
+            Targeting = new NewTargetViewModel(section.Section, groups);
+        }
+        else if (section.Section is MenuSection.SendTo or MenuSection.OpenWith)
+        {
+            Targeting = new NewTargetViewModel(section.Section);
+        }
+        else
         {
             Creating = new NewItemViewModel(section.Section);
         }
@@ -433,6 +480,12 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
 
         Creating = null;
+        await RunCreateAsync(create, name);
+    }
+
+    /// <summary>Runs a creation off the UI thread, then shows the outcome and reloads the list.</summary>
+    private async Task RunCreateAsync(Func<Result> create, string name)
+    {
         var result = await RunBusyAsync(create);
         if (!result.IsSuccess)
         {
@@ -445,6 +498,39 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         AppLog.Info($"Created {name}");
         await RefreshAsync();
         ShowNotice(InfoBarSeverity.Success, Strings.Get("Notice_Done_Title"), Strings.Format("Notice_Created_Message", name), NoticeAction.None);
+    }
+
+    /// <summary>The "New item" form for shortcut pages, or null when it is closed.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsTargetOpen))]
+    public partial NewTargetViewModel? Targeting { get; set; }
+
+    public bool IsTargetOpen => Targeting is not null;
+
+    [RelayCommand]
+    private void CancelTarget() => Targeting = null;
+
+    [RelayCommand]
+    private async Task SaveTargetAsync()
+    {
+        if (Targeting is not { } form || !form.Validate())
+        {
+            return;
+        }
+
+        var target = form.Target.Trim().Trim('"');
+        var group = form.GroupName;
+        var name = string.IsNullOrWhiteSpace(form.Name) ? Path.GetFileNameWithoutExtension(target) : form.Name.Trim();
+        Func<Result> create = form.Section switch
+        {
+            MenuSection.SendTo => () => host.SendTo.CreateShortcut(form.Name, target, form.Arguments),
+            MenuSection.OpenWith => () => host.OpenWith.CreateApp(target, form.Name, form.AllUsers),
+            MenuSection.WinX => () => host.WinX.CreateShortcut(group!, form.Name, target, form.Arguments),
+            _ => () => Result.Failure(ErrorKind.NotSupported, $"Nothing can be added to {form.Section}."),
+        };
+
+        Targeting = null;
+        await RunCreateAsync(create, name);
     }
 
     internal async Task RenameAsync(EntryViewModel item)

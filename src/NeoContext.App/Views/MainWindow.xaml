@@ -82,6 +82,8 @@
                     </Grid>
 
                     <StackPanel Grid.Row="1" Spacing="8">
+                    <Button x:Uid="RestoreWinXButton" HorizontalAlignment="Left" Command="{x:Bind ViewModel.RestoreWinXDefaultsCommand}"
+                            Visibility="{x:Bind ToVisible(ViewModel.IsWinXPage), Mode=OneWay}" />
                     <Button x:Uid="NewItemButton" HorizontalAlignment="Left" Command="{x:Bind ViewModel.BeginNewCommand}"
                             Visibility="{x:Bind ToVisible(ViewModel.CanCreate), Mode=OneWay}" />
 
@@ -210,6 +212,12 @@
                                                 <MenuFlyoutSeparator />
                                                 <MenuFlyoutItem x:Uid="Menu_Edit" Text="Edit" Command="{x:Bind EditCommand}" IsEnabled="{x:Bind CanEdit}">
                                                     <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE70F;" /></MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem x:Uid="Menu_MoveUp" Text="Move up" Command="{x:Bind MoveUpCommand}" Visibility="{x:Bind CanMove}">
+                                                    <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE74A;" /></MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem x:Uid="Menu_MoveDown" Text="Move down" Command="{x:Bind MoveDownCommand}" Visibility="{x:Bind CanMove}">
+                                                    <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE74B;" /></MenuFlyoutItem.Icon>
                                                 </MenuFlyoutItem>
                                                 <MenuFlyoutItem x:Uid="Menu_Rename" Text="Rename" Command="{x:Bind RenameCommand}" IsEnabled="{x:Bind CanRename}">
                                                     <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE8AC;" /></MenuFlyoutItem.Icon>
@@ -393,6 +401,40 @@
                                 <Button x:Uid="NewCreate" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveNewCommand}" />
                             </StackPanel>
                         </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- New shortcut form (Send to): closes with Create, Cancel or Esc -->
+                <Grid x:Name="NewTargetOverlay" Background="#80000000"
+                      Visibility="{x:Bind ToVisible(ViewModel.IsTargetOpen), Mode=OneWay}">
+                    <Border MaxWidth="560" MaxHeight="520" Margin="24" Padding="24" CornerRadius="8"
+                            BorderThickness="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="{x:Bind ViewModel.Targeting.Title, Mode=OneWay}" Style="{StaticResource SubtitleTextBlockStyle}"
+                                       TextWrapping="Wrap" />
+                            <TextBox x:Uid="NewTarget_Name" Text="{x:Bind ViewModel.Targeting.Name, Mode=TwoWay}" />
+                            <ComboBox x:Uid="NewTarget_Group" ItemsSource="{x:Bind ViewModel.Targeting.Groups}" DisplayMemberPath="Label"
+                                      SelectedIndex="{x:Bind ViewModel.Targeting.GroupIndex, Mode=TwoWay}"
+                                      Visibility="{x:Bind ToVisible(ViewModel.Targeting.ShowGroup), Mode=OneWay}" />
+                            <TextBox x:Uid="NewTarget_Target" Text="{x:Bind ViewModel.Targeting.Target, Mode=TwoWay}" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button x:Uid="NewTarget_BrowseFile" Click="OnBrowseTargetFile" />
+                                <Button x:Uid="NewTarget_BrowseFolder" Click="OnBrowseTargetFolder"
+                                        Visibility="{x:Bind ToVisible(ViewModel.Targeting.ShowFolderButton), Mode=OneWay}" />
+                            </StackPanel>
+                            <TextBox x:Uid="NewTarget_Arguments" Text="{x:Bind ViewModel.Targeting.Arguments, Mode=TwoWay}"
+                                     Visibility="{x:Bind ToVisible(ViewModel.Targeting.ShowArguments), Mode=OneWay}" />
+                            <CheckBox x:Uid="New_AllUsers" IsChecked="{x:Bind ViewModel.Targeting.AllUsers, Mode=TwoWay}"
+                                      Visibility="{x:Bind ToVisible(ViewModel.Targeting.ShowAllUsers), Mode=OneWay}" />
+                            <TextBlock Text="{x:Bind ViewModel.Targeting.Error, Mode=OneWay}" TextWrapping="Wrap"
+                                       Foreground="{ThemeResource SystemFillColorCriticalBrush}" />
+                            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                                <Button x:Uid="NewCancel" Command="{x:Bind ViewModel.CancelTargetCommand}" />
+                                <Button x:Uid="NewCreate" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveTargetCommand}" />
+                            </StackPanel>
+                        </StackPanel>
                     </Border>
                 </Grid>
 

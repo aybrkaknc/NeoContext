@@ -654,6 +654,81 @@
   <data name="Notice_Created_Message" xml:space="preserve">
     <value>"{0}" eklendi.</value>
   </data>
+  <data name="Section_SendTo" xml:space="preserve">
+    <value>Gönder</value>
+  </data>
+  <data name="Section_SendTo_Description" xml:space="preserve">
+    <value>Bir dosya veya klasöre sağ tıklayınca açılan "Gönder" alt menüsü.</value>
+  </data>
+  <data name="Kind_SendTo" xml:space="preserve">
+    <value>Gönder öğesi</value>
+  </data>
+  <data name="Desc_From_SendTo" xml:space="preserve">
+    <value>Öğeyi {0} ile açar</value>
+  </data>
+  <data name="Desc_Generic_SendTo" xml:space="preserve">
+    <value>Seçili öğeyi bir yere veya programa gönderir</value>
+  </data>
+  <data name="NewTarget_Title" xml:space="preserve">
+    <value>Yeni öğe: {0}</value>
+  </data>
+  <data name="NewTarget_Name.Header" xml:space="preserve">
+    <value>Menüdeki ad (isteğe bağlı)</value>
+  </data>
+  <data name="NewTarget_Target.Header" xml:space="preserve">
+    <value>Program, dosya veya klasör</value>
+  </data>
+  <data name="NewTarget_BrowseFile.Content" xml:space="preserve">
+    <value>Dosya seç...</value>
+  </data>
+  <data name="NewTarget_BrowseFolder.Content" xml:space="preserve">
+    <value>Klasör seç...</value>
+  </data>
+  <data name="NewTarget_Arguments.Header" xml:space="preserve">
+    <value>Argümanlar (isteğe bağlı)</value>
+  </data>
+  <data name="NewTarget_TargetRequired" xml:space="preserve">
+    <value>Bir program, dosya veya klasör seçin.</value>
+  </data>
+  <data name="Section_OpenWith" xml:space="preserve">
+    <value>Birlikte aç</value>
+  </data>
+  <data name="Section_OpenWith_Description" xml:space="preserve">
+    <value>"Birlikte aç" alt menüsündeki programlar. Birini gizlemek onu kaldırmaz.</value>
+  </data>
+  <data name="Kind_OpenWith" xml:space="preserve">
+    <value>Birlikte aç programı</value>
+  </data>
+  <data name="Desc_From_OpenWith" xml:space="preserve">
+    <value>Dosyaları {0} ile açar</value>
+  </data>
+  <data name="Desc_Generic_OpenWith" xml:space="preserve">
+    <value>Dosyaları bu programla açmanızı sağlar</value>
+  </data>
+  <data name="Menu_MoveUp.Text" xml:space="preserve">
+    <value>Yukarı taşı</value>
+  </data>
+  <data name="Menu_MoveDown.Text" xml:space="preserve">
+    <value>Aşağı taşı</value>
+  </data>
+  <data name="RestoreWinXButton.Content" xml:space="preserve">
+    <value>Varsayılan menüyü geri yükle</value>
+  </data>
+  <data name="WinXRestore_Title" xml:space="preserve">
+    <value>Varsayılan Win+X menüsü geri yüklensin mi?</value>
+  </data>
+  <data name="WinXRestore_Message" xml:space="preserve">
+    <value>Mevcut Win+X menünüz önce {0} klasörüne kopyalanır, sonra Windows'un varsayılan menüsüyle değiştirilir. Değişiklik Gezgin yeniden başlatılınca görünür.</value>
+  </data>
+  <data name="WinXRestore_Confirm" xml:space="preserve">
+    <value>Geri yükle</value>
+  </data>
+  <data name="NewTarget_Group.Header" xml:space="preserve">
+    <value>Grup</value>
+  </data>
+  <data name="NewTarget_NoGroups" xml:space="preserve">
+    <value>Win+X grubu bulunamadı.</value>
+  </data>
   <data name="WinX_Group" xml:space="preserve">
     <value>Grup {0}</value>
   </data>

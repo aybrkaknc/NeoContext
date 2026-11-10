@@ -11,8 +11,10 @@
 
 ---
 
+English | [Türkçe](README.tr.md)
+
 NeoContext shows everything that Explorer adds to your right-click menus and lets you switch each
-entry on or off, rename it, or remove it. It is a ground-up rewrite of the ideas behind
+entry on or off, rename it, edit it, move it, remove it, or add new ones. It is a ground-up rewrite of the ideas behind
 [ContextMenuManager](https://github.com/BluePointLilac/ContextMenuManager) by BluePointLilac,
 redesigned around safety, clear structure and an English-first, fully localizable interface.
 
@@ -20,12 +22,17 @@ redesigned around safety, clear structure and an English-first, fully localizabl
 
 | Page | What you can manage | How NeoContext changes it |
 | --- | --- | --- |
-| Files, Folders, Folder background, Desktop, Drives, Files and folders | Static commands (`shell` verbs) and COM shell extensions (`shellex` handlers) | Verbs: the documented `LegacyDisable` value. Handlers: moved to `-ContextMenuHandlers` |
+| Files, Folder, Directory, Folder background, Desktop, Drives, Files and folders, This PC, Recycle Bin, Libraries | Static commands (`shell` verbs) and COM shell extensions (`shellex` handlers) | Verbs: the documented `LegacyDisable` value; handlers: moved to `-ContextMenuHandlers`. Verbs can also be edited (command, icon, position, flags) |
 | New menu | File types in Explorer's **New** submenu | `ShellNew` key renamed to `-ShellNew` |
-| Win+X menu | Shortcuts in the Win+X / Start-button menu | Hidden attribute; the Win+X hash is rewritten after a rename |
+| Send to | Files in the Send to folder | Hidden attribute; names from `desktop.ini`; delete goes to the Recycle Bin; new shortcuts |
+| Open with | Programs registered for "Open with" | `NoOpenWith` value; `FriendlyAppName` for the name; new programs |
+| Win+X menu | Shortcuts in the Win+X / Start-button menu | Hidden attribute; the Win+X hash is rewritten after every change; move up or down, add, restore the default menu |
+| File types | Entries that belong to chosen file extensions, such as `.mp4` or `.zip` | The same actions as the other pages; pick a group or type extensions |
 | Store apps | Context menu verbs declared by installed MSIX / Microsoft Store apps | Per-user `Shell Extensions\Blocked` list |
 
-Every page has search, and each entry can be opened in Registry Editor or Explorer.
+Every page has search, and each entry can be opened in Registry Editor or Explorer. Verbs can be
+edited, and new items can be created on the pages that take them. An icon picker shows every icon in
+an .exe, .dll or .ico file.
 
 ### Safety first
 
@@ -85,7 +92,8 @@ tests/
   NeoContext.Tests      xUnit tests; registry tests run against a throw-away key under HKCU.
 ```
 
-Each kind of menu entry is an `IEntryProvider`. `ContextMenuService` loads all providers, applies the
+Each kind of menu entry is an `IEntryProvider`; providers that can edit or reorder entries also implement
+`IEntryEditor` or `IEntryMover`. `ContextMenuService` loads all providers, applies the
 protection and naming rules, and routes every change to the right provider. Providers never show UI
 and never throw for expected failures: they return a `Result` that the UI turns into a message with
 the right next step (restart as administrator, take ownership, restart Explorer).
@@ -110,6 +118,9 @@ the right next step (restart as administrator, take ownership, restart Explorer)
 - New-menu (ShellNew), Win+X and Store-app changes appear after Explorer restarts; NeoContext offers to restart it.
 - New-menu items cannot be renamed, because that would rename the file type everywhere in Windows.
 - Renaming a shell extension is not supported; its name comes from the COM class.
+- Only verbs can be edited. Shell extensions, New-menu items and Store apps cannot.
+- Win+X group folders cannot be renamed or removed; the default menu can be restored as a whole.
+- Submenus created by other programs are shown, but their items cannot be edited from NeoContext yet.
 
 ## Localization
 

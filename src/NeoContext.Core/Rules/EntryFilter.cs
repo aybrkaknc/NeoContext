@@ -22,7 +22,7 @@ public static class EntryFilter
         // A search crosses every section, so results are grouped by section first, then by name.
         return [.. matches
             .OrderBy(e => text.Length > 0 ? (int)e.Section : 0)
-            .ThenBy(e => e.DisplayName, StringComparer.CurrentCultureIgnoreCase)];
+            .ThenBy(e => e.Section == MenuSection.WinX ? $"{e.Detail}/{e.Key}" : e.DisplayName, StringComparer.CurrentCultureIgnoreCase)];
     }
 
     /// <summary>The name, description, registry key or CLSID, or the command line contains the text.</summary>

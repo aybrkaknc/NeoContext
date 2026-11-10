@@ -121,6 +121,18 @@ public sealed class ContextMenuService
             : Result.Failure(ErrorKind.NotSupported, $"No editor is registered for {entry.Kind}.");
     }
 
+    public Result Move(ContextMenuEntry entry, int direction)
+    {
+        if (!entry.Can(EntryCapabilities.Move))
+        {
+            return NotSupported(entry, "moved");
+        }
+
+        return _providers.TryGetValue(entry.Kind, out var provider) && provider is IEntryMover mover
+            ? mover.Move(entry, direction)
+            : Result.Failure(ErrorKind.NotSupported, $"No mover is registered for {entry.Kind}.");
+    }
+
     public Result Delete(ContextMenuEntry entry)
     {
         if (!entry.Can(EntryCapabilities.Delete))

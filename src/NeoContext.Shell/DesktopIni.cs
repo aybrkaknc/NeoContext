@@ -43,5 +43,15 @@ public static class DesktopIni
         }
     }
 
+    /// <summary>Removes the display name of <paramref name="filePath"/>, if it has one.</summary>
+    public static void RemoveLocalizedName(string filePath)
+    {
+        var ini = IniPath(filePath);
+        if (File.Exists(ini))
+        {
+            NativeMethods.WritePrivateProfileStringW(Section, Path.GetFileName(filePath), null, ini);
+        }
+    }
+
     private static string IniPath(string filePath) => Path.Combine(Path.GetDirectoryName(filePath)!, FileName);
 }

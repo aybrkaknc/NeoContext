@@ -62,6 +62,12 @@ public sealed class ShellLink : IDisposable
         set => _link.SetDescription(value);
     }
 
+    /// <summary>The folder the program starts in. Only needed when creating a shortcut.</summary>
+    public string WorkingDirectory
+    {
+        set => _link.SetWorkingDirectory(value);
+    }
+
     /// <summary>The icon as <c>path,index</c>, or null when the shortcut uses its target's icon.</summary>
     public string? IconLocation
     {

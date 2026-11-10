@@ -654,6 +654,81 @@
   <data name="Notice_Created_Message" xml:space="preserve">
     <value>"{0}" was added.</value>
   </data>
+  <data name="Section_SendTo" xml:space="preserve">
+    <value>Send to</value>
+  </data>
+  <data name="Section_SendTo_Description" xml:space="preserve">
+    <value>The "Send to" submenu you get when you right-click a file or folder.</value>
+  </data>
+  <data name="Kind_SendTo" xml:space="preserve">
+    <value>Send to item</value>
+  </data>
+  <data name="Desc_From_SendTo" xml:space="preserve">
+    <value>Sends the item to {0}</value>
+  </data>
+  <data name="Desc_Generic_SendTo" xml:space="preserve">
+    <value>Sends the selected item to a place or a program</value>
+  </data>
+  <data name="NewTarget_Title" xml:space="preserve">
+    <value>New item: {0}</value>
+  </data>
+  <data name="NewTarget_Name.Header" xml:space="preserve">
+    <value>Name in the menu (optional)</value>
+  </data>
+  <data name="NewTarget_Target.Header" xml:space="preserve">
+    <value>Program, file or folder</value>
+  </data>
+  <data name="NewTarget_BrowseFile.Content" xml:space="preserve">
+    <value>Choose a file...</value>
+  </data>
+  <data name="NewTarget_BrowseFolder.Content" xml:space="preserve">
+    <value>Choose a folder...</value>
+  </data>
+  <data name="NewTarget_Arguments.Header" xml:space="preserve">
+    <value>Arguments (optional)</value>
+  </data>
+  <data name="NewTarget_TargetRequired" xml:space="preserve">
+    <value>Choose a program, file or folder.</value>
+  </data>
+  <data name="Section_OpenWith" xml:space="preserve">
+    <value>Open with</value>
+  </data>
+  <data name="Section_OpenWith_Description" xml:space="preserve">
+    <value>Programs in the "Open with" submenu. Hiding one keeps it installed.</value>
+  </data>
+  <data name="Kind_OpenWith" xml:space="preserve">
+    <value>Open with program</value>
+  </data>
+  <data name="Desc_From_OpenWith" xml:space="preserve">
+    <value>Opens files with {0}</value>
+  </data>
+  <data name="Desc_Generic_OpenWith" xml:space="preserve">
+    <value>Lets you open files with this program</value>
+  </data>
+  <data name="Menu_MoveUp.Text" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="Menu_MoveDown.Text" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="RestoreWinXButton.Content" xml:space="preserve">
+    <value>Restore the default menu</value>
+  </data>
+  <data name="WinXRestore_Title" xml:space="preserve">
+    <value>Restore the default Win+X menu?</value>
+  </data>
+  <data name="WinXRestore_Message" xml:space="preserve">
+    <value>Your current Win+X menu is copied to {0} first, then replaced by the menu Windows ships with. The change shows after Explorer restarts.</value>
+  </data>
+  <data name="WinXRestore_Confirm" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="NewTarget_Group.Header" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="NewTarget_NoGroups" xml:space="preserve">
+    <value>No Win+X groups were found.</value>
+  </data>
   <data name="WinX_Group" xml:space="preserve">
     <value>Group {0}</value>
   </data>

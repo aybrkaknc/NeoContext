@@ -102,6 +102,42 @@ public sealed partial class MainWindow : Window
     /// <summary>Taps on the card stay on the card, so only taps outside it close the overlay.</summary>
     private void OnCardTapped(object sender, TappedRoutedEventArgs e) => e.Handled = true;
 
+    private async void OnBrowseTargetFile(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var picker = new FileOpenPicker();
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(this));
+            picker.FileTypeFilter.Add("*");
+            if (await picker.PickSingleFileAsync() is { } file && ViewModel.Targeting is { } form)
+            {
+                form.Target = file.Path;
+            }
+        }
+        catch (System.Runtime.InteropServices.COMException ex)
+        {
+            AppLog.Warn($"File picker failed: {ex.Message}");
+        }
+    }
+
+    private async void OnBrowseTargetFolder(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var picker = new FolderPicker();
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(this));
+            picker.FileTypeFilter.Add("*");
+            if (await picker.PickSingleFolderAsync() is { } folder && ViewModel.Targeting is { } form)
+            {
+                form.Target = folder.Path;
+            }
+        }
+        catch (System.Runtime.InteropServices.COMException ex)
+        {
+            AppLog.Warn($"Folder picker failed: {ex.Message}");
+        }
+    }
+
     private void OnRemoveChild(object sender, RoutedEventArgs e)
     {
         if (sender is Button { Tag: NewChildViewModel child } && ViewModel.Creating is { } creating)
@@ -197,6 +233,13 @@ public sealed partial class MainWindow : Window
         if (ViewModel.IsNewOpen)
         {
             ViewModel.CancelNewCommand.Execute(null);
+            args.Handled = true;
+            return;
+        }
+
+        if (ViewModel.IsTargetOpen)
+        {
+            ViewModel.CancelTargetCommand.Execute(null);
             args.Handled = true;
             return;
         }

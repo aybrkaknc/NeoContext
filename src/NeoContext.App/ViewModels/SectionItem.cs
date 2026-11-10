@@ -30,6 +30,8 @@ public sealed class SectionItem(MenuSection section, string glyph)
             new(MenuSection.RecycleBin, ""),
             new(MenuSection.Library, ""),
             new(MenuSection.NewMenu, ""),
+            new(MenuSection.SendTo, ""),
+            new(MenuSection.OpenWith, ""),
             new(MenuSection.WinX, ""),
             new(MenuSection.PackagedApps, ""),
         ]),

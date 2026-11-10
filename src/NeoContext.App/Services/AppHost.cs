@@ -33,13 +33,18 @@ public sealed class AppHost
         var shellExtensions = new ShellExtensionProvider(classes, resolver);
         FileTypes = new FileTypeScanner(classes, verbs, shellExtensions);
         Creator = new EntryCreator(classes, Path.Combine(AppInfo.DataDirectory, "Scripts"));
+        SendTo = new SendToProvider(SendToProvider.DefaultDirectory, resolver);
+        OpenWith = new OpenWithProvider(classes, resolver);
+        WinX = new WinXProvider(WinXProvider.DefaultRoot, resolver, WinXPathGeneralizer.ForCurrentSystem());
 
         IEntryProvider[] providers =
         [
             verbs,
             shellExtensions,
             new ShellNewProvider(classes, resolver),
-            new WinXProvider(WinXProvider.DefaultRoot, resolver, WinXPathGeneralizer.ForCurrentSystem()),
+            WinX,
+            SendTo,
+            OpenWith,
             new PackagedMenuProvider(new WindowsPackageSource(), BlockedShellExtensions.Default),
         ];
 
@@ -62,6 +67,12 @@ public sealed class AppHost
     public FileTypeScanner FileTypes { get; }
 
     public EntryCreator Creator { get; }
+
+    public SendToProvider SendTo { get; }
+
+    public OpenWithProvider OpenWith { get; }
+
+    public WinXProvider WinX { get; }
 
     public KeyOwnershipService Ownership { get; }
 

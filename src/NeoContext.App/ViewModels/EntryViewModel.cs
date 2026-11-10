@@ -206,10 +206,14 @@ public sealed partial class EntryViewModel : ObservableObject
 
     public bool CanEdit => Entry.Can(EntryCapabilities.Edit);
 
+    public bool CanMove => Entry.Can(EntryCapabilities.Move);
+
     public bool IsRegistryEntry => RegistryPath.TryParse(Entry.Location, out _);
 
     public string Glyph => Entry.Kind switch
     {
+        EntryKind.SendTo => "",
+        EntryKind.OpenWith => "",
         EntryKind.ShellVerb => "",
         EntryKind.ShellExtension => "",
         EntryKind.ShellNew => "",
@@ -260,6 +264,12 @@ public sealed partial class EntryViewModel : ObservableObject
 
     [RelayCommand]
     private void Edit() => _owner.BeginEdit(this);
+
+    [RelayCommand]
+    private Task MoveUpAsync() => _owner.MoveAsync(this, -1);
+
+    [RelayCommand]
+    private Task MoveDownAsync() => _owner.MoveAsync(this, 1);
 
     [RelayCommand]
     private Task RenameAsync() => _owner.RenameAsync(this);

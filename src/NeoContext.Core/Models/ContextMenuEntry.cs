@@ -15,6 +15,12 @@ public enum EntryKind
     /// <summary>A shortcut in the Win+X (power user) menu.</summary>
     WinX,
 
+    /// <summary>A file in the "Send to" folder.</summary>
+    SendTo,
+
+    /// <summary>An app registered under <c>Applications\&lt;exe&gt;</c> for the "Open with" menu.</summary>
+    OpenWith,
+
     /// <summary>A context menu verb declared by a packaged (MSIX/UWP) app.</summary>
     PackagedApp,
 }
@@ -62,6 +68,12 @@ public enum MenuSection
     /// <summary>The Explorer "New" submenu.</summary>
     NewMenu,
 
+    /// <summary>The "Send to" submenu.</summary>
+    SendTo,
+
+    /// <summary>The "Open with" submenu.</summary>
+    OpenWith,
+
     /// <summary>The Win+X menu.</summary>
     WinX,
 
@@ -83,6 +95,9 @@ public enum EntryCapabilities
 
     /// <summary>Command, icon and attributes can be edited.</summary>
     Edit = 8,
+
+    /// <summary>The entry can move up or down within its list (menu order).</summary>
+    Move = 16,
 }
 
 /// <summary>Where a verb sits in the menu.</summary>
