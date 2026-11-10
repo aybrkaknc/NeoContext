@@ -7,7 +7,7 @@
     <AnalysisLevel>latest-recommended</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
-    <Version>0.2.0</Version>
+    <Version>1.2.0</Version>
     <Authors>NeoContext contributors</Authors>
     <Product>NeoContext</Product>
     <Copyright>Copyright (C) NeoContext contributors</Copyright>
