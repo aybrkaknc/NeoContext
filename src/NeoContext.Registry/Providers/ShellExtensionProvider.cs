@@ -102,7 +102,7 @@ public sealed class ShellExtensionProvider(
                 Kind: EntryKind.ShellExtension,
                 Section: section,
                 Key: clsid.ToString("B"),
-                DisplayName: ResolveName(clsid, name),
+                DisplayName: ResolveName(clsid, name, server),
                 State: state,
                 Location: path.ToString(),
                 Capabilities: Capabilities)
@@ -119,8 +119,11 @@ public sealed class ShellExtensionProvider(
     private static bool TryGetClsid(string? defaultValue, string keyName, out Guid clsid) =>
         Guid.TryParse(defaultValue, out clsid) || Guid.TryParse(keyName, out clsid);
 
-    /// <summary>The handler's own key name, unless it is just the CLSID; then the COM class name.</summary>
-    private string ResolveName(Guid clsid, string keyName)
+    /// <summary>
+    /// The handler's own key name, unless it is just the CLSID. Otherwise the dictionary, the COM class name,
+    /// the description stored in the handler's DLL, and only then the bare GUID.
+    /// </summary>
+    private string ResolveName(Guid clsid, string keyName, string? server)
     {
         if (!Guid.TryParse(keyName, out _))
         {
@@ -134,7 +137,9 @@ public sealed class ShellExtensionProvider(
         }
 
         var className = RegistryStore.GetString(roots.Merged / "CLSID" / clsid.ToString("B"), "");
-        return DisplayText.Clean(className, resolver) ?? clsid.ToString("B");
+        return DisplayText.Clean(className, resolver)
+            ?? FileDescriptions.Describe(server)
+            ?? clsid.ToString("B");
     }
 
     private string? ClassName(Guid clsid) =>
