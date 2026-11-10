@@ -19,12 +19,16 @@ public static class EntryFilter
             ? entries.Where(e => Matches(e, text))
             : section is { } only ? entries.Where(e => e.Section == only) : [];
 
-        return [.. matches.OrderBy(e => e.DisplayName, StringComparer.CurrentCultureIgnoreCase)];
+        // A search crosses every section, so results are grouped by section first, then by name.
+        return [.. matches
+            .OrderBy(e => text.Length > 0 ? (int)e.Section : 0)
+            .ThenBy(e => e.DisplayName, StringComparer.CurrentCultureIgnoreCase)];
     }
 
-    /// <summary>The name, the registry key or CLSID, or the command line contains the text.</summary>
+    /// <summary>The name, description, registry key or CLSID, or the command line contains the text.</summary>
     public static bool Matches(ContextMenuEntry entry, string text) =>
         entry.DisplayName.Contains(text, StringComparison.CurrentCultureIgnoreCase)
+        || (entry.Description?.Contains(text, StringComparison.CurrentCultureIgnoreCase) ?? false)
         || entry.Key.Contains(text, StringComparison.OrdinalIgnoreCase)
         || (entry.Command?.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false);
 }

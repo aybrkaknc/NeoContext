@@ -1,6 +1,7 @@
 using NeoContext.Core.Abstractions;
 using NeoContext.Core.Models;
 using NeoContext.Core.Results;
+using NeoContext.Core.Rules;
 
 namespace NeoContext.Registry.Providers;
 
@@ -26,14 +27,23 @@ public sealed class ShellExtensionProvider(ClassesRoots roots, IIndirectStringRe
     public Result<IReadOnlyList<ContextMenuEntry>> Load()
     {
         var entries = new List<ContextMenuEntry>();
+        foreach (var (section, classKey) in ShellScopes.Keys)
+        {
+            entries.AddRange(LoadClass(section, classKey));
+        }
+
+        return entries;
+    }
+
+    /// <summary>Handlers under <c>&lt;class key&gt;\shellex</c> in every writable root. Also used for per-extension classes.</summary>
+    public List<ContextMenuEntry> LoadClass(MenuSection section, string classKey)
+    {
+        var entries = new List<ContextMenuEntry>();
         foreach (var root in roots.Writable)
         {
-            foreach (var (section, classKey) in ShellScopes.Keys)
-            {
-                var shellex = root.Path / classKey / "shellex";
-                AddHandlers(entries, section, root, shellex / ActiveKey, EntryState.Enabled);
-                AddHandlers(entries, section, root, shellex / DisabledKey, EntryState.Disabled);
-            }
+            var shellex = root.Path / classKey / "shellex";
+            AddHandlers(entries, section, root, shellex / ActiveKey, EntryState.Enabled);
+            AddHandlers(entries, section, root, shellex / DisabledKey, EntryState.Disabled);
         }
 
         return entries;
@@ -58,6 +68,7 @@ public sealed class ShellExtensionProvider(ClassesRoots roots, IIndirectStringRe
             }
 
             var path = handlersPath / name;
+            var server = ResolveServerPath(clsid);
             entries.Add(new ContextMenuEntry(
                 Id: path.ToString(),
                 Kind: EntryKind.ShellExtension,
@@ -69,7 +80,10 @@ public sealed class ShellExtensionProvider(ClassesRoots roots, IIndirectStringRe
                 Capabilities: Capabilities)
             {
                 Detail = root.Label,
-                Command = ResolveServerPath(clsid),
+                Command = server,
+                Description = FileDescriptions.Describe(server) ?? ClassName(clsid),
+                Publisher = FileDescriptions.Publisher(server),
+                IconLocation = InstalledApps.FindIcon(server),
             });
         }
     }
@@ -88,6 +102,9 @@ public sealed class ShellExtensionProvider(ClassesRoots roots, IIndirectStringRe
         var className = RegistryStore.GetString(roots.Merged / "CLSID" / clsid.ToString("B"), "");
         return DisplayText.Clean(className, resolver) ?? clsid.ToString("B");
     }
+
+    private string? ClassName(Guid clsid) =>
+        DisplayText.Clean(RegistryStore.GetString(roots.Merged / "CLSID" / clsid.ToString("B"), ""), resolver);
 
     /// <summary>The DLL that implements the handler, shown so users can tell where it comes from.</summary>
     private string? ResolveServerPath(Guid clsid) =>

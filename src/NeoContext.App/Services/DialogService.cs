@@ -41,7 +41,12 @@ public sealed class DialogService(Func<XamlRoot?> xamlRoot) : IDialogService
         dialog.PrimaryButtonText = Strings.Get("Dialog_Save");
         dialog.CloseButtonText = Strings.Get("Dialog_Cancel");
         dialog.DefaultButton = ContentDialogButton.Primary;
-        box.TextChanged += (_, _) => dialog.IsPrimaryButtonEnabled = EntryNameRules.Validate(box.Text).IsSuccess;
+        box.TextChanged += (_, _) =>
+        {
+            var valid = EntryNameRules.Validate(box.Text).IsSuccess;
+            dialog.IsPrimaryButtonEnabled = valid;
+            hint.Text = Strings.Format(valid ? "Rename_Hint" : "Rename_Invalid", EntryNameRules.MaxLength);
+        };
 
         return await dialog.ShowAsync() == ContentDialogResult.Primary ? box.Text.Trim() : null;
     }

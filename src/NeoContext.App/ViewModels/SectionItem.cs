@@ -18,13 +18,14 @@ public sealed class SectionItem(MenuSection section, string glyph)
     public static IReadOnlyList<SectionItem> All { get; } =
     [
         new(MenuSection.Files, ""),
+        new(MenuSection.FileTypes, ""),
         new(MenuSection.Folders, ""),
-        new(MenuSection.FolderBackground, ""),
+        new(MenuSection.FolderBackground, ""),
         new(MenuSection.Desktop, ""),
-        new(MenuSection.Drives, ""),
-        new(MenuSection.FilesAndFolders, ""),
+        new(MenuSection.Drives, ""),
+        new(MenuSection.FilesAndFolders, ""),
         new(MenuSection.NewMenu, ""),
-        new(MenuSection.WinX, ""),
-        new(MenuSection.PackagedApps, ""),
+        new(MenuSection.WinX, ""),
+        new(MenuSection.PackagedApps, ""),
     ];
 }

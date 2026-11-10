@@ -53,6 +53,9 @@ public enum MenuSection
     /// <summary>The Win+X menu.</summary>
     WinX,
 
+    /// <summary>Entries that belong to specific file extensions, chosen on the "File types" page.</summary>
+    FileTypes,
+
     /// <summary>Entries contributed by packaged apps.</summary>
     PackagedApps,
 }
@@ -91,6 +94,12 @@ public sealed record ContextMenuEntry(
 {
     /// <summary>The command line (verbs) or target (shortcuts), when there is one.</summary>
     public string? Command { get; init; }
+
+    /// <summary>What the entry runs or comes from, read from the system (file description, COM class name).</summary>
+    public string? Description { get; init; }
+
+    /// <summary>The company that made the program behind the entry, from its file properties.</summary>
+    public string? Publisher { get; init; }
 
     /// <summary>Icon resource location such as <c>shell32.dll,-16</c>.</summary>
     public string? IconLocation { get; init; }

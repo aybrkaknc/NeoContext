@@ -1,6 +1,7 @@
 using NeoContext.Core.Abstractions;
 using NeoContext.Core.Models;
 using NeoContext.Core.Results;
+using NeoContext.Core.Rules;
 
 namespace NeoContext.Registry.Providers;
 
@@ -27,24 +28,33 @@ public sealed class ShellVerbProvider(ClassesRoots roots, IIndirectStringResolve
     public Result<IReadOnlyList<ContextMenuEntry>> Load()
     {
         var entries = new List<ContextMenuEntry>();
+        foreach (var (section, classKey) in ShellScopes.Keys)
+        {
+            entries.AddRange(LoadClass(section, classKey));
+        }
+
+        return entries;
+    }
+
+    /// <summary>Verbs under <c>&lt;class key&gt;\shell</c> in every writable root. Also used for per-extension classes.</summary>
+    public List<ContextMenuEntry> LoadClass(MenuSection section, string classKey)
+    {
+        var entries = new List<ContextMenuEntry>();
         foreach (var root in roots.Writable)
         {
-            foreach (var (section, classKey) in ShellScopes.Keys)
+            var shellPath = root.Path / classKey / "shell";
+            using var shellKey = RegistryStore.OpenRead(shellPath);
+            if (shellKey is null)
             {
-                var shellPath = root.Path / classKey / "shell";
-                using var shellKey = RegistryStore.OpenRead(shellPath);
-                if (shellKey is null)
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                foreach (var verb in shellKey.GetSubKeyNames())
+            foreach (var verb in shellKey.GetSubKeyNames())
+            {
+                using var verbKey = shellKey.OpenSubKey(verb);
+                if (verbKey is not null)
                 {
-                    using var verbKey = shellKey.OpenSubKey(verb);
-                    if (verbKey is not null)
-                    {
-                        entries.Add(ToEntry(section, root, shellPath / verb, verbKey));
-                    }
+                    entries.Add(ToEntry(section, root, shellPath / verb, verbKey));
                 }
             }
         }
@@ -63,6 +73,7 @@ public sealed class ShellVerbProvider(ClassesRoots roots, IIndirectStringResolve
         var disabled = Has(LegacyDisable) || Has(ProgrammaticAccessOnly);
 
         using var commandKey = key.OpenSubKey("command");
+        var command = commandKey?.GetValue("") as string;
 
         return new ContextMenuEntry(
             Id: path.ToString(),
@@ -74,7 +85,9 @@ public sealed class ShellVerbProvider(ClassesRoots roots, IIndirectStringResolve
             Location: path.ToString(),
             Capabilities: Capabilities)
         {
-            Command = commandKey?.GetValue("") as string,
+            Command = command,
+            Description = FileDescriptions.Describe(command),
+            Publisher = FileDescriptions.Publisher(command),
             IconLocation = key.GetValue("Icon") as string,
             ExtendedOnly = Has("Extended"),
             Detail = root.Label,

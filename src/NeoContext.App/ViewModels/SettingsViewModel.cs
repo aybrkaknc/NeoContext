@@ -15,11 +15,13 @@ public sealed record LanguageOption(string Tag, string Name)
 public sealed partial class SettingsViewModel : ObservableObject
 {
     private readonly AppHost _host;
+    private readonly IDialogService _dialogs;
     private ReleaseInfo? _latest;
 
-    public SettingsViewModel(AppHost host)
+    public SettingsViewModel(AppHost host, IDialogService dialogs)
     {
         _host = host;
+        _dialogs = dialogs;
         Languages =
         [
             new LanguageOption("", Strings.Get("Settings_Language_System")),
@@ -161,6 +163,18 @@ public sealed partial class SettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task RestorePermissionsAsync()
     {
+        if (_host.Ownership.GetBackups().Count == 0)
+        {
+            OwnershipStatus = Strings.Get("Settings_Ownership_None");
+            return;
+        }
+
+        var count = _host.Ownership.GetBackups().Count;
+        if (!await _dialogs.ConfirmAsync(Strings.Get("Restore_Title"), Strings.Format("Restore_Message", count), Strings.Get("Restore_Confirm")))
+        {
+            return;
+        }
+
         var failures = 0;
         foreach (var backup in _host.Ownership.GetBackups())
         {

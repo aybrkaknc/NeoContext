@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using NeoContext.Core.Abstractions;
 using NeoContext.Core.Models;
 using NeoContext.Core.Results;
+using NeoContext.Core.Rules;
 using NeoContext.Shell.Interop;
 
 namespace NeoContext.Shell.WinX;
@@ -54,11 +55,12 @@ public sealed class WinXProvider(string rootDirectory, IIndirectStringResolver r
 
     private ContextMenuEntry ToEntry(string group, string file)
     {
-        string? description = null, target = null, icon = null;
+        string? description = null, target = null, icon = null, program = null;
         try
         {
             using var link = ShellLink.Open(file);
             description = link.Description;
+            program = link.TargetPath;
             target = $"{link.TargetPath} {link.Arguments}".Trim();
             icon = link.IconLocation;
         }
@@ -81,6 +83,8 @@ public sealed class WinXProvider(string rootDirectory, IIndirectStringResolver r
             Capabilities: Capabilities)
         {
             Command = string.IsNullOrEmpty(target) ? null : target,
+            Description = FileDescriptions.Describe(program),
+            Publisher = FileDescriptions.Publisher(program),
             IconLocation = icon,
             Detail = Path.GetFileName(group),
         };

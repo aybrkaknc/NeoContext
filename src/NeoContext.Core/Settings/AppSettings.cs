@@ -25,6 +25,9 @@ public sealed record AppSettings
     /// <summary>Time of the last successful update check (UTC). Failed checks do not update it.</summary>
     public DateTimeOffset? LastUpdateCheck { get; init; }
 
+    /// <summary>True once the first-run welcome notice has been shown.</summary>
+    public bool WelcomeShown { get; init; }
+
     /// <summary>Returns a copy with out-of-range values replaced by their defaults.</summary>
     public AppSettings Normalize() =>
         UpdateCheckIntervalDays is < 1 or > 365

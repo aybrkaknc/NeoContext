@@ -38,4 +38,31 @@ public sealed class RegistryExporter(string backupDirectory)
             ? file
             : Result<string>.Failure(ErrorKind.Unexpected, $"Could not back up {path}: {error.Trim()}");
     }
+
+    /// <summary>Writes a backup made by <see cref="Export"/> back into the registry with <c>reg.exe import</c>.</summary>
+    public static Result Import(string file)
+    {
+        if (!File.Exists(file))
+        {
+            return Result.Failure(ErrorKind.NotFound, $"Backup file not found: {file}");
+        }
+
+        var start = new ProcessStartInfo("reg.exe")
+        {
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardError = true,
+            RedirectStandardOutput = true,
+        };
+        start.ArgumentList.Add("import");
+        start.ArgumentList.Add(file);
+
+        using var process = Process.Start(start)!;
+        var error = process.StandardError.ReadToEnd();
+        process.WaitForExit();
+
+        return process.ExitCode == 0
+            ? Result.Success()
+            : Result.Failure(ErrorKind.AccessDenied, $"Could not restore {file}: {error.Trim()}");
+    }
 }

@@ -20,7 +20,14 @@ public enum NoticeAction
     RestartElevated,
     TakeOwnership,
     OpenRelease,
+    UndoDelete,
 }
+
+/// <summary>One labelled line in the entry details overlay.</summary>
+public sealed record DetailRow(string Label, string Value);
+
+/// <summary>A group button on the "File types" page, with its translated name.</summary>
+public sealed record FileTypeChoice(FileTypeGroup Group, string Label);
 
 /// <summary>
 /// State and commands for the entry pages. All registry and file work happens on a background
@@ -32,6 +39,9 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     private Func<Result>? _retryAfterOwnership;
     private RegistryPath[] _ownershipTargets = [];
     private Uri? _releaseUrl;
+    private string? _lastBackup;
+    private string[] _extensions = [];
+    private IReadOnlyList<string>? _knownExtensions;
 
     public IReadOnlyList<SectionItem> Sections => SectionItem.All;
 
@@ -40,7 +50,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     public bool IsElevated => SystemActions.IsElevated;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription))]
+    [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage))]
     public partial SectionItem? SelectedSection { get; set; }
 
     [ObservableProperty]
@@ -55,6 +65,16 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     [ObservableProperty]
     public partial bool IsNoticeOpen { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsDetailsOpen { get; set; }
+
+    [ObservableProperty]
+    public partial string DetailsTitle { get; set; } = "";
+
+    public ObservableCollection<DetailRow> DetailRows { get; } = [];
+
+    private string _detailsLocation = "";
 
     [ObservableProperty]
     public partial string NoticeTitle { get; set; } = "";
@@ -82,7 +102,58 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         ? Strings.Format("Search_Description", Entries.Count)
         : SelectedSection?.Description ?? "";
 
-    public string EmptyMessage => Strings.Get(IsSearching ? "Empty_Search" : "Empty_Page");
+    public string EmptyMessage => Strings.Get(
+        IsSearching ? "Empty_Search" : IsFileTypesPage && _extensions.Length == 0 ? "Empty_FileTypes" : "Empty_Page");
+
+    /// <summary>True on the "File types" page, which shows the extension picker.</summary>
+    public bool IsFileTypesPage => SelectedSection?.Section == MenuSection.FileTypes;
+
+    public IReadOnlyList<FileTypeChoice> FileTypeChoices { get; } =
+        [.. FileTypeGroups.All.Select(g => new FileTypeChoice(g, Strings.Get($"FileType_{g.Name}")))];
+
+    public bool HasSelectedExtensions => _extensions.Length > 0;
+
+    public string FileTypeSummary => _extensions.Length == 0 ? "" : Strings.Format("FileType_Scanning", string.Join(", ", _extensions));
+
+    [RelayCommand]
+    private Task SelectFileTypeGroupAsync(FileTypeChoice choice) => SetExtensionsAsync([.. choice.Group.Extensions]);
+
+    [RelayCommand]
+    private Task ClearExtensionsAsync() => SetExtensionsAsync([]);
+
+    /// <summary>Handles typed text such as "mp4", ".MP4" or "mp4, mkv".</summary>
+    internal Task SubmitExtensionsAsync(string? text)
+    {
+        var parsed = (text ?? "").Split([',', ';', ' '], StringSplitOptions.RemoveEmptyEntries)
+            .Select(FileTypeGroups.NormalizeExtension)
+            .ToList();
+        if (parsed.Count == 0 || parsed.Any(e => e is null))
+        {
+            ShowNotice(InfoBarSeverity.Warning, Strings.Get("FileType_Invalid_Title"), Strings.Get("FileType_Invalid_Message"), NoticeAction.None);
+            return Task.CompletedTask;
+        }
+
+        return SetExtensionsAsync([.. parsed.Select(e => e!).Distinct()]);
+    }
+
+    /// <summary>Registered extensions that start with what the user typed, for the suggestion list.</summary>
+    internal IReadOnlyList<string> SuggestExtensions(string? text)
+    {
+        _knownExtensions ??= host.FileTypes.KnownExtensions();
+        var typed = text?.Trim().TrimStart('*').TrimStart('.') ?? "";
+        return typed.Length == 0
+            ? []
+            : [.. _knownExtensions.Where(e => e.StartsWith("." + typed, StringComparison.OrdinalIgnoreCase)).Take(12)];
+    }
+
+    private async Task SetExtensionsAsync(string[] extensions)
+    {
+        _extensions = extensions;
+        OnPropertyChanged(nameof(HasSelectedExtensions));
+        OnPropertyChanged(nameof(FileTypeSummary));
+        OnPropertyChanged(nameof(EmptyMessage));
+        await RefreshAsync();
+    }
 
     partial void OnSelectedSectionChanged(SectionItem? value) => ApplyFilter();
 
@@ -94,7 +165,17 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         IsBusy = true;
         try
         {
-            _all = await Task.Run(host.Menus.Refresh);
+            var extensions = _extensions;
+            _all = await Task.Run(() =>
+            {
+                IReadOnlyList<ContextMenuEntry> entries = host.Menus.Refresh();
+                if (extensions.Length > 0)
+                {
+                    entries = [.. entries, .. host.FileTypes.Scan(extensions)];
+                }
+
+                return entries;
+            });
             foreach (var error in host.Menus.LoadErrors)
             {
                 AppLog.Warn($"Load failed: {error}");
@@ -106,6 +187,23 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         {
             IsBusy = false;
         }
+
+        ShowWelcomeOnce();
+    }
+
+    /// <summary>A short orientation shown on the very first launch only.</summary>
+    private void ShowWelcomeOnce()
+    {
+        if (host.Settings.WelcomeShown)
+        {
+            return;
+        }
+
+        host.UpdateSettings(s => s with { WelcomeShown = true });
+        if (!IsNoticeOpen)
+        {
+            ShowNotice(InfoBarSeverity.Informational, Strings.Get("Notice_Welcome_Title"), Strings.Get("Notice_Welcome_Message"), NoticeAction.None);
+        }
     }
 
     private void ApplyFilter()
@@ -116,7 +214,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         var searching = IsSearching;
         foreach (var entry in EntryFilter.Apply(_all, SearchText, SelectedSection?.Section))
         {
-            Entries.Add(new EntryViewModel(entry, this, showSection: searching));
+            Entries.Add(new EntryViewModel(entry, this, showSection: searching, query: searching ? SearchText : ""));
         }
 
         IsEmpty = Entries.Count == 0;
@@ -135,9 +233,66 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
             return false;
         }
 
-        var result = await Task.Run(() => host.Menus.SetState(entry, state));
+        var result = await RunBusyAsync(() => host.Menus.SetState(entry, state));
         return await CompleteAsync(result, entry, () => host.Menus.SetState(entry, state));
     }
+
+    internal Task ShowDetailsAsync(EntryViewModel item)
+    {
+        var entry = item.Entry;
+        var rows = new List<(string, string)>
+        {
+            (Strings.Get("Details_Does"), item.DescribeEntry()),
+            (Strings.Get("Details_Kind"), item.KindLabel),
+            (Strings.Get("Details_Menu"), item.SectionLabel),
+            (Strings.Get("Details_Status"), Strings.Get(entry.IsEnabled ? "Details_On" : "Details_Off")),
+        };
+
+        if (entry.Publisher is { } publisher)
+        {
+            rows.Add((Strings.Get("Details_Publisher"), publisher));
+        }
+
+        if (host.Menus.IsProtected(entry))
+        {
+            rows.Add((Strings.Get("Details_Protected"), Strings.Get("Details_Protected_Text")));
+        }
+
+        rows.Add((Strings.Get("Details_Effect"), Strings.Get($"Effect_{entry.Kind}")));
+
+        if (!string.IsNullOrEmpty(item.Detail))
+        {
+            rows.Add((Strings.Get("Details_Scope"), item.Detail));
+        }
+
+        if (!string.IsNullOrWhiteSpace(entry.Command))
+        {
+            rows.Add((Strings.Get("Details_Command"), entry.Command));
+        }
+
+        rows.Add((Strings.Get("Details_Location"), entry.Location));
+        if (entry.Kind is EntryKind.ShellExtension or EntryKind.PackagedApp)
+        {
+            rows.Add((Strings.Get("Details_Key"), entry.Key));
+        }
+
+        DetailsTitle = entry.DisplayName;
+        _detailsLocation = entry.Location;
+        DetailRows.Clear();
+        foreach (var (label, value) in rows)
+        {
+            DetailRows.Add(new DetailRow(label, value));
+        }
+
+        IsDetailsOpen = true;
+        return Task.CompletedTask;
+    }
+
+    [RelayCommand]
+    private void CloseDetails() => IsDetailsOpen = false;
+
+    [RelayCommand]
+    private void CopyDetailsLocation() => SystemActions.CopyToClipboard(_detailsLocation);
 
     internal async Task RenameAsync(EntryViewModel item)
     {
@@ -148,13 +303,21 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
 
         var entry = item.Entry;
-        var result = await Task.Run(() => host.Menus.Rename(entry, name));
+        var result = await RunBusyAsync(() => host.Menus.Rename(entry, name));
         await CompleteAsync(result, entry, () => host.Menus.Rename(entry, name));
     }
 
     internal async Task DeleteAsync(EntryViewModel item)
     {
         var entry = item.Entry;
+
+        // Refuse before asking for confirmation or writing a backup.
+        if (host.Menus.IsProtected(entry))
+        {
+            ShowError(new Error(ErrorKind.Protected, entry.DisplayName), entry);
+            return;
+        }
+
         var isRegistry = RegistryPath.TryParse(entry.Location, out var path);
         var message = Strings.Format(isRegistry ? "Delete_Message_Registry" : "Delete_Message_File", entry.DisplayName, AppInfo.RegistryBackupDirectory);
         if (!await dialogs.ConfirmAsync(Strings.Get("Delete_Title"), message, Strings.Get("Delete_Confirm"), destructive: true))
@@ -162,6 +325,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
             return;
         }
 
+        string? backupFile = null;
         Result Delete()
         {
             // Registry entries are exported first; without a backup nothing is deleted.
@@ -173,14 +337,71 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
                     return backup.ToResult();
                 }
 
+                backupFile = backup.Value;
                 AppLog.Info($"Backed up {path} to {backup.Value}");
             }
 
             return host.Menus.Delete(entry);
         }
 
-        var result = await Task.Run(Delete);
-        await CompleteAsync(result, entry, Delete);
+        var result = await RunBusyAsync(Delete);
+        var done = await CompleteAsync(result, entry, Delete);
+
+        // Offer to undo when the entry was backed up and no Explorer restart notice is showing.
+        if (done && backupFile is not null && !host.Menus.RequiresExplorerRestart(entry))
+        {
+            _lastBackup = backupFile;
+            ShowNotice(InfoBarSeverity.Success, Strings.Get("Notice_Done_Title"), Strings.Format("Notice_Deleted_Message", entry.DisplayName), NoticeAction.UndoDelete);
+        }
+    }
+
+    private async Task UndoDeleteAsync()
+    {
+        var file = _lastBackup;
+        if (file is null)
+        {
+            return;
+        }
+
+        var result = await RunBusyAsync(() => RegistryExporter.Import(file));
+        if (!result.IsSuccess)
+        {
+            AppLog.Warn($"Undo failed: {result.Error}");
+            ShowNotice(InfoBarSeverity.Error, Strings.Get($"Error_{result.Error!.Kind}"), Describe(result.Error), NoticeAction.None);
+            return;
+        }
+
+        _lastBackup = null;
+        await RefreshAsync();
+        ShowNotice(InfoBarSeverity.Success, Strings.Get("Notice_Done_Title"), Strings.Get("Notice_Restored_Message"), NoticeAction.None);
+    }
+
+    [RelayCommand]
+    private void ClearSearch() => SearchText = "";
+
+    /// <summary>Runs registry or file work off the UI thread while the busy ring is shown.</summary>
+    private async Task<Result> RunBusyAsync(Func<Result> work)
+    {
+        IsBusy = true;
+        try
+        {
+            return await Task.Run(work);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    /// <summary>A translated summary of the failure, followed by the technical detail.</summary>
+    private static string Describe(Error error)
+    {
+        var summary = Strings.Get($"Error_{error.Kind}_Message");
+
+        // The technical detail is English and only useful when the cause is unclear.
+        return error.Kind is ErrorKind.Unexpected or ErrorKind.AccessDenied or ErrorKind.RequiresElevation
+            ? $"{summary}{Environment.NewLine}{error.Message}"
+            : summary;
     }
 
     internal void OpenLocation(EntryViewModel item)
@@ -210,6 +431,10 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         {
             ShowNotice(InfoBarSeverity.Informational, Strings.Get("Notice_RestartExplorer_Title"), Strings.Get("Notice_RestartExplorer_Message"), NoticeAction.RestartExplorer);
         }
+        else
+        {
+            ShowNotice(InfoBarSeverity.Success, Strings.Get("Notice_Done_Title"), Strings.Format("Notice_Done_Message", entry.DisplayName), NoticeAction.None);
+        }
 
         await RefreshAsync();
         return true;
@@ -237,7 +462,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
         var message = error.Kind is ErrorKind.Protected
             ? Strings.Format("Error_Protected_Message", entry.DisplayName)
-            : error.Message;
+            : Describe(error);
         ShowNotice(InfoBarSeverity.Error, Strings.Get($"Error_{error.Kind}"), message, action);
     }
 
@@ -267,13 +492,18 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         switch (action)
         {
             case NoticeAction.RestartExplorer:
-                await Task.Run(ExplorerRestarter.Restart);
+                await RestartExplorerAsync();
                 break;
 
             case NoticeAction.RestartElevated:
                 if (SystemActions.RestartElevated())
                 {
                     Microsoft.UI.Xaml.Application.Current.Exit();
+                }
+                else
+                {
+                    // The user declined the Windows permission prompt.
+                    ShowNotice(InfoBarSeverity.Warning, Strings.Get("Notice_ElevationCancelled_Title"), Strings.Get("Notice_ElevationCancelled_Message"), NoticeAction.RestartElevated);
                 }
 
                 break;
@@ -282,9 +512,39 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
                 await TakeOwnershipAndRetryAsync();
                 break;
 
+            case NoticeAction.UndoDelete:
+                await UndoDeleteAsync();
+                break;
+
             case NoticeAction.OpenRelease when _releaseUrl is not null:
                 SystemActions.OpenUrl(_releaseUrl.ToString());
                 break;
+        }
+    }
+
+    private async Task RestartExplorerAsync()
+    {
+        // Restarting closes every open Explorer window and the taskbar for a moment, so ask first.
+        if (!await dialogs.ConfirmAsync(Strings.Get("Explorer_Title"), Strings.Get("Explorer_Message"), Strings.Get("Explorer_Confirm")))
+        {
+            ShowNotice(InfoBarSeverity.Informational, Strings.Get("Notice_RestartExplorer_Title"), Strings.Get("Notice_RestartExplorer_Message"), NoticeAction.RestartExplorer);
+            return;
+        }
+
+        IsBusy = true;
+        try
+        {
+            await Task.Run(ExplorerRestarter.Restart);
+            ShowNotice(InfoBarSeverity.Success, Strings.Get("Notice_Done_Title"), Strings.Get("Explorer_Done"), NoticeAction.None);
+        }
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException or NotSupportedException)
+        {
+            AppLog.Warn($"Explorer restart failed: {ex.Message}");
+            ShowNotice(InfoBarSeverity.Error, Strings.Get("Error_Unexpected"), Strings.Format("Explorer_Failed", ex.Message), NoticeAction.RestartExplorer);
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
@@ -308,7 +568,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
             var taken = await Task.Run(() => host.Ownership.TakeOwnership(target));
             if (!taken.IsSuccess)
             {
-                ShowNotice(InfoBarSeverity.Error, Strings.Get("Error_AccessDenied"), taken.Error!.Message, NoticeAction.None);
+                ShowNotice(InfoBarSeverity.Error, Strings.Get("Error_AccessDenied"), Describe(taken.Error!), NoticeAction.None);
                 return;
             }
 
@@ -323,7 +583,7 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         }
         else
         {
-            ShowNotice(InfoBarSeverity.Error, Strings.Get($"Error_{result.Error!.Kind}"), result.Error.Message, NoticeAction.None);
+            ShowNotice(InfoBarSeverity.Error, Strings.Get($"Error_{result.Error!.Kind}"), Describe(result.Error), NoticeAction.None);
         }
     }
 }

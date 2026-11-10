@@ -80,7 +80,7 @@ public sealed class ShellNewProvider(ClassesRoots roots, IIndirectStringResolver
                         Capabilities: Capabilities)
                     {
                         Detail = $"{extension} · {root.Label}",
-                        IconLocation = templateKey.GetValue("IconPath") as string,
+                        IconLocation = templateKey.GetValue("IconPath") as string ?? DefaultIcon(progId, extension),
                     });
                 }
             }
@@ -88,6 +88,11 @@ public sealed class ShellNewProvider(ClassesRoots roots, IIndirectStringResolver
 
         return entries;
     }
+
+    /// <summary>The icon Explorer shows for files of this type: the ProgID's DefaultIcon, then the extension's own.</summary>
+    private string? DefaultIcon(string? progId, string extension) =>
+        (string.IsNullOrEmpty(progId) ? null : RegistryStore.GetString(roots.Merged / progId / "DefaultIcon", ""))
+        ?? RegistryStore.GetString(roots.Merged / extension / "DefaultIcon", "");
 
     private static IEnumerable<string> CandidatePaths(string? progId)
     {

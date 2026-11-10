@@ -1,6 +1,7 @@
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using NeoContext.App.Services;
 using NeoContext.App.ViewModels;
 using NeoContext.Updates;
@@ -12,7 +13,8 @@ public sealed partial class MainWindow : Window
 {
     public MainWindow(AppHost host)
     {
-        ViewModel = new MainViewModel(host, new DialogService(() => Content.XamlRoot));
+        var dialogs = new DialogService(() => Content.XamlRoot);
+        ViewModel = new MainViewModel(host, dialogs);
         InitializeComponent();
 
         Title = "NeoContext";
@@ -26,7 +28,7 @@ public sealed partial class MainWindow : Window
             presenter.PreferredMinimumHeight = 480;
         }
 
-        SettingsPanel.ViewModel = new SettingsViewModel(host);
+        SettingsPanel.ViewModel = new SettingsViewModel(host, dialogs);
         Navigation.SelectedItem = ViewModel.Sections[0];
         _ = ViewModel.RefreshAsync();
     }
@@ -46,6 +48,67 @@ public sealed partial class MainWindow : Window
 
     /// <summary>x:Bind helper: show "nothing here" only when the list is empty and not loading.</summary>
     public Visibility ShowEmptyText(bool isEmpty, bool isBusy) => isEmpty && !isBusy ? Visibility.Visible : Visibility.Collapsed;
+
+    public Visibility ToVisible(bool value) => value ? Visibility.Visible : Visibility.Collapsed;
+
+    private void OnOverlayTapped(object sender, TappedRoutedEventArgs e) => ViewModel.CloseDetailsCommand.Execute(null);
+
+    /// <summary>Taps on the card stay on the card, so only taps outside it close the overlay.</summary>
+    private void OnCardTapped(object sender, TappedRoutedEventArgs e) => e.Handled = true;
+
+    private void OnEscape(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        if (ViewModel.IsDetailsOpen)
+        {
+            ViewModel.CloseDetailsCommand.Execute(null);
+            args.Handled = true;
+        }
+    }
+
+    private void OnFileTypeGroupClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: FileTypeChoice choice })
+        {
+            ViewModel.SelectFileTypeGroupCommand.Execute(choice);
+        }
+    }
+
+    private void OnExtensionTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    {
+        if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+        {
+            sender.ItemsSource = ViewModel.SuggestExtensions(sender.Text);
+        }
+    }
+
+    private void OnExtensionSubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args) =>
+        _ = ViewModel.SubmitExtensionsAsync(args.ChosenSuggestion as string ?? args.QueryText);
+
+    private void OnEntryClick(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is EntryViewModel entry)
+        {
+            entry.ShowDetailsCommand.Execute(null);
+        }
+    }
+
+    private void OnFocusSearch(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        SearchBox.Focus(FocusState.Keyboard);
+        args.Handled = true;
+    }
+
+    private void OnClearSearch(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.SearchText = "";
+        args.Handled = true;
+    }
+
+    private void OnRefreshShortcut(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+    {
+        ViewModel.RefreshCommand.Execute(null);
+        args.Handled = true;
+    }
 
     private void OnNavigationSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {

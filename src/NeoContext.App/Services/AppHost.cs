@@ -29,10 +29,14 @@ public sealed class AppHost
         var classes = ClassesRoots.Default;
         Protection = new ProtectionPolicy(Settings.ProtectEssentialEntries);
 
+        var verbs = new ShellVerbProvider(classes, resolver);
+        var shellExtensions = new ShellExtensionProvider(classes, resolver);
+        FileTypes = new FileTypeScanner(classes, verbs, shellExtensions);
+
         IEntryProvider[] providers =
         [
-            new ShellVerbProvider(classes, resolver),
-            new ShellExtensionProvider(classes, resolver),
+            verbs,
+            shellExtensions,
             new ShellNewProvider(classes, resolver),
             new WinXProvider(WinXProvider.DefaultRoot, resolver, WinXPathGeneralizer.ForCurrentSystem()),
             new PackagedMenuProvider(new WindowsPackageSource(), BlockedShellExtensions.Default),
@@ -53,6 +57,8 @@ public sealed class AppHost
     public ProtectionPolicy Protection { get; }
 
     public ContextMenuService Menus { get; }
+
+    public FileTypeScanner FileTypes { get; }
 
     public KeyOwnershipService Ownership { get; }
 

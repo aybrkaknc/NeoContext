@@ -28,11 +28,16 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <TextBlock x:Uid="Settings_Language" Text="Language" />
+                    <TextBlock x:Name="LanguageLabel" x:Uid="Settings_Language" Text="Language" />
                     <TextBlock x:Uid="Settings_Language_Hint" Text="Takes effect after restarting NeoContext." Style="{StaticResource CaptionTextBlockStyle}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Uid="Settings_Language_Restart" Text="Restart NeoContext to apply the new language."
+                               Style="{StaticResource CaptionTextBlockStyle}" Margin="0,4,0,0"
+                               Foreground="{ThemeResource SystemFillColorCautionBrush}"
+                               Visibility="{x:Bind ViewModel.LanguageChanged, Mode=OneWay}" />
                 </StackPanel>
                 <ComboBox Grid.Column="1" MinWidth="200" VerticalAlignment="Center"
+                          AutomationProperties.LabeledBy="{x:Bind LanguageLabel}"
                           ItemsSource="{x:Bind ViewModel.Languages}"
                           SelectedItem="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}" />
             </Grid>
@@ -43,12 +48,13 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <TextBlock x:Uid="Settings_Protect" Text="Protect essential entries" />
+                    <TextBlock x:Name="ProtectLabel" x:Uid="Settings_Protect" Text="Protect essential entries" />
                     <TextBlock x:Uid="Settings_Protect_Hint" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                Text="Prevents disabling or deleting entries such as Open, which Explorer needs to work." />
                 </StackPanel>
                 <ToggleSwitch Grid.Column="1" MinWidth="0" OnContent="" OffContent=""
+                              AutomationProperties.LabeledBy="{x:Bind ProtectLabel}"
                               IsOn="{x:Bind ViewModel.ProtectEssentialEntries, Mode=TwoWay}" />
             </Grid>
 
@@ -61,12 +67,13 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <TextBlock x:Uid="Settings_AutoCheck" Text="Check for updates automatically" />
+                    <TextBlock x:Name="AutoCheckLabel" x:Uid="Settings_AutoCheck" Text="Check for updates automatically" />
                     <TextBlock x:Uid="Settings_AutoCheck_Hint" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                Text="Once a week. NeoContext only notifies you; it never installs anything on its own." />
                 </StackPanel>
                 <ToggleSwitch Grid.Column="1" MinWidth="0" OnContent="" OffContent=""
+                              AutomationProperties.LabeledBy="{x:Bind AutoCheckLabel}"
                               IsOn="{x:Bind ViewModel.CheckForUpdates, Mode=TwoWay}" />
             </Grid>
 
@@ -76,7 +83,8 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Spacing="4">
-                    <TextBlock Text="{x:Bind ViewModel.UpdateStatus, Mode=OneWay}" TextWrapping="Wrap" />
+                    <TextBlock Text="{x:Bind ViewModel.UpdateStatus, Mode=OneWay}" TextWrapping="Wrap"
+                               AutomationProperties.LiveSetting="Polite" />
                     <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsCheckingForUpdates, Mode=OneWay}" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
@@ -99,6 +107,7 @@
                 <StackPanel>
                     <TextBlock x:Uid="Settings_Ownership" Text="Restore original key owners" />
                     <TextBlock Text="{x:Bind ViewModel.OwnershipStatus, Mode=OneWay}" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               AutomationProperties.LiveSetting="Polite"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
                 <Button x:Uid="Settings_RestoreOwnership" Grid.Column="1" Content="Restore" VerticalAlignment="Center"

@@ -486,3 +486,6 @@ $RECYCLE.BIN/
 
 # Local test launcher (not part of the project)
 run-dev.cmd
+
+# Reference copy of the original ContextMenuManager source (read-only, not part of this repository)
+ContextMenuManager-master/

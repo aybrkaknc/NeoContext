@@ -189,6 +189,276 @@
   <data name="Kind_PackagedApp" xml:space="preserve">
     <value>Uygulama uzantısı</value>
   </data>
+  <data name="Desc_From_ShellVerb" xml:space="preserve">
+    <value>{0} çalıştırır</value>
+  </data>
+  <data name="Desc_From_ShellExtension" xml:space="preserve">
+    <value>{0} tarafından eklendi</value>
+  </data>
+  <data name="Desc_From_WinX" xml:space="preserve">
+    <value>{0} açar</value>
+  </data>
+  <data name="Desc_Generic_ShellNew" xml:space="preserve">
+    <value>Yeni bir {0} dosyası oluşturur</value>
+  </data>
+  <data name="Desc_Generic_PackagedApp" xml:space="preserve">
+    <value>Yüklü bir uygulama tarafından eklendi, şunlar için: {0}</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_open" xml:space="preserve">
+    <value>Öğeyi varsayılan uygulamayla açar</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_edit" xml:space="preserve">
+    <value>Öğeyi düzenlemek için açar</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_print" xml:space="preserve">
+    <value>Öğeyi yazdırır</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_printto" xml:space="preserve">
+    <value>Öğeyi bir yazıcıya gönderir</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_play" xml:space="preserve">
+    <value>Öğeyi oynatır</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_runas" xml:space="preserve">
+    <value>Öğeyi yönetici olarak çalıştırır</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_explore" xml:space="preserve">
+    <value>Klasörü, klasör ağacıyla birlikte Gezgin'de açar</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_find" xml:space="preserve">
+    <value>Klasörün içinde arama yapar</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_openas" xml:space="preserve">
+    <value>Öğeyi hangi uygulamayla açacağınızı seçtirir</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_opennewwindow" xml:space="preserve">
+    <value>Klasörü yeni bir pencerede açar</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_opennewprocess" xml:space="preserve">
+    <value>Klasörü yeni bir işlemde açar</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_opennewtab" xml:space="preserve">
+    <value>Klasörü yeni bir sekmede açar</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_preview" xml:space="preserve">
+    <value>Öğeyi önizler</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_cmd" xml:space="preserve">
+    <value>Burada bir Komut İstemi açar</value>
+  </data>
+  <data name="Desc_Known_ShellVerb_powershell" xml:space="preserve">
+    <value>Burada bir PowerShell penceresi açar</value>
+  </data>
+  <data name="Notice_Done_Title" xml:space="preserve">
+    <value>Tamamlandı</value>
+  </data>
+  <data name="Notice_Done_Message" xml:space="preserve">
+    <value>"{0}" güncellendi.</value>
+  </data>
+  <data name="Notice_ElevationCancelled_Title" xml:space="preserve">
+    <value>Yönetici izni verilmedi</value>
+  </data>
+  <data name="Notice_ElevationCancelled_Message" xml:space="preserve">
+    <value>NeoContext yönetici olarak yeniden başlatılmadı, bu yüzden değişiklik yapılmadı. Tekrar deneyebilirsiniz.</value>
+  </data>
+  <data name="Error_NotFound_Message" xml:space="preserve">
+    <value>Başka bir program tarafından kaldırılmış olabilir. Liste yenilenecek.</value>
+  </data>
+  <data name="Error_RequiresElevation_Message" xml:space="preserve">
+    <value>Windows bu değişikliği engelledi. NeoContext'i yönetici olarak yeniden başlatıp tekrar deneyin.</value>
+  </data>
+  <data name="Error_AccessDenied_Message" xml:space="preserve">
+    <value>Windows bu değişikliğe hesabınız için izin vermiyor.</value>
+  </data>
+  <data name="Error_InvalidInput_Message" xml:space="preserve">
+    <value>Girdiğiniz değer kullanılamaz.</value>
+  </data>
+  <data name="Error_NotSupported_Message" xml:space="preserve">
+    <value>Bu değişiklik bu tür girdi için kullanılamıyor.</value>
+  </data>
+  <data name="Error_Network_Message" xml:space="preserve">
+    <value>İnternet bağlantınızı kontrol edip tekrar deneyin.</value>
+  </data>
+  <data name="Error_Integrity_Message" xml:space="preserve">
+    <value>İndirilen dosya yayımlanan sağlama toplamıyla eşleşmedi, bu yüzden silindi.</value>
+  </data>
+  <data name="Error_Unexpected_Message" xml:space="preserve">
+    <value>Değişiklik tamamlanamadı.</value>
+  </data>
+  <data name="Explorer_Title" xml:space="preserve">
+    <value>Gezgin yeniden başlatılsın mı?</value>
+  </data>
+  <data name="Explorer_Message" xml:space="preserve">
+    <value>Açık Gezgin pencereleri ve görev çubuğu bir an kapanıp yeniden açılır. Önce Gezgin'deki işlerinizi kaydedin.</value>
+  </data>
+  <data name="Explorer_Confirm" xml:space="preserve">
+    <value>Yeniden başlat</value>
+  </data>
+  <data name="Explorer_Done" xml:space="preserve">
+    <value>Gezgin yeniden başlatıldı.</value>
+  </data>
+  <data name="Explorer_Failed" xml:space="preserve">
+    <value>Gezgin yeniden başlatılamadı: {0}</value>
+  </data>
+  <data name="Settings_Ownership_None" xml:space="preserve">
+    <value>Geri yüklenecek kayıtlı sahip yok.</value>
+  </data>
+  <data name="Settings_Language_Restart" xml:space="preserve">
+    <value>Yeni dilin uygulanması için NeoContext'i yeniden başlatın.</value>
+  </data>
+  <data name="Rename_Invalid" xml:space="preserve">
+    <value>Ad boş olamaz ve {0} karakterden uzun olamaz.</value>
+  </data>
+  <data name="Desc_Generic_ShellVerb" xml:space="preserve">
+    <value>Başka bir program tarafından eklenen bir komutu çalıştırır</value>
+  </data>
+  <data name="Desc_Generic_ShellExtension" xml:space="preserve">
+    <value>Bu bilgisayardaki bir dosya veya programdan bir öğe ekler</value>
+  </data>
+  <data name="Desc_Generic_WinX" xml:space="preserve">
+    <value>Win+X menüsündeki bir kısayol</value>
+  </data>
+  <data name="Restore_Title" xml:space="preserve">
+    <value>Özgün sahipler geri yüklensin mi?</value>
+  </data>
+  <data name="Restore_Message" xml:space="preserve">
+    <value>{0} kayıt defteri anahtarı özgün sahibine geri verilecek. "Sahipliği al" ile değiştirdiğiniz girdiler yeniden salt okunur olabilir.</value>
+  </data>
+  <data name="Restore_Confirm" xml:space="preserve">
+    <value>Geri yükle</value>
+  </data>
+  <data name="Action_UndoDelete" xml:space="preserve">
+    <value>Geri al</value>
+  </data>
+  <data name="Notice_Deleted_Message" xml:space="preserve">
+    <value>"{0}" silindi. Yedeği kaydedildi, isterseniz geri alabilirsiniz.</value>
+  </data>
+  <data name="Notice_Restored_Message" xml:space="preserve">
+    <value>Girdi yedeğinden geri yüklendi.</value>
+  </data>
+  <data name="ClearSearchButton.Content" xml:space="preserve">
+    <value>Aramayı temizle</value>
+  </data>
+  <data name="BusyRing.AutomationProperties.Name" xml:space="preserve">
+    <value>Yükleniyor</value>
+  </data>
+  <data name="EntriesList.AutomationProperties.Name" xml:space="preserve">
+    <value>Menü girdileri</value>
+  </data>
+  <data name="Notice_Welcome_Title" xml:space="preserve">
+    <value>NeoContext'e hoş geldiniz</value>
+  </data>
+  <data name="Notice_Welcome_Message" xml:space="preserve">
+    <value>Soldan bir menü seçin, sonra anahtarla bir girdiyi gösterin veya gizleyin. Silinen girdilerin önce yedeği alınır, böylece geri alabilirsiniz. Windows 11'de birçok girdi "Daha fazla seçenek göster" altında görünür.</value>
+  </data>
+  <data name="Menu_Details.Text" xml:space="preserve">
+    <value>Ayrıntılar</value>
+  </data>
+  <data name="DetailsClose.Content" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="DetailsCopy.Content" xml:space="preserve">
+    <value>Konumu kopyala</value>
+  </data>
+  <data name="Details_Does" xml:space="preserve">
+    <value>Ne yapar</value>
+  </data>
+  <data name="Details_Kind" xml:space="preserve">
+    <value>Tür</value>
+  </data>
+  <data name="Details_Menu" xml:space="preserve">
+    <value>Göründüğü yer</value>
+  </data>
+  <data name="Details_Status" xml:space="preserve">
+    <value>Durum</value>
+  </data>
+  <data name="Details_On" xml:space="preserve">
+    <value>Menüde gösteriliyor</value>
+  </data>
+  <data name="Details_Off" xml:space="preserve">
+    <value>Menüden gizli</value>
+  </data>
+  <data name="Details_Publisher" xml:space="preserve">
+    <value>Yapan</value>
+  </data>
+  <data name="Details_Protected" xml:space="preserve">
+    <value>Korumalı</value>
+  </data>
+  <data name="Details_Protected_Text" xml:space="preserve">
+    <value>Explorer bu girdiye ihtiyaç duyuyor, bu yüzden koruma açıkken NeoContext onu kapatmaz veya silmez.</value>
+  </data>
+  <data name="Details_Effect" xml:space="preserve">
+    <value>Kapatırsanız</value>
+  </data>
+  <data name="Details_Scope" xml:space="preserve">
+    <value>Geçerli olduğu yer</value>
+  </data>
+  <data name="Details_Command" xml:space="preserve">
+    <value>Komut</value>
+  </data>
+  <data name="Details_Location" xml:space="preserve">
+    <value>Konum</value>
+  </data>
+  <data name="Details_Key" xml:space="preserve">
+    <value>Tanımlayıcı (CLSID)</value>
+  </data>
+  <data name="Effect_ShellVerb" xml:space="preserve">
+    <value>Girdi menüden gizlenir. Hiçbir şey silinmez, istediğiniz zaman yeniden açabilirsiniz.</value>
+  </data>
+  <data name="Effect_ShellExtension" xml:space="preserve">
+    <value>Uzantı öğesini menüye eklemeyi bırakır. Program yüklü kalır. İstediğiniz zaman yeniden açabilirsiniz.</value>
+  </data>
+  <data name="Effect_ShellNew" xml:space="preserve">
+    <value>Dosya türü, Gezgin yeniden başlatıldıktan sonra Yeni menüsünden kalkar. İstediğiniz zaman yeniden açabilirsiniz.</value>
+  </data>
+  <data name="Effect_WinX" xml:space="preserve">
+    <value>Kısayol, Gezgin yeniden başlatıldıktan sonra Win+X menüsünden gizlenir. İstediğiniz zaman yeniden açabilirsiniz.</value>
+  </data>
+  <data name="Effect_PackagedApp" xml:space="preserve">
+    <value>Uygulamanın menü öğeleri, Gezgin yeniden başlatıldıktan sonra gizlenir. Uygulama yüklü kalır. İstediğiniz zaman yeniden açabilirsiniz.</value>
+  </data>
+  <data name="Section_FileTypes" xml:space="preserve">
+    <value>Dosya türleri</value>
+  </data>
+  <data name="Section_FileTypes_Description" xml:space="preserve">
+    <value>.mp4 veya .zip gibi belirli dosya türlerine ait girdiler. Bir grup seçin veya uzantı yazın.</value>
+  </data>
+  <data name="Empty_FileTypes" xml:space="preserve">
+    <value>Girdileri görmek için yukarıdan bir dosya türü seçin.</value>
+  </data>
+  <data name="FileType_Exe" xml:space="preserve">
+    <value>Programlar</value>
+  </data>
+  <data name="FileType_Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="FileType_Audio" xml:space="preserve">
+    <value>Müzik</value>
+  </data>
+  <data name="FileType_Archive" xml:space="preserve">
+    <value>Arşivler</value>
+  </data>
+  <data name="FileType_Document" xml:space="preserve">
+    <value>Belgeler</value>
+  </data>
+  <data name="FileType_Image" xml:space="preserve">
+    <value>Resimler</value>
+  </data>
+  <data name="FileType_Scanning" xml:space="preserve">
+    <value>Gösterilen girdiler: {0}</value>
+  </data>
+  <data name="FileType_Invalid_Title" xml:space="preserve">
+    <value>Geçerli bir uzantı değil</value>
+  </data>
+  <data name="FileType_Invalid_Message" xml:space="preserve">
+    <value>mp4, .zip gibi bir uzantı veya virgülle ayrılmış birkaç uzantı yazın.</value>
+  </data>
+  <data name="ExtensionBox.PlaceholderText" xml:space="preserve">
+    <value>Uzantı, örn. mp4</value>
+  </data>
+  <data name="ClearFileTypes.Content" xml:space="preserve">
+    <value>Temizle</value>
+  </data>
   <data name="WinX_Group" xml:space="preserve">
     <value>Grup {0}</value>
   </data>

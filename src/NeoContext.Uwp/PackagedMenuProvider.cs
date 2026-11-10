@@ -58,11 +58,40 @@ public sealed class PackagedMenuProvider(IPackageSource packages, BlockedShellEx
                     Capabilities: EntryCapabilities.Toggle)
                 {
                     Detail = itemTypes,
+                    IconLocation = FindLogo(package.InstalledPath),
                 });
             }
         }
 
         return entries;
+    }
+
+    /// <summary>The app's small logo from its Assets folder, or null when no standard logo file exists.</summary>
+    private static string? FindLogo(string installPath)
+    {
+        try
+        {
+            var assets = Path.Combine(installPath, "Assets");
+            if (!Directory.Exists(assets))
+            {
+                return null;
+            }
+
+            foreach (var pattern in new[] { "Square44x44Logo.targetsize-32*.png", "Square44x44Logo.targetsize-48*.png", "Square44x44Logo*.png", "StoreLogo*.png" })
+            {
+                var file = Directory.EnumerateFiles(assets, pattern).FirstOrDefault();
+                if (file is not null)
+                {
+                    return file;
+                }
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Some package folders cannot be listed; the entry just keeps its default icon.
+        }
+
+        return null;
     }
 
     /// <summary>"*, Directory" stays as is; long lists of extensions become ".jpg, .png, .gif +40".</summary>

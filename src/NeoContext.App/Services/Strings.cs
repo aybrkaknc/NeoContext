@@ -24,6 +24,13 @@ public static class Strings
         }
     }
 
+    /// <summary>Like <see cref="Get"/>, but returns null when the key does not exist.</summary>
+    public static string? TryGet(string key)
+    {
+        var value = Get(key);
+        return value == key ? null : value;
+    }
+
     public static string Format(string key, params object[] args) =>
         string.Format(CultureInfo.CurrentCulture, Get(key), args);
 }
