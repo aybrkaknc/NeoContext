@@ -164,7 +164,7 @@ public static class RegistryStore
         catch (Exception ex) when (ex is SecurityException or UnauthorizedAccessException)
         {
             return IsElevated
-                ? Result.Failure(ErrorKind.AccessDenied, $"Access denied to {path}. The key may be owned by TrustedInstaller.")
+                ? Result.Failure(ErrorKind.AccessDenied, $"Access denied to {path}. Its owner or permissions block this change.")
                 : Result.Failure(ErrorKind.RequiresElevation, $"Administrator rights are needed to change {path}.");
         }
         catch (IOException ex)

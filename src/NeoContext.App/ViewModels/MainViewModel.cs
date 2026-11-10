@@ -228,8 +228,10 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         {
             var key = RegistryPath.Parse(entry.Location);
 
-            // Moving a key (disable/enable of handlers and ShellNew) also needs rights on its parent.
-            _ownershipTargets = key.Parent is { } parent ? [key, parent] : [key];
+            // Only moving a key (ShellNew and shell extension toggles) also needs rights on its parent.
+            // Changing values or deleting a verb's own key does not, so the parent is left alone.
+            var moves = entry.Kind is EntryKind.ShellNew or EntryKind.ShellExtension;
+            _ownershipTargets = moves && key.Parent is { } parent ? [key, parent] : [key];
             _retryAfterOwnership = retry;
         }
 
