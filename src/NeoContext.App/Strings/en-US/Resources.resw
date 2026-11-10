@@ -987,4 +987,28 @@
   <data name="Settings_Ownership_Count" xml:space="preserve">
     <value>{0} key(s) currently have a changed owner.</value>
   </data>
+  <data name="Settings_Dictionaries.Text" xml:space="preserve">
+    <value>Update dictionaries automatically</value>
+  </data>
+  <data name="Settings_Dictionaries_Hint.Text" xml:space="preserve">
+    <value>Ready-made menus, detailed settings and extension names. Files are checked against a SHA-256 digest before use.</value>
+  </data>
+  <data name="Settings_Dictionaries_Now.Content" xml:space="preserve">
+    <value>Update now</value>
+  </data>
+  <data name="Settings_Dictionaries_Current" xml:space="preserve">
+    <value>Dictionaries are up to date.</value>
+  </data>
+  <data name="Settings_Dictionaries_Updated" xml:space="preserve">
+    <value>{0} dictionary file(s) updated.</value>
+  </data>
+  <data name="Settings_Dictionaries_Failed" xml:space="preserve">
+    <value>Dictionary update failed: {0}</value>
+  </data>
+  <data name="Notice_Dictionaries_Title" xml:space="preserve">
+    <value>Dictionaries updated</value>
+  </data>
+  <data name="Notice_Dictionaries_Message" xml:space="preserve">
+    <value>{0} dictionary file(s) were updated. Refresh the list to see the changes.</value>
+  </data>
 </root>

@@ -83,6 +83,8 @@ public sealed partial class MainWindow : Window
 
     public void ShowUpdateAvailable(ReleaseInfo release) => DispatcherQueue.TryEnqueue(() => ViewModel.ShowUpdateAvailable(release));
 
+    public void ShowDictionariesUpdated(int count) => DispatcherQueue.TryEnqueue(() => ViewModel.ShowDictionariesUpdated(count));
+
     public void ShowUnexpectedError(Exception exception) => DispatcherQueue.TryEnqueue(() =>
     {
         ViewModel.NoticeSeverity = InfoBarSeverity.Error;

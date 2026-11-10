@@ -96,6 +96,28 @@
                 </StackPanel>
             </Grid>
 
+            <Grid Style="{StaticResource CardStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Spacing="4">
+                    <TextBlock x:Name="DictionariesLabel" x:Uid="Settings_Dictionaries" Text="Update dictionaries automatically" />
+                    <TextBlock x:Uid="Settings_Dictionaries_Hint" TextWrapping="Wrap" Style="{StaticResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="Ready-made menus, detailed settings and extension names. Files are checked against a SHA-256 digest before use." />
+                    <TextBlock Text="{x:Bind ViewModel.DictionaryStatus, Mode=OneWay}" TextWrapping="Wrap"
+                               Style="{StaticResource CaptionTextBlockStyle}" AutomationProperties.LiveSetting="Polite" />
+                    <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.IsUpdatingDictionaries, Mode=OneWay}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                    <Button x:Uid="Settings_Dictionaries_Now" Content="Update now" Command="{x:Bind ViewModel.UpdateDictionariesNowCommand}" />
+                    <ToggleSwitch MinWidth="0" OnContent="" OffContent=""
+                                  AutomationProperties.LabeledBy="{x:Bind DictionariesLabel}"
+                                  IsOn="{x:Bind ViewModel.UpdateDictionaries, Mode=TwoWay}" />
+                </StackPanel>
+            </Grid>
+
             <!-- Permissions -->
             <TextBlock x:Uid="Settings_Permissions" Text="Permissions" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,16,0,0" />
 

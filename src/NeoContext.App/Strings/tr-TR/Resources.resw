@@ -987,4 +987,28 @@
   <data name="Settings_Ownership_Count" xml:space="preserve">
     <value>Şu anda {0} anahtarın sahibi değiştirilmiş durumda.</value>
   </data>
+  <data name="Settings_Dictionaries.Text" xml:space="preserve">
+    <value>Sözlükleri otomatik güncelle</value>
+  </data>
+  <data name="Settings_Dictionaries_Hint.Text" xml:space="preserve">
+    <value>Hazır menüler, ayrıntılı ayarlar ve uzantı adları. Dosyalar kullanılmadan önce SHA-256 özetiyle doğrulanır.</value>
+  </data>
+  <data name="Settings_Dictionaries_Now.Content" xml:space="preserve">
+    <value>Şimdi güncelle</value>
+  </data>
+  <data name="Settings_Dictionaries_Current" xml:space="preserve">
+    <value>Sözlükler güncel.</value>
+  </data>
+  <data name="Settings_Dictionaries_Updated" xml:space="preserve">
+    <value>{0} sözlük dosyası güncellendi.</value>
+  </data>
+  <data name="Settings_Dictionaries_Failed" xml:space="preserve">
+    <value>Sözlük güncellemesi başarısız: {0}</value>
+  </data>
+  <data name="Notice_Dictionaries_Title" xml:space="preserve">
+    <value>Sözlükler güncellendi</value>
+  </data>
+  <data name="Notice_Dictionaries_Message" xml:space="preserve">
+    <value>{0} sözlük dosyası güncellendi. Değişiklikleri görmek için listeyi yenileyin.</value>
+  </data>
 </root>

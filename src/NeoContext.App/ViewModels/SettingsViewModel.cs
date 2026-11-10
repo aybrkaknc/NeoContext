@@ -32,6 +32,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         SelectedLanguage = Languages.FirstOrDefault(l => l.Tag == host.Settings.Language) ?? Languages[0];
         ProtectEssentialEntries = host.Settings.ProtectEssentialEntries;
         CheckForUpdates = host.Settings.CheckForUpdates;
+        UpdateDictionaries = host.Settings.UpdateDictionaries;
         UpdateStatus = Strings.Format("Settings_Update_Current", AppInfo.Version);
         RefreshOwnershipBackups();
     }
@@ -53,6 +54,15 @@ public sealed partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty]
     public partial bool CheckForUpdates { get; set; }
+
+    [ObservableProperty]
+    public partial bool UpdateDictionaries { get; set; }
+
+    [ObservableProperty]
+    public partial string DictionaryStatus { get; set; } = "";
+
+    [ObservableProperty]
+    public partial bool IsUpdatingDictionaries { get; set; }
 
     [ObservableProperty]
     public partial string UpdateStatus { get; set; }
@@ -85,6 +95,33 @@ public sealed partial class SettingsViewModel : ObservableObject
 
     partial void OnCheckForUpdatesChanged(bool value) =>
         _host.UpdateSettings(s => s with { CheckForUpdates = value });
+
+    partial void OnUpdateDictionariesChanged(bool value) =>
+        _host.UpdateSettings(s => s with { UpdateDictionaries = value });
+
+    [RelayCommand]
+    private async Task UpdateDictionariesNowAsync()
+    {
+        IsUpdatingDictionaries = true;
+        try
+        {
+            var result = await _host.DictionaryUpdater.UpdateAsync();
+            if (!result.IsSuccess)
+            {
+                DictionaryStatus = Strings.Format("Settings_Dictionaries_Failed", result.Error!.Message);
+                return;
+            }
+
+            _host.UpdateSettings(s => s with { LastDictionaryCheck = DateTimeOffset.UtcNow });
+            DictionaryStatus = result.Value.Count == 0
+                ? Strings.Get("Settings_Dictionaries_Current")
+                : Strings.Format("Settings_Dictionaries_Updated", result.Value.Count);
+        }
+        finally
+        {
+            IsUpdatingDictionaries = false;
+        }
+    }
 
     [RelayCommand]
     private async Task CheckNowAsync()

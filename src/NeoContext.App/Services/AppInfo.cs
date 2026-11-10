@@ -12,6 +12,9 @@ public static class AppInfo
     public const string RepositoryUrl = $"https://github.com/{RepositoryOwner}/{RepositoryName}";
     public const string OriginalProjectUrl = "https://github.com/BluePointLilac/ContextMenuManager";
 
+    /// <summary>Where the published dictionaries and their manifest live.</summary>
+    public const string DictionaryBaseUrl = $"https://raw.githubusercontent.com/{RepositoryOwner}/{RepositoryName}/main/dictionaries/";
+
     public static SemVersion Version { get; } = SemVersion.TryParse(
         typeof(AppInfo).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
         out var version) ? version : new SemVersion(0, 0, 0);
@@ -28,6 +31,8 @@ public static class AppInfo
     public static string RegistryBackupDirectory => Path.Combine(DataDirectory, "backups");
 
     public static string LogDirectory => Path.Combine(DataDirectory, "logs");
+
+    public static string DictionaryDirectory => Path.Combine(DataDirectory, "Dictionaries");
 
     public static string DownloadDirectory => Path.Combine(DataDirectory, "downloads");
 }

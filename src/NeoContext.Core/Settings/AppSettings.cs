@@ -25,6 +25,12 @@ public sealed record AppSettings
     /// <summary>Time of the last successful update check (UTC). Failed checks do not update it.</summary>
     public DateTimeOffset? LastUpdateCheck { get; init; }
 
+    /// <summary>Fetch newer dictionaries (ready-made menus, detailed settings, GUID names) from the project repository.</summary>
+    public bool UpdateDictionaries { get; init; } = true;
+
+    /// <summary>Time of the last successful dictionary check (UTC).</summary>
+    public DateTimeOffset? LastDictionaryCheck { get; init; }
+
     /// <summary>The registry key chosen on the "Custom registry path" page, or empty when none is chosen.</summary>
     public string CustomRegistryPath { get; init; } = "";
 

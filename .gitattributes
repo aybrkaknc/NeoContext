@@ -3,3 +3,6 @@
 
 *.png binary
 *.ico binary
+
+# Published dictionaries are hashed byte for byte, so they must never be converted.
+dictionaries/* -text

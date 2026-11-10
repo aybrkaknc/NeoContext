@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Reflection;
 
 namespace NeoContext.Core.Dictionaries;
 
@@ -17,7 +16,7 @@ public sealed record GuidInfo(string? ResText, string? LocalizedText, string? Te
 /// <summary>The name and icon dictionary for shell extensions (the INI comes from ContextMenuManager, GPL-3.0).</summary>
 public sealed class GuidInfoCatalog
 {
-    private const string ResourceName = "NeoContext.Dictionaries.GuidInfosDic.ini";
+    private const string FileName = "GuidInfosDic.ini";
 
     private readonly Dictionary<Guid, GuidInfo> _entries;
 
@@ -29,10 +28,12 @@ public sealed class GuidInfoCatalog
 
     public GuidInfo? Find(Guid clsid) => _entries.GetValueOrDefault(clsid);
 
-    public static GuidInfoCatalog LoadEmbedded(CultureInfo culture)
+    public static GuidInfoCatalog LoadEmbedded(CultureInfo culture) => Load(DictionaryStore.EmbeddedOnly, culture);
+
+    /// <summary>Reads the user's copy, the downloaded copy or the built-in one, in that order.</summary>
+    public static GuidInfoCatalog Load(DictionaryStore store, CultureInfo culture)
     {
-        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ResourceName)
-                           ?? throw new InvalidOperationException($"The embedded dictionary {ResourceName} is missing.");
+        using var stream = store.Open(FileName);
         using var reader = new StreamReader(stream);
         return Parse(reader.ReadToEnd(), culture.Name);
     }

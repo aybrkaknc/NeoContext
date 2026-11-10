@@ -37,7 +37,10 @@ public sealed class AppHost
 
         // The shared command pool lives in the machine-wide registry; the custom key is whatever the user chose.
         var commandStore = new RegistryPath(RegistryHive.LocalMachine, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell");
-        var guidInfo = GuidInfoCatalog.LoadEmbedded(dictionaryCulture);
+        Dictionaries = new DictionaryStore(AppInfo.DictionaryDirectory);
+        Dictionaries.ResetWebIfAppChanged(AppInfo.Version.ToString());
+        DictionaryUpdater = new DictionaryUpdater(Http, AppInfo.DictionaryBaseUrl, Dictionaries);
+        var guidInfo = GuidInfoCatalog.Load(Dictionaries, dictionaryCulture);
         var verbs = new ShellVerbProvider(classes, resolver, commandStore, () => Settings.CustomRegistryPath);
         var shellExtensions = new ShellExtensionProvider(classes, resolver, guidInfo, () => Settings.CustomRegistryPath);
         FileTypes = new FileTypeScanner(classes, verbs, shellExtensions);
@@ -49,14 +52,14 @@ public sealed class AppHost
         var enhance = new EnhanceMenuProvider(
             new EnhanceMenuStore(classes, Path.Combine(AppInfo.DataDirectory, "Scripts")),
             resolver,
-            () => EnhanceMenus.LoadEmbedded(dictionaryCulture));
+            () => EnhanceMenus.Load(Dictionaries, DictionaryContext.ForCurrentSystem(dictionaryCulture)));
         Blocked = BlockedShellExtensions.Default;
         var dropEffect = new DropEffectProvider(classes, Strings.Get);
         var guidBlocked = new GuidBlockedProvider(Blocked, classes, resolver, guidInfo);
         var detailed = new DetailedEditProvider(
             new DetailedEditStore(classes),
             resolver,
-            () => DetailedEdit.LoadEmbedded(dictionaryCulture));
+            () => DetailedEdit.Load(Dictionaries, DictionaryContext.ForCurrentSystem(dictionaryCulture)));
 
         IEntryProvider[] providers =
         [
@@ -104,6 +107,10 @@ public sealed class AppHost
     public KeyOwnershipService Ownership { get; }
 
     public RegistryExporter Exporter { get; }
+
+    public DictionaryStore Dictionaries { get; }
+
+    public DictionaryUpdater DictionaryUpdater { get; }
 
     public UpdateChecker UpdateChecker { get; }
 

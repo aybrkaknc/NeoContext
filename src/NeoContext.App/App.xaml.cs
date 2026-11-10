@@ -28,6 +28,7 @@ public partial class App : Application
         _window.Activate();
 
         _ = CheckForUpdatesInBackgroundAsync();
+        _ = UpdateDictionariesInBackgroundAsync();
     }
 
     /// <summary>The language must be set before any UI is created; changing it needs a restart.</summary>
@@ -62,6 +63,28 @@ public partial class App : Application
         if (result.Value.Latest is { } latest)
         {
             _window?.ShowUpdateAvailable(latest);
+        }
+    }
+
+    private async Task UpdateDictionariesInBackgroundAsync()
+    {
+        var settings = Host.Settings;
+        if (!settings.UpdateDictionaries || !UpdateSchedule.IsDue(settings.LastDictionaryCheck, settings.UpdateCheckIntervalDays, DateTimeOffset.UtcNow))
+        {
+            return;
+        }
+
+        var result = await Host.DictionaryUpdater.UpdateAsync();
+        if (!result.IsSuccess)
+        {
+            AppLog.Warn($"Dictionary update failed: {result.Error}");
+            return;
+        }
+
+        Host.UpdateSettings(s => s with { LastDictionaryCheck = DateTimeOffset.UtcNow });
+        if (result.Value.Count > 0)
+        {
+            _window?.ShowDictionariesUpdated(result.Value.Count);
         }
     }
 

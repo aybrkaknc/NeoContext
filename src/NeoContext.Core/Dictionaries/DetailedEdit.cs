@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Reflection;
 using System.Xml.Linq;
 
 namespace NeoContext.Core.Dictionaries;
@@ -31,12 +30,14 @@ public sealed record DetailedGroup(string Text, string? Icon, IReadOnlyList<Guid
 /// <summary>Reads the detailed editing dictionary (schema from ContextMenuManager, GPL-3.0). Groups kept in INI files are skipped.</summary>
 public static class DetailedEdit
 {
-    private const string ResourceName = "NeoContext.Dictionaries.DetailedEditDic.xml";
+    private const string FileName = "DetailedEditDic.xml";
 
-    public static IReadOnlyList<DetailedGroup> LoadEmbedded(DictionaryContext context)
+    public static IReadOnlyList<DetailedGroup> LoadEmbedded(DictionaryContext context) => Load(DictionaryStore.EmbeddedOnly, context);
+
+    /// <summary>Reads the user's copy, the downloaded copy or the built-in one, in that order.</summary>
+    public static IReadOnlyList<DetailedGroup> Load(DictionaryStore store, DictionaryContext context)
     {
-        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(ResourceName)
-                           ?? throw new InvalidOperationException($"The embedded dictionary {ResourceName} is missing.");
+        using var stream = store.Open(FileName);
         return Parse(EnhanceMenuParser.Load(stream), context);
     }
 

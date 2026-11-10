@@ -1,0 +1,16 @@
+{
+    "files":  [
+                  {
+                      "name":  "EnhanceMenusDic.xml",
+                      "sha256":  "3a1c1015134259d3bfa0b3d06f0e29e0a3b8937eb491dbebd54a9c32baba9544"
+                  },
+                  {
+                      "name":  "DetailedEditDic.xml",
+                      "sha256":  "e358fd992cc4b14436a52ac9ce2dab9b0c2a6c1988cf6e273052f8012c147f88"
+                  },
+                  {
+                      "name":  "GuidInfosDic.ini",
+                      "sha256":  "0c469ac6418a022c37c8f8f6f518da4923563b31fdc10143877eb053fb7b6112"
+                  }
+              ]
+}

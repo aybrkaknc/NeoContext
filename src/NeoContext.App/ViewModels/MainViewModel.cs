@@ -770,6 +770,9 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         ShowNotice(InfoBarSeverity.Success, Strings.Get("Notice_Update_Title"), Strings.Format("Notice_Update_Message", release.Version), NoticeAction.OpenRelease);
     }
 
+    public void ShowDictionariesUpdated(int count) =>
+        ShowNotice(InfoBarSeverity.Success, Strings.Get("Notice_Dictionaries_Title"), Strings.Format("Notice_Dictionaries_Message", count), NoticeAction.None);
+
     [RelayCommand]
     private async Task RunNoticeActionAsync()
     {
