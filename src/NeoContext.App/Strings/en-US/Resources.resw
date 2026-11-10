@@ -1029,4 +1029,94 @@
   <data name="Edit_ValueHintText" xml:space="preserve">
     <value>Leave the box empty to remove the value.</value>
   </data>
+  <data name="Section_Unknown" xml:space="preserve">
+    <value>Unknown type</value>
+  </data>
+  <data name="Section_Unknown_Description" xml:space="preserve">
+    <value>Entries for files that no program is associated with.</value>
+  </data>
+  <data name="Section_PerceivedType" xml:space="preserve">
+    <value>Perceived type</value>
+  </data>
+  <data name="Section_PerceivedType_Description" xml:space="preserve">
+    <value>Entries shared by every file of one kind, such as images or videos.</value>
+  </data>
+  <data name="Section_DirectoryType" xml:space="preserve">
+    <value>Folder type</value>
+  </data>
+  <data name="Section_DirectoryType_Description" xml:space="preserve">
+    <value>Entries for folders that Windows treats as documents, pictures, videos or music.</value>
+  </data>
+  <data name="Section_Analysis" xml:space="preserve">
+    <value>Menu analysis</value>
+  </data>
+  <data name="Section_Analysis_Description" xml:space="preserve">
+    <value>Pick a file or folder to see every entry that appears when you right-click it.</value>
+  </data>
+  <data name="Empty_PerceivedType" xml:space="preserve">
+    <value>Pick a type above to see its entries.</value>
+  </data>
+  <data name="Empty_FolderType" xml:space="preserve">
+    <value>Pick a folder type above to see its entries.</value>
+  </data>
+  <data name="Empty_Analysis" xml:space="preserve">
+    <value>Pick, type or drop a file or folder to analyse its menu.</value>
+  </data>
+  <data name="PerceivedType_Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="PerceivedType_Document" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="PerceivedType_Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="PerceivedType_Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="PerceivedType_Audio" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="PerceivedType_Compressed" xml:space="preserve">
+    <value>Compressed</value>
+  </data>
+  <data name="PerceivedType_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="FolderType_Document" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="FolderType_Image" xml:space="preserve">
+    <value>Pictures</value>
+  </data>
+  <data name="FolderType_Video" xml:space="preserve">
+    <value>Videos</value>
+  </data>
+  <data name="FolderType_Audio" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="Analysis_Path.Header" xml:space="preserve">
+    <value>File or folder</value>
+  </data>
+  <data name="Analysis_BrowseFile.Content" xml:space="preserve">
+    <value>Choose file</value>
+  </data>
+  <data name="Analysis_BrowseFolder.Content" xml:space="preserve">
+    <value>Choose folder</value>
+  </data>
+  <data name="Analysis_Run.Content" xml:space="preserve">
+    <value>Analyse</value>
+  </data>
+  <data name="Analysis_Hint.Text" xml:space="preserve">
+    <value>You can also drop a file or folder here. Each entry shows the class it comes from.</value>
+  </data>
+  <data name="Analysis_Summary" xml:space="preserve">
+    <value>Showing entries that apply to: {0}</value>
+  </data>
+  <data name="Analysis_Invalid_Title" xml:space="preserve">
+    <value>Path not found</value>
+  </data>
+  <data name="Analysis_Invalid_Message" xml:space="preserve">
+    <value>There is no file or folder at that path.</value>
+  </data>
 </root>

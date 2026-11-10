@@ -28,6 +28,10 @@ redesigned around safety, clear structure and an English-first, fully localizabl
 | Open with | Programs registered for "Open with" | `NoOpenWith` value; `FriendlyAppName` for the name; new programs |
 | Win+X menu | Shortcuts in the Win+X / Start-button menu | Hidden attribute; the Win+X hash is rewritten after every change; move up or down, add, restore the default menu |
 | File types | Entries that belong to chosen file extensions, such as `.mp4` or `.zip` | The same actions as the other pages; pick a group or type extensions |
+| Perceived type | Entries shared by every file of one kind (text, document, image, video, audio, compressed, system) | The same actions as the other pages, on `SystemFileAssociations\<type>` |
+| Folder type | Entries for folders Windows treats as documents, pictures, videos or music | The same actions, on `SystemFileAssociations\Directory.<type>` |
+| Unknown type | Entries for files that no program is associated with | The same actions, on `HKCR\Unknown`; new items can be added |
+| Menu analysis | Every entry that applies to one file or folder you pick or drop | Reads the classes Explorer reads for that path and labels each entry with its class |
 | Store apps | Context menu verbs declared by installed MSIX / Microsoft Store apps | Per-user `Shell Extensions\Blocked` list |
 | Ready-made menus | A dictionary of useful commands (Take ownership, Get hash, Open PowerShell here and many more) | Adds the verb to the registry with one switch; hidden or elevated commands run through a generated script that gets the clicked item as a parameter |
 | Detailed editing | Explorer and program settings that change the menu (about 90 items, with number and text values) | Writes the registry values listed by the dictionary; a program's group shows only when it is installed |

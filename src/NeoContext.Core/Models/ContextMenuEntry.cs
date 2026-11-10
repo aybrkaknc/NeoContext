@@ -112,6 +112,18 @@ public enum MenuSection
 
     /// <summary>Entries contributed by packaged apps.</summary>
     PackagedApps,
+
+    /// <summary>Files that no program is associated with (<c>HKCR\Unknown</c>).</summary>
+    Unknown,
+
+    /// <summary>Entries shared by every file of one perceived type, such as images (<c>SystemFileAssociations\image</c>).</summary>
+    PerceivedType,
+
+    /// <summary>Entries for folders that Windows treats as documents, pictures, videos or music.</summary>
+    DirectoryType,
+
+    /// <summary>Every entry that applies to one file or folder the user picked.</summary>
+    Analysis,
 }
 
 /// <summary>Operations a provider supports for a specific entry.</summary>

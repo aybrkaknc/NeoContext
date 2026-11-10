@@ -1029,4 +1029,94 @@
   <data name="Edit_ValueHintText" xml:space="preserve">
     <value>Değeri kaldırmak için kutuyu boş bırakın.</value>
   </data>
+  <data name="Section_Unknown" xml:space="preserve">
+    <value>Bilinmeyen tür</value>
+  </data>
+  <data name="Section_Unknown_Description" xml:space="preserve">
+    <value>Hiçbir programla ilişkilendirilmemiş dosyaların girdileri.</value>
+  </data>
+  <data name="Section_PerceivedType" xml:space="preserve">
+    <value>Algılanan tür</value>
+  </data>
+  <data name="Section_PerceivedType_Description" xml:space="preserve">
+    <value>Resim veya video gibi aynı türdeki tüm dosyaların ortak girdileri.</value>
+  </data>
+  <data name="Section_DirectoryType" xml:space="preserve">
+    <value>Klasör türü</value>
+  </data>
+  <data name="Section_DirectoryType_Description" xml:space="preserve">
+    <value>Windows'un belge, resim, video veya müzik olarak ele aldığı klasörlerin girdileri.</value>
+  </data>
+  <data name="Section_Analysis" xml:space="preserve">
+    <value>Menü analizi</value>
+  </data>
+  <data name="Section_Analysis_Description" xml:space="preserve">
+    <value>Sağ tıkladığınızda görünen tüm girdileri görmek için bir dosya veya klasör seçin.</value>
+  </data>
+  <data name="Empty_PerceivedType" xml:space="preserve">
+    <value>Girdilerini görmek için yukarıdan bir tür seçin.</value>
+  </data>
+  <data name="Empty_FolderType" xml:space="preserve">
+    <value>Girdilerini görmek için yukarıdan bir klasör türü seçin.</value>
+  </data>
+  <data name="Empty_Analysis" xml:space="preserve">
+    <value>Menüsünü çözümlemek için bir dosya veya klasör seçin, yazın ya da bırakın.</value>
+  </data>
+  <data name="PerceivedType_Text" xml:space="preserve">
+    <value>Metin</value>
+  </data>
+  <data name="PerceivedType_Document" xml:space="preserve">
+    <value>Belge</value>
+  </data>
+  <data name="PerceivedType_Image" xml:space="preserve">
+    <value>Resim</value>
+  </data>
+  <data name="PerceivedType_Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="PerceivedType_Audio" xml:space="preserve">
+    <value>Ses</value>
+  </data>
+  <data name="PerceivedType_Compressed" xml:space="preserve">
+    <value>Sıkıştırılmış</value>
+  </data>
+  <data name="PerceivedType_System" xml:space="preserve">
+    <value>Sistem</value>
+  </data>
+  <data name="FolderType_Document" xml:space="preserve">
+    <value>Belgeler</value>
+  </data>
+  <data name="FolderType_Image" xml:space="preserve">
+    <value>Resimler</value>
+  </data>
+  <data name="FolderType_Video" xml:space="preserve">
+    <value>Videolar</value>
+  </data>
+  <data name="FolderType_Audio" xml:space="preserve">
+    <value>Müzik</value>
+  </data>
+  <data name="Analysis_Path.Header" xml:space="preserve">
+    <value>Dosya veya klasör</value>
+  </data>
+  <data name="Analysis_BrowseFile.Content" xml:space="preserve">
+    <value>Dosya seç</value>
+  </data>
+  <data name="Analysis_BrowseFolder.Content" xml:space="preserve">
+    <value>Klasör seç</value>
+  </data>
+  <data name="Analysis_Run.Content" xml:space="preserve">
+    <value>Çözümle</value>
+  </data>
+  <data name="Analysis_Hint.Text" xml:space="preserve">
+    <value>Buraya bir dosya veya klasör de bırakabilirsiniz. Her girdi geldiği sınıfı gösterir.</value>
+  </data>
+  <data name="Analysis_Summary" xml:space="preserve">
+    <value>Şunlara uygulanan girdiler gösteriliyor: {0}</value>
+  </data>
+  <data name="Analysis_Invalid_Title" xml:space="preserve">
+    <value>Yol bulunamadı</value>
+  </data>
+  <data name="Analysis_Invalid_Message" xml:space="preserve">
+    <value>Bu yolda dosya veya klasör yok.</value>
+  </data>
 </root>

@@ -16,7 +16,7 @@ public static class EntryFilter
 
         var text = query?.Trim() ?? "";
         IEnumerable<ContextMenuEntry> matches = text.Length > 0
-            ? entries.Where(e => Matches(e, text))
+            ? entries.Where(e => e.Section != MenuSection.Analysis && Matches(e, text)) // an analysis only repeats entries of other pages
             : section is { } only ? entries.Where(e => e.Section == only) : [];
 
         // A search crosses every section, so results are grouped by section first, then by name.

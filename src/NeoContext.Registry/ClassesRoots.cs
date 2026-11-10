@@ -48,6 +48,7 @@ public static class ShellScopes
         [MenuSection.Computer] = [@"CLSID\{20D04FE0-3AEA-1069-A2D8-08002B30309D}"],
         [MenuSection.RecycleBin] = [@"CLSID\{645FF040-5081-101B-9F08-00AA002F954E}"],
         [MenuSection.Library] = ["LibraryFolder", @"LibraryFolder\Background", "UserLibraryFolder"],
+        [MenuSection.Unknown] = ["Unknown"],
     };
 
     /// <summary>The classes whose <c>shellex\DragDropHandlers</c> shape the menu after a right-button drag and drop.</summary>

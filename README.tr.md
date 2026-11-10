@@ -29,6 +29,10 @@ için tasarlandı.
 | Birlikte aç | "Birlikte aç" için kayıtlı programlar | Ad için `NoOpenWith` değeri ve `FriendlyAppName`; yeni programlar |
 | Win+X menüsü | Win+X / Başlat düğmesi menüsündeki kısayollar | Gizli özniteliği; her değişiklikten sonra Win+X hash'i yeniden yazılır; yukarı veya aşağı taşıma, ekleme, varsayılan menüyü geri yükleme |
 | Dosya türleri | Seçilen dosya uzantılarına ait girdiler, örneğin `.mp4` veya `.zip` | Diğer sayfalarla aynı işlemler; grup seçin veya uzantı yazın |
+| Algılanan tür | Aynı türdeki tüm dosyaların ortak girdileri (metin, belge, resim, video, ses, sıkıştırılmış, sistem) | Diğer sayfalarla aynı işlemler, `SystemFileAssociations\<tür>` üzerinde |
+| Klasör türü | Windows'un belge, resim, video veya müzik olarak ele aldığı klasörlerin girdileri | Aynı işlemler, `SystemFileAssociations\Directory.<tür>` üzerinde |
+| Bilinmeyen tür | Hiçbir programla ilişkilendirilmemiş dosyaların girdileri | Aynı işlemler, `HKCR\Unknown` üzerinde; yeni öğe eklenebilir |
+| Menü analizi | Seçtiğiniz veya bıraktığınız bir dosya ya da klasöre uygulanan tüm girdiler | Explorer'ın o yol için okuduğu sınıfları okur ve her girdiyi sınıfıyla etiketler |
 | Mağaza uygulamaları | Yüklü MSIX / Microsoft Store uygulamalarının bildirdiği bağlam menüsü fiilleri | Kullanıcıya özel `Shell Extensions\Blocked` listesi |
 | Hazır menüler | Yararlı komutların sözlüğü (Sahipliği al, Karma al, Burada PowerShell aç ve çok daha fazlası) | Fiili tek anahtarla kayıt defterine ekler; gizli veya yükseltilmiş komutlar, tıklanan öğeyi parametre olarak alan üretilmiş bir betikle çalışır |
 | Ayrıntılı düzenleme | Menüyü etkileyen Explorer ve program ayarları (yaklaşık 90 öğe, sayı ve metin değerleri dahil) | Sözlüğün listelediği kayıt defteri değerlerini yazar; bir programın grubu yalnızca yüklüyse görünür |

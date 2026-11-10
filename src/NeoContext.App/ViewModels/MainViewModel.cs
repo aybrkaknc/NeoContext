@@ -26,6 +26,9 @@ public enum NoticeAction
 /// <summary>One labelled line in the entry details overlay.</summary>
 public sealed record DetailRow(string Label, string Value);
 
+/// <summary>A button on the Perceived type and Folder type pages, with its translated name.</summary>
+public sealed record PickerChoice(string Key, string Label);
+
 /// <summary>A group button on the "File types" page, with its translated name.</summary>
 public sealed record FileTypeChoice(FileTypeGroup Group, string Label);
 
@@ -42,6 +45,9 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     private string? _lastBackup;
     private string[] _extensions = [];
     private IReadOnlyList<string>? _knownExtensions;
+    private string? _perceivedType;
+    private string? _folderType;
+    private string? _analysisPath;
 
     public IReadOnlyList<SectionGroup> SectionGroups => SectionItem.Groups;
 
@@ -50,7 +56,8 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     public bool IsElevated => SystemActions.IsElevated;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage), nameof(CanCreate), nameof(IsWinXPage), nameof(IsCustomPathPage))]
+    [NotifyPropertyChangedFor(nameof(SectionTitle), nameof(SectionDescription), nameof(IsFileTypesPage), nameof(EmptyMessage), nameof(CanCreate), nameof(IsWinXPage), nameof(IsCustomPathPage),
+        nameof(IsPerceivedPage), nameof(IsFolderTypePage), nameof(IsChoicePage), nameof(IsAnalysisPage), nameof(PickerChoices), nameof(PickerSummary))]
     public partial SectionItem? SelectedSection { get; set; }
 
     [ObservableProperty]
@@ -138,6 +145,9 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
     public string EmptyMessage => Strings.Get(
         IsSearching ? "Empty_Search"
         : IsFileTypesPage && _extensions.Length == 0 ? "Empty_FileTypes"
+        : IsPerceivedPage && _perceivedType is null ? "Empty_PerceivedType"
+        : IsFolderTypePage && _folderType is null ? "Empty_FolderType"
+        : IsAnalysisPage && _analysisPath is null ? "Empty_Analysis"
         : IsCustomPathPage && host.Settings.CustomRegistryPath.Length == 0 ? "Empty_CustomPath"
         : "Empty_Page");
 
@@ -146,6 +156,78 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
 
     public IReadOnlyList<FileTypeChoice> FileTypeChoices { get; } =
         [.. FileTypeGroups.All.Select(g => new FileTypeChoice(g, Strings.Get($"FileType_{g.Name}")))];
+
+    public bool IsPerceivedPage => SelectedSection?.Section == MenuSection.PerceivedType;
+
+    public bool IsFolderTypePage => SelectedSection?.Section == MenuSection.DirectoryType;
+
+    /// <summary>True on the pages that pick one type from a short list.</summary>
+    public bool IsChoicePage => IsPerceivedPage || IsFolderTypePage;
+
+    public bool IsAnalysisPage => SelectedSection?.Section == MenuSection.Analysis;
+
+    private IReadOnlyList<PickerChoice> PerceivedChoices { get; } =
+        [.. FileTypeScanner.PerceivedTypes.Select(t => new PickerChoice(t, Strings.Get($"PerceivedType_{t}")))];
+
+    private IReadOnlyList<PickerChoice> FolderChoices { get; } =
+        [.. FileTypeScanner.FolderTypes.Select(t => new PickerChoice(t, Strings.Get($"FolderType_{t}")))];
+
+    public IReadOnlyList<PickerChoice> PickerChoices => IsFolderTypePage ? FolderChoices : IsPerceivedPage ? PerceivedChoices : [];
+
+    /// <summary>What the page currently shows entries for, or empty before anything is picked.</summary>
+    public string PickerSummary
+    {
+        get
+        {
+            var key = IsFolderTypePage ? _folderType : IsPerceivedPage ? _perceivedType : null;
+            if (key is not null)
+            {
+                return Strings.Format("FileType_Scanning", PickerChoices.FirstOrDefault(c => c.Key == key)?.Label ?? key);
+            }
+
+            return IsAnalysisPage && _analysisPath is not null ? Strings.Format("Analysis_Summary", _analysisPath) : "";
+        }
+    }
+
+    [ObservableProperty]
+    public partial string AnalysisText { get; set; } = "";
+
+    [RelayCommand]
+    private async Task SelectPickerChoiceAsync(PickerChoice choice)
+    {
+        if (IsFolderTypePage)
+        {
+            _folderType = choice.Key;
+        }
+        else
+        {
+            _perceivedType = choice.Key;
+        }
+
+        await PickerChangedAsync();
+    }
+
+    [RelayCommand]
+    private async Task AnalyzeAsync()
+    {
+        var path = AnalysisText.Trim().Trim('"');
+        if (!File.Exists(path) && !Directory.Exists(path))
+        {
+            ShowNotice(InfoBarSeverity.Warning, Strings.Get("Analysis_Invalid_Title"), Strings.Get("Analysis_Invalid_Message"), NoticeAction.None);
+            return;
+        }
+
+        AnalysisText = path;
+        _analysisPath = path;
+        await PickerChangedAsync();
+    }
+
+    private Task PickerChangedAsync()
+    {
+        OnPropertyChanged(nameof(PickerSummary));
+        OnPropertyChanged(nameof(EmptyMessage));
+        return RefreshAsync();
+    }
 
     public bool HasSelectedExtensions => _extensions.Length > 0;
 
@@ -202,12 +284,30 @@ public sealed partial class MainViewModel(AppHost host, IDialogService dialogs) 
         try
         {
             var extensions = _extensions;
+            var perceived = _perceivedType;
+            var folderType = _folderType;
+            var analysis = _analysisPath;
             _all = await Task.Run(() =>
             {
                 IReadOnlyList<ContextMenuEntry> entries = host.Menus.Refresh();
                 if (extensions.Length > 0)
                 {
                     entries = [.. entries, .. host.FileTypes.Scan(extensions)];
+                }
+
+                if (perceived is not null)
+                {
+                    entries = [.. entries, .. host.FileTypes.ScanClass(MenuSection.PerceivedType, $@"SystemFileAssociations\{perceived}", perceived)];
+                }
+
+                if (folderType is not null)
+                {
+                    entries = [.. entries, .. host.FileTypes.ScanClass(MenuSection.DirectoryType, $@"SystemFileAssociations\Directory.{folderType}", folderType)];
+                }
+
+                if (analysis is not null)
+                {
+                    entries = [.. entries, .. host.FileTypes.Analyze(analysis)];
                 }
 
                 return entries;

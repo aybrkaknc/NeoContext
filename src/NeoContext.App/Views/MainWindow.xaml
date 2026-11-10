@@ -120,6 +120,49 @@
                         </Grid>
                     </StackPanel>
 
+                    <!-- Perceived type and folder type pickers -->
+                    <StackPanel Spacing="8" Visibility="{x:Bind ToVisible(ViewModel.IsChoicePage), Mode=OneWay}">
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.PickerChoices, Mode=OneWay}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:PickerChoice">
+                                    <Button Content="{x:Bind Label}" Tag="{x:Bind}" Click="OnPickerChoiceClick" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="{x:Bind ViewModel.PickerSummary, Mode=OneWay}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+
+                    <!-- Menu analysis: a path, the pickers, or a dropped file or folder -->
+                    <Border AllowDrop="True" DragOver="OnAnalysisDragOver" Drop="OnAnalysisDrop" Padding="12" CornerRadius="8"
+                            BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            Visibility="{x:Bind ToVisible(ViewModel.IsAnalysisPage), Mode=OneWay}">
+                        <StackPanel Spacing="8">
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Uid="Analysis_Path" Text="{x:Bind ViewModel.AnalysisText, Mode=TwoWay}" KeyDown="OnAnalysisKeyDown" />
+                                <Button x:Uid="Analysis_BrowseFile" Grid.Column="1" VerticalAlignment="Bottom" Click="OnAnalysisBrowseFile" />
+                                <Button x:Uid="Analysis_BrowseFolder" Grid.Column="2" VerticalAlignment="Bottom" Click="OnAnalysisBrowseFolder" />
+                                <Button x:Uid="Analysis_Run" Grid.Column="3" VerticalAlignment="Bottom" Style="{StaticResource AccentButtonStyle}"
+                                        Command="{x:Bind ViewModel.AnalyzeCommand}" />
+                            </Grid>
+                            <TextBlock x:Uid="Analysis_Hint" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="Wrap"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="{x:Bind ViewModel.PickerSummary, Mode=OneWay}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </Border>
+
                     <InfoBar
                              IsOpen="{x:Bind ViewModel.IsNoticeOpen, Mode=TwoWay}"
                              Severity="{x:Bind ViewModel.NoticeSeverity, Mode=OneWay}"

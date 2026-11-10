@@ -55,6 +55,54 @@ public sealed class FileTypeScanner(
         return result;
     }
 
+    /// <summary>The perceived types Windows knows, as the names of their <c>SystemFileAssociations</c> classes.</summary>
+    public static IReadOnlyList<string> PerceivedTypes { get; } = ["Text", "Document", "Image", "Video", "Audio", "Compressed", "System"];
+
+    /// <summary>The folder types with their own menu, as <c>SystemFileAssociations\Directory.&lt;type&gt;</c>.</summary>
+    public static IReadOnlyList<string> FolderTypes { get; } = ["Document", "Image", "Video", "Audio"];
+
+    /// <summary>Entries of one class, shown on the page of <paramref name="section"/>.</summary>
+    public IReadOnlyList<ContextMenuEntry> ScanClass(MenuSection section, string classKey, string label) =>
+        [.. verbs.LoadClass(section, classKey).Concat(extensions.LoadClass(section, classKey)).Select(e => e with { Detail = $"{label} · {e.Detail}" })];
+
+    /// <summary>
+    /// Every entry that applies to a file or folder: the classes Explorer reads for it, in the order it reads them.
+    /// A file without any associated program also gets the <c>Unknown</c> class. A missing path gives nothing.
+    /// </summary>
+    public IReadOnlyList<ContextMenuEntry> Analyze(string path)
+    {
+        List<string> classKeys = [];
+        if (Directory.Exists(path))
+        {
+            classKeys.Add("Folder");
+            if (string.Equals(Path.GetPathRoot(path), path, StringComparison.OrdinalIgnoreCase))
+            {
+                classKeys.Add("Drive");
+            }
+            else
+            {
+                classKeys.AddRange(["Directory", "AllFilesystemObjects"]);
+            }
+        }
+        else if (File.Exists(path))
+        {
+            var extension = Path.GetExtension(path).ToLowerInvariant();
+            if (extension.Length == 0)
+            {
+                extension = ".";
+            }
+
+            classKeys.AddRange(["*", "AllFilesystemObjects"]);
+            classKeys.AddRange(ClassKeys(extension));
+            if (ProgIds(extension).Count == 0)
+            {
+                classKeys.Add("Unknown");
+            }
+        }
+
+        return [.. classKeys.Distinct(StringComparer.OrdinalIgnoreCase).SelectMany(key => ScanClass(MenuSection.Analysis, key, key))];
+    }
+
     /// <summary>Every extension registered on this PC, for suggestions in the picker.</summary>
     public IReadOnlyList<string> KnownExtensions()
     {

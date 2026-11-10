@@ -261,6 +261,83 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    private void OnPickerChoiceClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: PickerChoice choice })
+        {
+            ViewModel.SelectPickerChoiceCommand.Execute(choice);
+        }
+    }
+
+    private void OnAnalysisKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key == Windows.System.VirtualKey.Enter)
+        {
+            ViewModel.AnalyzeCommand.Execute(null);
+            e.Handled = true;
+        }
+    }
+
+    private async void OnAnalysisBrowseFile(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var picker = new FileOpenPicker();
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(this));
+            picker.FileTypeFilter.Add("*");
+            if (await picker.PickSingleFileAsync() is { } file)
+            {
+                ViewModel.AnalysisText = file.Path;
+                ViewModel.AnalyzeCommand.Execute(null);
+            }
+        }
+        catch (System.Runtime.InteropServices.COMException ex)
+        {
+            AppLog.Warn($"File picker failed: {ex.Message}");
+        }
+    }
+
+    private async void OnAnalysisBrowseFolder(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var picker = new FolderPicker();
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, WinRT.Interop.WindowNative.GetWindowHandle(this));
+            picker.FileTypeFilter.Add("*");
+            if (await picker.PickSingleFolderAsync() is { } folder)
+            {
+                ViewModel.AnalysisText = folder.Path;
+                ViewModel.AnalyzeCommand.Execute(null);
+            }
+        }
+        catch (System.Runtime.InteropServices.COMException ex)
+        {
+            AppLog.Warn($"Folder picker failed: {ex.Message}");
+        }
+    }
+
+    private void OnAnalysisDragOver(object sender, DragEventArgs e) =>
+        e.AcceptedOperation = e.DataView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.StorageItems)
+            ? Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy
+            : Windows.ApplicationModel.DataTransfer.DataPackageOperation.None;
+
+    private async void OnAnalysisDrop(object sender, DragEventArgs e)
+    {
+        try
+        {
+            var items = await e.DataView.GetStorageItemsAsync();
+            if (items.Count > 0 && items[0].Path is { Length: > 0 } path)
+            {
+                ViewModel.AnalysisText = path;
+                ViewModel.AnalyzeCommand.Execute(null);
+            }
+        }
+        catch (System.Runtime.InteropServices.COMException ex)
+        {
+            AppLog.Warn($"Drop failed: {ex.Message}");
+        }
+    }
+
     private void OnExtensionTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
     {
         if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
