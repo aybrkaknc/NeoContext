@@ -1,5 +1,5 @@
 # Version manifest. See README.md in this folder for the placeholders.
-PackageIdentifier: ayberk2766.NeoContext
+PackageIdentifier: aybrkaknc.NeoContext
 PackageVersion: "{{VERSION}}"
 DefaultLocale: en-US
 ManifestType: version

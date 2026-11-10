@@ -13,5 +13,5 @@ The manifest installs the portable zip, so it works without a code-signing certi
    - `{{SHA256_X64}}` / `{{SHA256_ARM64}}`: from `SHA256SUMS.txt` in the release, upper case.
    - `{{RELEASE_DATE}}`: the release date as `YYYY-MM-DD`.
 3. Validate locally: `winget validate --manifest <folder>` and `winget install --manifest <folder>`.
-4. Open a pull request to `microsoft/winget-pkgs` under `manifests/a/ayberk2766/NeoContext/{{VERSION}}/`
+4. Open a pull request to `microsoft/winget-pkgs` under `manifests/a/aybrkaknc/NeoContext/{{VERSION}}/`
    (or use [`wingetcreate`](https://github.com/microsoft/winget-create), which fills in hashes for you).

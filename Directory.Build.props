@@ -12,7 +12,7 @@
     <Product>NeoContext</Product>
     <Copyright>Copyright (C) NeoContext contributors</Copyright>
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/ayberk2766/NeoContext</RepositoryUrl>
+    <RepositoryUrl>https://github.com/aybrkaknc/NeoContext</RepositoryUrl>
 
     <!-- Windows 10 1809 is the oldest release Windows App SDK supports. -->
     <WindowsTargetFramework>net10.0-windows10.0.19041.0</WindowsTargetFramework>

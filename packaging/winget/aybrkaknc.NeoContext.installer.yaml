@@ -1,5 +1,5 @@
 # Installer manifest: the portable, self-contained zip.
-PackageIdentifier: ayberk2766.NeoContext
+PackageIdentifier: aybrkaknc.NeoContext
 PackageVersion: "{{VERSION}}"
 MinimumOSVersion: 10.0.17763.0
 InstallerType: zip
@@ -10,10 +10,10 @@ NestedInstallerFiles:
 ReleaseDate: "{{RELEASE_DATE}}"
 Installers:
   - Architecture: x64
-    InstallerUrl: https://github.com/ayberk2766/NeoContext/releases/download/v{{VERSION}}/NeoContext-{{VERSION}}-win-x64.zip
+    InstallerUrl: https://github.com/aybrkaknc/NeoContext/releases/download/v{{VERSION}}/NeoContext-{{VERSION}}-win-x64.zip
     InstallerSha256: "{{SHA256_X64}}"
   - Architecture: arm64
-    InstallerUrl: https://github.com/ayberk2766/NeoContext/releases/download/v{{VERSION}}/NeoContext-{{VERSION}}-win-arm64.zip
+    InstallerUrl: https://github.com/aybrkaknc/NeoContext/releases/download/v{{VERSION}}/NeoContext-{{VERSION}}-win-arm64.zip
     InstallerSha256: "{{SHA256_ARM64}}"
 ManifestType: installer
 ManifestVersion: 1.6.0

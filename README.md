@@ -50,7 +50,7 @@ Every page has search, and each entry can be opened in Registry Editor or Explor
 
 ## Install
 
-Download the latest build from [Releases](https://github.com/ayberk2766/NeoContext/releases):
+Download the latest build from [Releases](https://github.com/aybrkaknc/NeoContext/releases):
 
 - **`NeoContext-<version>-win-x64.zip`** – portable. Extract and run `NeoContext.exe`. Create an empty
   `data` folder next to the executable to keep settings and backups there instead of `%LOCALAPPDATA%`.
@@ -61,7 +61,7 @@ A winget manifest template lives in [`packaging/winget`](packaging/winget).
 ## Build from source
 
 ```powershell
-git clone https://github.com/ayberk2766/NeoContext.git
+git clone https://github.com/aybrkaknc/NeoContext.git
 cd NeoContext
 dotnet test                                   # unit and integration tests
 dotnet build src/NeoContext.App -p:Platform=x64 -p:WindowsPackageType=None

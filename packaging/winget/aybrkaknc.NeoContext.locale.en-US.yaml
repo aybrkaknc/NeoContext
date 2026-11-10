@@ -1,13 +1,13 @@
 # Default locale manifest.
-PackageIdentifier: ayberk2766.NeoContext
+PackageIdentifier: aybrkaknc.NeoContext
 PackageVersion: "{{VERSION}}"
 PackageLocale: en-US
 Publisher: NeoContext contributors
-PublisherUrl: https://github.com/ayberk2766/NeoContext
+PublisherUrl: https://github.com/aybrkaknc/NeoContext
 PackageName: NeoContext
-PackageUrl: https://github.com/ayberk2766/NeoContext
+PackageUrl: https://github.com/aybrkaknc/NeoContext
 License: GPL-3.0
-LicenseUrl: https://github.com/ayberk2766/NeoContext/blob/main/LICENSE
+LicenseUrl: https://github.com/aybrkaknc/NeoContext/blob/main/LICENSE
 ShortDescription: A modern, safe manager for the Windows right-click menu.
 Description: >-
   NeoContext lists the entries Explorer adds to right-click menus, the New submenu, the Win+X menu
@@ -20,6 +20,6 @@ Tags:
   - shell
   - windows
   - winui
-ReleaseNotesUrl: https://github.com/ayberk2766/NeoContext/releases/tag/v{{VERSION}}
+ReleaseNotesUrl: https://github.com/aybrkaknc/NeoContext/releases/tag/v{{VERSION}}
 ManifestType: defaultLocale
 ManifestVersion: 1.6.0

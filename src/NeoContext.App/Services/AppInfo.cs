@@ -7,7 +7,7 @@ namespace NeoContext.App.Services;
 /// <summary>Facts about this build and where it keeps its files.</summary>
 public static class AppInfo
 {
-    public const string RepositoryOwner = "ayberk2766";
+    public const string RepositoryOwner = "aybrkaknc";
     public const string RepositoryName = "NeoContext";
     public const string RepositoryUrl = $"https://github.com/{RepositoryOwner}/{RepositoryName}";
     public const string OriginalProjectUrl = "https://github.com/BluePointLilac/ContextMenuManager";
